@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated miner -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="miner.presentation.MinerModelWizardID"
+            name="%_UI_MinerModelWizard_label"
+            class="miner.presentation.MinerModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/MinerModelFile.gif">
+         <description>%_UI_MinerModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated minerv1 -->
+      <editor
+            id="minerv1.presentation.Minerv1EditorID"
+            name="%_UI_Minerv1Editor_label"
+            icon="icons/full/obj16/Minerv1ModelFile.gif"
+            extensions="minerv1"
+            class="minerv1.presentation.Minerv1Editor"
+            contributorClass="minerv1.presentation.Minerv1ActionBarContributor">
+      </editor>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <!-- @generated miner -->
+      <editor
+            id="miner.presentation.MinerEditorID"
+            name="%_UI_MinerEditor_label"
+            icon="icons/full/obj16/MinerModelFile.gif"
+            extensions="miner"
+            class="miner.presentation.MinerEditor"
+            contributorClass="miner.presentation.MinerActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>
