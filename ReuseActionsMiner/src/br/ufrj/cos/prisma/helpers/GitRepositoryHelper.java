@@ -25,6 +25,7 @@ import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.revwalk.RevCommit;
 
+import br.ufrj.cos.prisma.miner.util.Constants;
 import br.ufrj.cos.prisma.model.GithubRepository;
 
 public class GitRepositoryHelper {
@@ -271,8 +272,8 @@ public class GitRepositoryHelper {
 	
 	public static GitRepositoryHelper getInstanceForApplication(FrameworkApplication app) {
 //		final String REPO_CLONE_LOCAL_DIR = "/users/talitalopes/Documents/Mestrado/github/";
-		final String REPO_CLONE_LOCAL_DIR = "D:/Mestrado/Miner/github/";
-		String repoLocalDir = String.format("%s%s", REPO_CLONE_LOCAL_DIR,
+		
+		String repoLocalDir = String.format("%s%s", Constants.REPO_CLONE_LOCAL_DIR,
 				app.getName());
 		File repoFile = new File(repoLocalDir);
 		GitRepositoryHelper helper = new GitRepositoryHelper(
