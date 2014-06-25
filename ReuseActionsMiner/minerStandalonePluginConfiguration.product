@@ -12,7 +12,6 @@
 
    <windowImages/>
 
-
    <plugins>
       <plugin id="MinerEMFModel"/>
       <plugin id="MinerEMFModel.edit"/>
