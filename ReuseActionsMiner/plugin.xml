@@ -86,6 +86,13 @@
                enablesFor="1"
                id="Miner.popup.actions.ListRepositoriesForExtraction">
          </action>
+         <action
+               label="Parse without JDT"
+               class="br.ufrj.cos.prisma.miner.popup.actions.ParserAction"
+               menubarPath="ProcessReuseMiner.menu1/group1"
+               enablesFor="1"
+               id="Miner.popup.actions.NewParser">
+         </action>
 		 <action
                label="Mine Workspace"
                class="br.ufrj.cos.prisma.miner.popup.actions.MineWorkspaceAction"
