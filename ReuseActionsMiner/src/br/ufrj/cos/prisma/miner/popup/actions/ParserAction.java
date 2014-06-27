@@ -16,13 +16,38 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
+import br.ufrj.cos.prisma.model.Framework;
+import br.ufrj.cos.prisma.model.FrameworkClass;
+import br.ufrj.cos.prisma.model.FrameworkMethod;
+
 public class ParserAction implements IObjectActionDelegate {
+
+	Framework framework;
 
 	@Override
 	public void run(IAction arg0) {
-		String filePath = "/Users/talitalopes/Documents/Projetos/UFRJ/Mestrado/frameworks/gef/org.eclipse.gef";
+		String filePath = "/Users/talitalopes/Documents/Projetos/UFRJ/Mestrado/frameworks/gef/org.eclipse.gef/org.eclipse.gef";
 		Filewalker walker = new Filewalker();
 		walker.walk(filePath);
+
+		this.framework = walker.getFramework();
+		for (FrameworkClass c : this.framework.getFrameworkClasses()) {
+			if (c.getClassDeclaration().getExtends() != null) {
+				System.out.println(c.getClassDeclaration().getName()
+						+ " extends "
+						+ c.getClassDeclaration().getExtends().get(0));
+			} else {
+				System.out.println(c.getClassDeclaration().getName());
+			}
+
+			for (FrameworkMethod m : c.getFrameworkMethods()) {
+				System.out.println("\t" + m.getMethod().getName());
+			}
+			
+			if (c.getFrameworkMethods().size() == 0) {
+				System.out.println("No methods");
+			}
+		}
 	}
 
 	@Override
@@ -38,18 +63,18 @@ public class ParserAction implements IObjectActionDelegate {
 	 */
 	@SuppressWarnings("rawtypes")
 	protected static class MethodVisitor extends VoidVisitorAdapter {
-		Set<MethodDeclaration> methods;
+		Set<FrameworkMethod> methods;
 
 		public MethodVisitor() {
-			methods = new HashSet<MethodDeclaration>();
+			methods = new HashSet<FrameworkMethod>();
 		}
 
 		@Override
 		public void visit(MethodDeclaration n, Object arg) {
-			methods.add(n);
+			methods.add(new FrameworkMethod(n));
 		}
 
-		public Set<MethodDeclaration> getAllMethods() {
+		public Set<FrameworkMethod> getAllMethods() {
 			return methods;
 		}
 	}
@@ -66,14 +91,20 @@ public class ParserAction implements IObjectActionDelegate {
 			classOrInterfaceDeclaration = c;
 		}
 
-		public String getClassOrInterfaceName() {
-			return this.classOrInterfaceDeclaration.getName();
+		public ClassOrInterfaceDeclaration getClassOrInterfaceName() {
+			return this.classOrInterfaceDeclaration;
 		}
 	}
 
 	public static class Filewalker {
-		public Filewalker() {
+		Framework framework;
 
+		public Filewalker() {
+			this.framework = new Framework();
+		}
+
+		public Framework getFramework() {
+			return this.framework;
 		}
 
 		public void walk(String path) {
@@ -113,15 +144,14 @@ public class ParserAction implements IObjectActionDelegate {
 
 			ClassVisitor classVisitor = new ClassVisitor();
 			classVisitor.visit(cu, null);
-			System.out.println(classVisitor.getClassOrInterfaceName());
+			FrameworkClass fwClass = new FrameworkClass(
+					classVisitor.getClassOrInterfaceName());
 
-			// prints the resulting compilation unit to default system output
 			MethodVisitor methodVisitor = new MethodVisitor();
 			methodVisitor.visit(cu, null);
 
-			for (MethodDeclaration method : methodVisitor.getAllMethods()) {
-				System.out.println(method.getName());
-			}
+			fwClass.addFrameworkMethods(methodVisitor.getAllMethods());
+			framework.addFrameworkClass(fwClass);
 		}
 	}
 }
