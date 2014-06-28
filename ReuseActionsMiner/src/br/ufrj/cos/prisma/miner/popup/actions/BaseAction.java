@@ -37,6 +37,10 @@ public class BaseAction implements IObjectActionDelegate {
 
 	@Override
 	public void run(IAction action) {
+		loadModel();
+	}
+
+	protected void loadModel() {
 		ISelection sel = part.getSite().getSelectionProvider().getSelection();
 
 		if (sel instanceof TreeSelection) {
@@ -48,10 +52,9 @@ public class BaseAction implements IObjectActionDelegate {
 				loadModel((IFile) firstElement);
 			}
 		}
-
 	}
-
-	public void loadModel(IFile model) {
+	
+	protected void loadModel(IFile model) {
 		try {
 			AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(
 					getAdapterFactory(), new BasicCommandStack());

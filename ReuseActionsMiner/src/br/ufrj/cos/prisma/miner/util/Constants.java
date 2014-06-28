@@ -2,6 +2,8 @@ package br.ufrj.cos.prisma.miner.util;
 
 public class Constants {
 
+	public static String REPOSITORIES_SEARCH_KEYWORK = "gef";
+	
 	public static String REPO_CLONE_LOCAL_DIR = "/volumes/talita/Mestrado/Miner/github/";
 //	public static final String  String REPO_CLONE_LOCAL_DIR = "D:/Mestrado/Miner/github/";
 	public static String JAVA_NATURE = "org.eclipse.jdt.core.javanature";
