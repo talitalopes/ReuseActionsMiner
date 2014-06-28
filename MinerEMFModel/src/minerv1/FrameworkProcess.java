@@ -16,6 +16,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link minerv1.FrameworkProcess#getName <em>Name</em>}</li>
  *   <li>{@link minerv1.FrameworkProcess#getApplications <em>Applications</em>}</li>
  *   <li>{@link minerv1.FrameworkProcess#getActivities <em>Activities</em>}</li>
+ *   <li>{@link minerv1.FrameworkProcess#getDir <em>Dir</em>}</li>
+ *   <li>{@link minerv1.FrameworkProcess#getKeyword <em>Keyword</em>}</li>
  * </ul>
  * </p>
  *
@@ -81,5 +83,57 @@ public interface FrameworkProcess extends EObject {
 	 * @generated
 	 */
 	EList<Activity> getActivities();
+
+	/**
+	 * Returns the value of the '<em><b>Dir</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Dir</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Dir</em>' attribute.
+	 * @see #setDir(String)
+	 * @see minerv1.Minerv1Package#getFrameworkProcess_Dir()
+	 * @model
+	 * @generated
+	 */
+	String getDir();
+
+	/**
+	 * Sets the value of the '{@link minerv1.FrameworkProcess#getDir <em>Dir</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Dir</em>' attribute.
+	 * @see #getDir()
+	 * @generated
+	 */
+	void setDir(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Keyword</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Keyword</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Keyword</em>' attribute.
+	 * @see #setKeyword(String)
+	 * @see minerv1.Minerv1Package#getFrameworkProcess_Keyword()
+	 * @model
+	 * @generated
+	 */
+	String getKeyword();
+
+	/**
+	 * Sets the value of the '{@link minerv1.FrameworkProcess#getKeyword <em>Keyword</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Keyword</em>' attribute.
+	 * @see #getKeyword()
+	 * @generated
+	 */
+	void setKeyword(String value);
 
 } // FrameworkProcess

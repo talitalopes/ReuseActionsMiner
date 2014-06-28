@@ -95,13 +95,31 @@ public interface Minerv1Package extends EPackage {
 	int FRAMEWORK_PROCESS__ACTIVITIES = 2;
 
 	/**
+	 * The feature id for the '<em><b>Dir</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FRAMEWORK_PROCESS__DIR = 3;
+
+	/**
+	 * The feature id for the '<em><b>Keyword</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FRAMEWORK_PROCESS__KEYWORD = 4;
+
+	/**
 	 * The number of structural features of the '<em>Framework Process</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FRAMEWORK_PROCESS_FEATURE_COUNT = 3;
+	int FRAMEWORK_PROCESS_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Framework Process</em>' class.
@@ -398,6 +416,28 @@ public interface Minerv1Package extends EPackage {
 	EReference getFrameworkProcess_Activities();
 
 	/**
+	 * Returns the meta object for the attribute '{@link minerv1.FrameworkProcess#getDir <em>Dir</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Dir</em>'.
+	 * @see minerv1.FrameworkProcess#getDir()
+	 * @see #getFrameworkProcess()
+	 * @generated
+	 */
+	EAttribute getFrameworkProcess_Dir();
+
+	/**
+	 * Returns the meta object for the attribute '{@link minerv1.FrameworkProcess#getKeyword <em>Keyword</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Keyword</em>'.
+	 * @see minerv1.FrameworkProcess#getKeyword()
+	 * @see #getFrameworkProcess()
+	 * @generated
+	 */
+	EAttribute getFrameworkProcess_Keyword();
+
+	/**
 	 * Returns the meta object for class '{@link minerv1.FrameworkApplication <em>Framework Application</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -445,7 +485,7 @@ public interface Minerv1Package extends EPackage {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Mine</em>'.
-	 * @see minerv1.FrameworkApplication#mine()
+	 * @see minerv1.FrameworkApplication#isMine()
 	 * @see #getFrameworkApplication()
 	 * @generated
 	 */
@@ -646,6 +686,22 @@ public interface Minerv1Package extends EPackage {
 		 * @generated
 		 */
 		EReference FRAMEWORK_PROCESS__ACTIVITIES = eINSTANCE.getFrameworkProcess_Activities();
+
+		/**
+		 * The meta object literal for the '<em><b>Dir</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FRAMEWORK_PROCESS__DIR = eINSTANCE.getFrameworkProcess_Dir();
+
+		/**
+		 * The meta object literal for the '<em><b>Keyword</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FRAMEWORK_PROCESS__KEYWORD = eINSTANCE.getFrameworkProcess_Keyword();
 
 		/**
 		 * The meta object literal for the '{@link minerv1.impl.FrameworkApplicationImpl <em>Framework Application</em>}' class.

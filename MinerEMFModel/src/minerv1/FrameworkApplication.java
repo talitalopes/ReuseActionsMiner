@@ -109,14 +109,14 @@ public interface FrameworkApplication extends EObject {
 	 * @model
 	 * @generated
 	 */
-	boolean mine();
+	boolean isMine();
 
 	/**
 	 * Sets the value of the '{@link minerv1.FrameworkApplication#isMine <em>Mine</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Mine</em>' attribute.
-	 * @see #mine()
+	 * @see #isMine()
 	 * @generated
 	 */
 	void setMine(boolean value);

@@ -63,6 +63,8 @@ public class FrameworkProcessItemProvider
 			super.getPropertyDescriptors(object);
 
 			addNamePropertyDescriptor(object);
+			addDirPropertyDescriptor(object);
+			addKeywordPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -81,6 +83,50 @@ public class FrameworkProcessItemProvider
 				 getString("_UI_FrameworkProcess_name_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_FrameworkProcess_name_feature", "_UI_FrameworkProcess_type"),
 				 Minerv1Package.Literals.FRAMEWORK_PROCESS__NAME,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Dir feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addDirPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_FrameworkProcess_dir_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_FrameworkProcess_dir_feature", "_UI_FrameworkProcess_type"),
+				 Minerv1Package.Literals.FRAMEWORK_PROCESS__DIR,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Keyword feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addKeywordPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_FrameworkProcess_keyword_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_FrameworkProcess_keyword_feature", "_UI_FrameworkProcess_type"),
+				 Minerv1Package.Literals.FRAMEWORK_PROCESS__KEYWORD,
 				 true,
 				 false,
 				 false,
@@ -158,6 +204,8 @@ public class FrameworkProcessItemProvider
 
 		switch (notification.getFeatureID(FrameworkProcess.class)) {
 			case Minerv1Package.FRAMEWORK_PROCESS__NAME:
+			case Minerv1Package.FRAMEWORK_PROCESS__DIR:
+			case Minerv1Package.FRAMEWORK_PROCESS__KEYWORD:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case Minerv1Package.FRAMEWORK_PROCESS__APPLICATIONS:

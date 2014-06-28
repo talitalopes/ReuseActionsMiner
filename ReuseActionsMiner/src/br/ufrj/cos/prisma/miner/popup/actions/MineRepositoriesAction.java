@@ -35,7 +35,7 @@ public class MineRepositoriesAction extends BaseExtractionAction {
 	private void mineReuseActionsFromRepositories() {
 		for (FrameworkApplication app : process.getApplications()) {
 			currentIndex = 0;
-			if (!app.mine()) {
+			if (!app.isMine()) {
 				continue;
 			}
 			final GitRepositoryHelper helper = GitRepositoryHelper

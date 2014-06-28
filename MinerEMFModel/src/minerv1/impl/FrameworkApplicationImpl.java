@@ -89,20 +89,20 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 	protected EList<Commit> commits;
 
 	/**
-	 * The default value of the '{@link #mine() <em>Mine</em>}' attribute.
+	 * The default value of the '{@link #isMine() <em>Mine</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #mine()
+	 * @see #isMine()
 	 * @generated
 	 * @ordered
 	 */
 	protected static final boolean MINE_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #mine() <em>Mine</em>}' attribute.
+	 * The cached value of the '{@link #isMine() <em>Mine</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #mine()
+	 * @see #isMine()
 	 * @generated
 	 * @ordered
 	 */
@@ -186,7 +186,7 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean mine() {
+	public boolean isMine() {
 		return mine;
 	}
 
@@ -231,7 +231,7 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 			case Minerv1Package.FRAMEWORK_APPLICATION__COMMITS:
 				return getCommits();
 			case Minerv1Package.FRAMEWORK_APPLICATION__MINE:
-				return mine();
+				return isMine();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}

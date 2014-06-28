@@ -24,5 +24,9 @@ public interface FrameworkProcessValidator {
 
 	boolean validateActivities(EList<Activity> value);
 
+	boolean validateDir(String value);
+
+	boolean validateKeyword(String value);
+
 	boolean validateActivities(Activity value);
 }
