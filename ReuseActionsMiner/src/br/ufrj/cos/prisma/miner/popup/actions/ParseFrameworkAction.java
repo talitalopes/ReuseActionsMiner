@@ -20,7 +20,7 @@ import br.ufrj.cos.prisma.model.Framework;
 import br.ufrj.cos.prisma.model.FrameworkClass;
 import br.ufrj.cos.prisma.model.FrameworkMethod;
 
-public class ParserAction implements IObjectActionDelegate {
+public class ParseFrameworkAction implements IObjectActionDelegate {
 
 	Framework framework;
 
