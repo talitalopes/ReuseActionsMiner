@@ -11,51 +11,43 @@ import java.io.FileInputStream;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbenchPart;
+import minerv1.Minerv1Factory;
+import minerv1.Activity;
+import minerv1.ActivityType;
 
-import br.ufrj.cos.prisma.model.Framework;
-import br.ufrj.cos.prisma.model.FrameworkClass;
+import org.eclipse.jface.action.IAction;
+
 import br.ufrj.cos.prisma.model.FrameworkMethod;
 
-public class ParseFrameworkAction implements IObjectActionDelegate {
-
-	Framework framework;
+public class ParseFrameworkAction extends BaseAction {
 
 	@Override
 	public void run(IAction arg0) {
-		String filePath = "/Users/talitalopes/Documents/Projetos/UFRJ/Mestrado/frameworks/gef/org.eclipse.gef/org.eclipse.gef";
+		super.run(arg0);
+
+		String filePath = this.process.getDir();
 		Filewalker walker = new Filewalker();
 		walker.walk(filePath);
 
-		this.framework = walker.getFramework();
-		for (FrameworkClass c : this.framework.getFrameworkClasses()) {
-			if (c.getClassDeclaration().getExtends() != null) {
-				System.out.println(c.getClassDeclaration().getName()
-						+ " extends "
-						+ c.getClassDeclaration().getExtends().get(0));
-			} else {
-				System.out.println(c.getClassDeclaration().getName());
-			}
-
-			for (FrameworkMethod m : c.getFrameworkMethods()) {
-				System.out.println("\t" + m.getMethod().getName());
-			}
-			
-			if (c.getFrameworkMethods().size() == 0) {
-				System.out.println("No methods");
-			}
-		}
-	}
-
-	@Override
-	public void selectionChanged(IAction arg0, ISelection arg1) {
-	}
-
-	@Override
-	public void setActivePart(IAction arg0, IWorkbenchPart arg1) {
+		this.process.getActivities().addAll(walker.getActivities());
+		save();
+//		for (FrameworkClass c : this.framework.getFrameworkClasses()) {
+//			if (c.getClassDeclaration().getExtends() != null) {
+//				System.out.println(c.getClassDeclaration().getName()
+//						+ " extends "
+//						+ c.getClassDeclaration().getExtends().get(0));
+//			} else {
+//				System.out.println(c.getClassDeclaration().getName());
+//			}
+//
+//			for (FrameworkMethod m : c.getFrameworkMethods()) {
+//				System.out.println("\t" + m.getMethod().getName());
+//			}
+//
+//			if (c.getFrameworkMethods().size() == 0) {
+//				System.out.println("No methods");
+//			}
+//		}
 	}
 
 	/**
@@ -97,14 +89,14 @@ public class ParseFrameworkAction implements IObjectActionDelegate {
 	}
 
 	public static class Filewalker {
-		Framework framework;
+		Set<Activity> activities;
 
 		public Filewalker() {
-			this.framework = new Framework();
+			this.activities = new HashSet<Activity>();
 		}
 
-		public Framework getFramework() {
-			return this.framework;
+		public Set<Activity> getActivities() {
+			return this.activities;
 		}
 
 		public void walk(String path) {
@@ -142,16 +134,24 @@ public class ParseFrameworkAction implements IObjectActionDelegate {
 				in.close();
 			}
 
+			// Visit class
 			ClassVisitor classVisitor = new ClassVisitor();
 			classVisitor.visit(cu, null);
-			FrameworkClass fwClass = new FrameworkClass(
-					classVisitor.getClassOrInterfaceName());
-
-			MethodVisitor methodVisitor = new MethodVisitor();
-			methodVisitor.visit(cu, null);
-
-			fwClass.addFrameworkMethods(methodVisitor.getAllMethods());
-			framework.addFrameworkClass(fwClass);
+			
+			// Add class to framework
+			Activity activity = (Activity) Minerv1Factory.eINSTANCE.createActivity();
+			activity.setId("id");
+			activity.setType(ActivityType.CLASS_EXTENSION);
+			activity.setName(classVisitor.getClassOrInterfaceName().getName());
+			this.activities.add(activity);
+			
+//			FrameworkClass fwClass = new FrameworkClass(
+//					classVisitor.getClassOrInterfaceName());
+//			 MethodVisitor methodVisitor = new MethodVisitor();
+//			 methodVisitor.visit(cu, null);
+//			
+//			 fwClass.addFrameworkMethods(methodVisitor.getAllMethods());
+//			framework.addFrameworkClass(fwClass);
 		}
 	}
 }

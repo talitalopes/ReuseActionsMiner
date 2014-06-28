@@ -88,7 +88,7 @@
          </action>
          <action
                label="Parse without JDT"
-               class="br.ufrj.cos.prisma.miner.popup.actions.ParserAction"
+               class="br.ufrj.cos.prisma.miner.popup.actions.ParseFrameworkAction"
                menubarPath="ProcessReuseMiner.menu1/group1"
                enablesFor="1"
                id="Miner.popup.actions.NewParser">

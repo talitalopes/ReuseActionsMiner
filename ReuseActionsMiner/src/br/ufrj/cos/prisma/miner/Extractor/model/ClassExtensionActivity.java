@@ -7,6 +7,13 @@ import miner.MinerFactory;
 
 public class ClassExtensionActivity extends MinerActivity {
 
+	public ClassExtensionActivity(String name) {
+		this.activity = MinerFactory.eINSTANCE.createActivity();
+		this.activity.setId(this.activityKey);
+		this.activity.setType(ActivityType.CLASS_EXTENSION);
+		this.activity.setName(name);
+	}
+	
 	public ClassExtensionActivity(IType superClassFW, IType type) {
 		this.superClassFWType = superClassFW;
 		this.classType = type;
