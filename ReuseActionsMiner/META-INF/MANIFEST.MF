@@ -17,7 +17,7 @@ Bundle-ClassPath: libs/org.eclipse.jgit-3.1.0.201310021548-r.jar,
 Bundle-Activator: minerv1.provider.Minerv1EditPlugin$Implementation
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.ui;bundle-version="3.104.0",
  org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.8.1",
