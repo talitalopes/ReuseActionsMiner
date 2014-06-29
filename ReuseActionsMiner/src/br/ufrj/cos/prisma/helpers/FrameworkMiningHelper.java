@@ -57,7 +57,7 @@ public class FrameworkMiningHelper {
 	 * 
 	 * **/
 	public List<Event> extractApplicationReuseActions() {
-		System.out.println("Mining reuse actions from application");
+		LogHelper.log("Mining reuse actions from application");
 		Filewalker walker = new Filewalker(process);
 		walker.walk(this.frameworkPath, MiningType.APPLICATION);
 
@@ -69,7 +69,7 @@ public class FrameworkMiningHelper {
 			events.add(e);
 		}
 
-		System.out.println("Finish mining reuse actions from application");
+		LogHelper.log("Finish mining reuse actions from application");
 		return events;
 	}
 
@@ -154,7 +154,7 @@ public class FrameworkMiningHelper {
 
 		public void findReuseActions(String filePath) throws Exception {
 			if (this.process == null) {
-				System.out.println("No process found");
+				LogHelper.log("No process found");
 				return;
 			}
 

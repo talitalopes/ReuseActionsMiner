@@ -14,7 +14,6 @@ import br.ufrj.cos.prisma.helpers.GitRepositoryHelper;
 import br.ufrj.cos.prisma.helpers.LogHelper;
 
 public class MineRepositoriesActionv2 extends BaseExtractionAction {
-	int currentIndex;
 	boolean wait;
 
 	public MineRepositoriesActionv2() {
@@ -31,7 +30,6 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 
 	private void mineReuseActionsFromRepositories() {
 		for (FrameworkApplication app : process.getApplications()) {
-			currentIndex = 0;
 			if (!app.isMine()) {
 				continue;
 			}
@@ -46,7 +44,7 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 			FrameworkMiningHelper miningHelper = new FrameworkMiningHelper(
 					gitHelper.getRepoFile().getAbsolutePath(), this.process);
 
-			while (currentIndex < commits.size()) {
+			for (int currentIndex = 0; currentIndex < commits.size(); currentIndex++) {
 				LogHelper.log(String.format("Commit %d out of %d",
 						currentIndex + 1, commits.size()));
 
@@ -61,8 +59,6 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 				app.getCommits().add(this.currentCommit);
 				
 				gitHelper.deleteRepo();
-
-				this.currentIndex++;
 			}
 
 			gitHelper.deleteParentFolder();
