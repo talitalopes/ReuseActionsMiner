@@ -233,6 +233,7 @@ public class GitRepositoryHelper {
 			return;
 		}
 
+		System.out.println("Delete repo " + repoFile.getParentFile());
 		try {
 			LogHelper.log("Deleting Parent file: " + repoFile.getParentFile());
 			FileUtils.deleteDirectory(repoFile.getParentFile());

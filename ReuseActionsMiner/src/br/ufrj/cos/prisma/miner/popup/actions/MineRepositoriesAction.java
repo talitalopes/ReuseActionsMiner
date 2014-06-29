@@ -41,16 +41,16 @@ public class MineRepositoriesAction extends BaseExtractionAction {
 			final GitRepositoryHelper helper = GitRepositoryHelper
 					.getInstanceForApplication(app);
 
-			List<String> applications = helper.getCommitsHistoryFromMaster();
+			List<String> commits = helper.getCommitsHistoryFromMaster();
 
 			LogHelper.log(String.format("%d commits found for application %s",
-					applications.size(), app.getName()));
+					commits.size(), app.getName()));
 
-			while (currentIndex < applications.size()) {
+			while (currentIndex < commits.size()) {
 				System.out.println(String.format("Commit %d out of %d",
-						currentIndex + 1, applications.size()));
+						currentIndex + 1, commits.size()));
 				
-				String currentCommitId = applications.get(currentIndex);
+				String currentCommitId = commits.get(currentIndex);
 				this.currentCommit = createCommit(currentCommitId);
 
 				ExploreCommitTask exploreTask = new ExploreCommitTask(app,
