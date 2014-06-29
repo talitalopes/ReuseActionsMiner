@@ -4,6 +4,7 @@
  */
 package minerv1.validation;
 
+import java.util.Map;
 import minerv1.Activity;
 import minerv1.FrameworkApplication;
 import org.eclipse.emf.common.util.EList;
@@ -27,6 +28,8 @@ public interface FrameworkProcessValidator {
 	boolean validateDir(String value);
 
 	boolean validateKeyword(String value);
+
+	boolean validateActivitiesMap(Map<?, ?> value);
 
 	boolean validateActivities(Activity value);
 }

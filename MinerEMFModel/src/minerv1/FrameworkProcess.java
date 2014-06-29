@@ -2,6 +2,7 @@
  */
 package minerv1;
 
+import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
@@ -18,6 +19,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link minerv1.FrameworkProcess#getActivities <em>Activities</em>}</li>
  *   <li>{@link minerv1.FrameworkProcess#getDir <em>Dir</em>}</li>
  *   <li>{@link minerv1.FrameworkProcess#getKeyword <em>Keyword</em>}</li>
+ *   <li>{@link minerv1.FrameworkProcess#getActivitiesMap <em>Activities Map</em>}</li>
  * </ul>
  * </p>
  *
@@ -136,4 +138,34 @@ public interface FrameworkProcess extends EObject {
 	 */
 	void setKeyword(String value);
 
+	/**
+	 * Returns the value of the '<em><b>Activities Map</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Activities Map</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Activities Map</em>' attribute.
+	 * @see #setActivitiesMap(Map)
+	 * @see minerv1.Minerv1Package#getFrameworkProcess_ActivitiesMap()
+	 * @model transient="true"
+	 * @generated
+	 */
+	Map<String, Activity> getActivitiesMap();
+
+	/**
+	 * Sets the value of the '{@link minerv1.FrameworkProcess#getActivitiesMap <em>Activities Map</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Activities Map</em>' attribute.
+	 * @see #getActivitiesMap()
+	 * @generated
+	 */
+	void setActivitiesMap(Map<String, Activity> value);
+
+	public boolean hasActivity(String name);
+	
+	public void populateActivitiesMap();
+	
 } // FrameworkProcess

@@ -65,6 +65,7 @@ public class FrameworkProcessItemProvider
 			addNamePropertyDescriptor(object);
 			addDirPropertyDescriptor(object);
 			addKeywordPropertyDescriptor(object);
+			addActivitiesMapPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -127,6 +128,28 @@ public class FrameworkProcessItemProvider
 				 getString("_UI_FrameworkProcess_keyword_feature"),
 				 getString("_UI_PropertyDescriptor_description", "_UI_FrameworkProcess_keyword_feature", "_UI_FrameworkProcess_type"),
 				 Minerv1Package.Literals.FRAMEWORK_PROCESS__KEYWORD,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Activities Map feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addActivitiesMapPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_FrameworkProcess_activitiesMap_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_FrameworkProcess_activitiesMap_feature", "_UI_FrameworkProcess_type"),
+				 Minerv1Package.Literals.FRAMEWORK_PROCESS__ACTIVITIES_MAP,
 				 true,
 				 false,
 				 false,
@@ -206,6 +229,7 @@ public class FrameworkProcessItemProvider
 			case Minerv1Package.FRAMEWORK_PROCESS__NAME:
 			case Minerv1Package.FRAMEWORK_PROCESS__DIR:
 			case Minerv1Package.FRAMEWORK_PROCESS__KEYWORD:
+			case Minerv1Package.FRAMEWORK_PROCESS__ACTIVITIES_MAP:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case Minerv1Package.FRAMEWORK_PROCESS__APPLICATIONS:

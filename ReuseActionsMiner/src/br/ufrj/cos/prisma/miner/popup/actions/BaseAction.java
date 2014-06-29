@@ -53,7 +53,7 @@ public class BaseAction implements IObjectActionDelegate {
 			}
 		}
 	}
-	
+
 	protected void loadModel(IFile model) {
 		try {
 			AdapterFactoryEditingDomain editingDomain = new AdapterFactoryEditingDomain(
@@ -64,12 +64,13 @@ public class BaseAction implements IObjectActionDelegate {
 
 			EObject eObject = resource.getContents().get(0);
 			this.process = (FrameworkProcess) eObject;
-
+			this.process.populateActivitiesMap();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void save() {
 		try {
 			resource.save(null);
@@ -77,7 +78,7 @@ public class BaseAction implements IObjectActionDelegate {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Return an ComposedAdapterFactory for all registered models
 	 * 

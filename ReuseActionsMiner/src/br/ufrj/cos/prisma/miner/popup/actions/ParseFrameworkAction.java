@@ -29,25 +29,14 @@ public class ParseFrameworkAction extends BaseAction {
 		Filewalker walker = new Filewalker();
 		walker.walk(filePath);
 
-		this.process.getActivities().addAll(walker.getActivities());
+		for (Activity a : walker.getActivities()) {
+			this.process.getActivitiesMap().put(a.getName(), a);
+		}
+		this.process.getActivities().clear();
+		this.process.getActivities().addAll(
+				this.process.getActivitiesMap().values());
+
 		save();
-//		for (FrameworkClass c : this.framework.getFrameworkClasses()) {
-//			if (c.getClassDeclaration().getExtends() != null) {
-//				System.out.println(c.getClassDeclaration().getName()
-//						+ " extends "
-//						+ c.getClassDeclaration().getExtends().get(0));
-//			} else {
-//				System.out.println(c.getClassDeclaration().getName());
-//			}
-//
-//			for (FrameworkMethod m : c.getFrameworkMethods()) {
-//				System.out.println("\t" + m.getMethod().getName());
-//			}
-//
-//			if (c.getFrameworkMethods().size() == 0) {
-//				System.out.println("No methods");
-//			}
-//		}
 	}
 
 	/**
@@ -137,21 +126,22 @@ public class ParseFrameworkAction extends BaseAction {
 			// Visit class
 			ClassVisitor classVisitor = new ClassVisitor();
 			classVisitor.visit(cu, null);
-			
+
 			// Add class to framework
-			Activity activity = (Activity) Minerv1Factory.eINSTANCE.createActivity();
-			activity.setId("id");
+			Activity activity = (Activity) Minerv1Factory.eINSTANCE
+					.createActivity();
+			activity.setId(classVisitor.getClassOrInterfaceName().getName());
 			activity.setType(ActivityType.CLASS_EXTENSION);
 			activity.setName(classVisitor.getClassOrInterfaceName().getName());
 			this.activities.add(activity);
-			
-//			FrameworkClass fwClass = new FrameworkClass(
-//					classVisitor.getClassOrInterfaceName());
-//			 MethodVisitor methodVisitor = new MethodVisitor();
-//			 methodVisitor.visit(cu, null);
-//			
-//			 fwClass.addFrameworkMethods(methodVisitor.getAllMethods());
-//			framework.addFrameworkClass(fwClass);
+
+			// FrameworkClass fwClass = new FrameworkClass(
+			// classVisitor.getClassOrInterfaceName());
+			// MethodVisitor methodVisitor = new MethodVisitor();
+			// methodVisitor.visit(cu, null);
+			//
+			// fwClass.addFrameworkMethods(methodVisitor.getAllMethods());
+			// framework.addFrameworkClass(fwClass);
 		}
 	}
 }

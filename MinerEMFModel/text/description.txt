@@ -13,6 +13,7 @@ Package minerv1 <http://prisma.cos.ufrj.br/processreuseminerv1>
     Reference activities : Activity<<0..*>>
     Attribute dir : EString
     Attribute keyword : EString
+    Attribute activitiesMap : EMap
 
   Class FrameworkApplication
     Attribute name : EString

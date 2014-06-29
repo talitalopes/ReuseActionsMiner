@@ -113,13 +113,22 @@ public interface Minerv1Package extends EPackage {
 	int FRAMEWORK_PROCESS__KEYWORD = 4;
 
 	/**
+	 * The feature id for the '<em><b>Activities Map</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FRAMEWORK_PROCESS__ACTIVITIES_MAP = 5;
+
+	/**
 	 * The number of structural features of the '<em>Framework Process</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FRAMEWORK_PROCESS_FEATURE_COUNT = 5;
+	int FRAMEWORK_PROCESS_FEATURE_COUNT = 6;
 
 	/**
 	 * The number of operations of the '<em>Framework Process</em>' class.
@@ -438,6 +447,17 @@ public interface Minerv1Package extends EPackage {
 	EAttribute getFrameworkProcess_Keyword();
 
 	/**
+	 * Returns the meta object for the attribute '{@link minerv1.FrameworkProcess#getActivitiesMap <em>Activities Map</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Activities Map</em>'.
+	 * @see minerv1.FrameworkProcess#getActivitiesMap()
+	 * @see #getFrameworkProcess()
+	 * @generated
+	 */
+	EAttribute getFrameworkProcess_ActivitiesMap();
+
+	/**
 	 * Returns the meta object for class '{@link minerv1.FrameworkApplication <em>Framework Application</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -702,6 +722,14 @@ public interface Minerv1Package extends EPackage {
 		 * @generated
 		 */
 		EAttribute FRAMEWORK_PROCESS__KEYWORD = eINSTANCE.getFrameworkProcess_Keyword();
+
+		/**
+		 * The meta object literal for the '<em><b>Activities Map</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FRAMEWORK_PROCESS__ACTIVITIES_MAP = eINSTANCE.getFrameworkProcess_ActivitiesMap();
 
 		/**
 		 * The meta object literal for the '{@link minerv1.impl.FrameworkApplicationImpl <em>Framework Application</em>}' class.
