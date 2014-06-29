@@ -434,6 +434,10 @@ public class FrameworkProcessImpl extends MinimalEObjectImpl.Container
 	}
 
 	public void populateActivitiesMap() {
+		if (this.activities == null) {
+			return;
+		}
+		
 		for (Activity activity: this.activities) {
 			this.activitiesMap.put(activity.getName(), activity);
 		}
