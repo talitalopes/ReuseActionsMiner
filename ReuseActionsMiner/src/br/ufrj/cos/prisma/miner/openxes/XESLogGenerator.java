@@ -1,6 +1,5 @@
 package br.ufrj.cos.prisma.miner.openxes;
 
-import br.ufrj.cos.prisma.miner.util.Constants;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,7 +9,6 @@ import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Date;
 
-import miner.ProcessInstance;
 import minerv1.Event;
 import minerv1.FrameworkApplication;
 import minerv1.FrameworkProcess;
@@ -31,6 +29,7 @@ import org.deckfour.xes.out.XesXmlSerializer;
 import org.deckfour.xes.xstream.XesXStreamPersistency;
 
 import br.ufrj.cos.prisma.helpers.LogHelper;
+import br.ufrj.cos.prisma.miner.util.Constants;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -172,40 +171,6 @@ public class XESLogGenerator {
 			}
 		} catch (Exception e) {
 			LogHelper.log("Error genereting log", e.getMessage());
-		}
-	}
-
-	public void getXESRepresentationFromProcess(miner.Process p) {
-		try {
-			String traceName = null;
-			XTrace trace = null;
-			XEvent event = null;
-			Date cDate = null;
-
-			for (ProcessInstance pi : p.getInstances()) {
-
-				traceName = pi.getName();
-				trace = createNewTrace(traceName);
-
-				if (trace != null) {
-					int lastCommitIndex = pi.getCommits().size() - 1;
-					for (miner.Event e : pi.getCommits().get(lastCommitIndex)
-							.getEvents()) {
-						cDate = e.getDate();
-						event = createEvent(
-								e.getActivity().getType().getName(), e
-										.getActivity().getName(), cDate);
-
-						if (event != null) {
-							trace.add(event);
-						}
-					}
-				}
-				log.add(trace);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 

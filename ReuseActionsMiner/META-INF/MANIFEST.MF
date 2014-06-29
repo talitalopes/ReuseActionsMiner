@@ -37,13 +37,8 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.104.0",
  org.eclipse.ui.ide.application;bundle-version="1.0.400",
  org.eclipse.ui.console;bundle-version="3.5.100"
 Bundle-ActivationPolicy: lazy
-Import-Package: miner,
- miner.impl,
- miner.presentation,
- miner.provider,
- miner.util,
- minerv1,
+Import-Package: minerv1,
  minerv1.impl,
  minerv1.presentation,
- minerv1.util,
- minerv1.provider
+ minerv1.provider,
+ minerv1.util

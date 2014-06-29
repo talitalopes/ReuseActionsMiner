@@ -25,15 +25,6 @@
       <category
             id="org.eclipse.emf.ecore.Wizard.category.ID"
             name="%_UI_Wizard_category"/>
-      <!--wizard
-            id="miner.presentation.MinerModelWizardID"
-            name="%_UI_MinerModelWizard_label"
-            class="miner.presentation.MinerModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
-            icon="icons/full/obj16/MinerModelFile.gif">
-         <description>%_UI_MinerModelWizard_description</description>
-         <selection class="org.eclipse.core.resources.IResource"/>
-      </wizard-->
       <wizard
             category="org.eclipse.emf.ecore.Wizard.category.ID"
             class="minerv1.presentation.Minerv1ModelWizard"
