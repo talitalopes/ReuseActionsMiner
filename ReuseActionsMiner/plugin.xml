@@ -101,11 +101,11 @@
                id="Miner.popup.actions.MineWorkspaceAction">
          </action>
          <action
-               label="Mine Repositories"
-               class="br.ufrj.cos.prisma.miner.popup.actions.MineRepositoriesAction"
+               label="Mine Repositories v2"
+               class="br.ufrj.cos.prisma.miner.popup.actions.MineRepositoriesActionv2"
                menubarPath="ProcessReuseMiner.menu1/group1"
                enablesFor="1"
-               id="Miner.popup.actions.MineRepositoriesAction">
+               id="Miner.popup.actions.MineRepositoriesActionv2">
          </action>
          
          <!--action
