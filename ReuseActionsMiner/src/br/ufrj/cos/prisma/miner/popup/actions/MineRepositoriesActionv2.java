@@ -3,19 +3,15 @@ package br.ufrj.cos.prisma.miner.popup.actions;
 import java.util.List;
 
 import minerv1.Commit;
+import minerv1.Event;
 import minerv1.FrameworkApplication;
 import minerv1.Minerv1Factory;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
 
+import br.ufrj.cos.prisma.helpers.FrameworkMiningHelper;
 import br.ufrj.cos.prisma.helpers.GitRepositoryHelper;
 import br.ufrj.cos.prisma.helpers.LogHelper;
-import br.ufrj.cos.prisma.thread.ExploreCommitTask;
-import br.ufrj.cos.prisma.thread.TaskListener;
 
 public class MineRepositoriesActionv2 extends BaseExtractionAction {
 	int currentIndex;
@@ -30,6 +26,7 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 	public void run(IAction action) {
 		super.run(action);
 		mineReuseActionsFromRepositories();
+		save();
 	}
 
 	private void mineReuseActionsFromRepositories() {
@@ -38,74 +35,46 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 			if (!app.isMine()) {
 				continue;
 			}
-			final GitRepositoryHelper helper = GitRepositoryHelper
+			final GitRepositoryHelper gitHelper = GitRepositoryHelper
 					.getInstanceForApplication(app);
 
-			List<String> commits = helper.getCommitsHistoryFromMaster();
+			List<String> commits = gitHelper.getCommitsHistoryFromMaster();
 
 			LogHelper.log(String.format("%d commits found for application %s",
 					commits.size(), app.getName()));
 
+			FrameworkMiningHelper miningHelper = new FrameworkMiningHelper(
+					gitHelper.getRepoFile().getAbsolutePath(), this.process);
+
 			while (currentIndex < commits.size()) {
-				System.out.println(String.format("Commit %d out of %d",
+				LogHelper.log(String.format("Commit %d out of %d",
 						currentIndex + 1, commits.size()));
-				
+
 				String currentCommitId = commits.get(currentIndex);
 				this.currentCommit = createCommit(currentCommitId);
 
-				ExploreCommitTask exploreTask = new ExploreCommitTask(app,
-						currentCommitId);
-				exploreTask.addListener(onTaskCompletedListener(app));
+				cloneCurrentCommit(gitHelper, currentCommitId);
 
-				// and now get the workbench to do the work
-				final IWorkbench workbench = PlatformUI.getWorkbench();
-				workbench.getDisplay().syncExec(exploreTask);
+				List<Event> reuseActionsEvents = miningHelper.extractApplicationReuseActions();
+				this.currentCommit.getEvents().clear();
+				this.currentCommit.getEvents().addAll(reuseActionsEvents);
+				app.getCommits().add(this.currentCommit);
+				
+				gitHelper.deleteRepo();
 
-				while (wait) {
-				}
-
-				wait = true;
 				this.currentIndex++;
 			}
 
-			helper.deleteParentFolder();
-			System.out.println("Finishing FrameworkApplication "
+			gitHelper.deleteParentFolder();
+			LogHelper.log("Finishing FrameworkApplication "
 					+ app.getName());
 		}
 	}
 
-	private TaskListener onTaskCompletedListener(final FrameworkApplication app) {
-		return new TaskListener() {
-			@Override
-			public void threadComplete(Runnable runner,
-					final List<IProject> projects) {
-				exploreProjects(projects);
-
-				app.getCommits().add(currentCommit);
-				deleteProjectsFromWorkspace(projects);
-				wait = false;
-
-				System.out.println("Finishing task");
-				save();
-			}
-		};
-	}
-
-	private void exploreProjects(List<IProject> projects) {
-		for (IProject project : projects) {
-			System.out.println("Exploring Project: " + project.getName());
-			if (project.getName().toLowerCase().equals("miner")
-					|| project.getName().toLowerCase()
-							.equals(this.process.getName().toLowerCase())) {
-				continue;
-			}
-
-			try {
-				exploreProject(project);
-			} catch (JavaModelException e) {
-				LogHelper.log("JavaModelException", e.getMessage());
-			}
-		}
+	private void cloneCurrentCommit(GitRepositoryHelper gitHelper,
+			String commitId) {
+		LogHelper.log("Cloning commit: " + commitId);
+		gitHelper.cloneFromCommit(commitId);
 	}
 
 	private Commit createCommit(String id) {
