@@ -5,6 +5,8 @@ public class Constants {
 	public static String REPOSITORIES_SEARCH_KEYWORK = "gef";
 	
 	public static String REPO_CLONE_LOCAL_DIR = "/users/talitalopes/Documents/Mestrado/github/";
+	public static String LOG_LOCAL_DIR = "/users/talitalopes/Documents/Mestrado/logs/";
+	
 //	public static final String  String REPO_CLONE_LOCAL_DIR = "D:/Mestrado/Miner/github/";
 	public static String JAVA_NATURE = "org.eclipse.jdt.core.javanature";
 	

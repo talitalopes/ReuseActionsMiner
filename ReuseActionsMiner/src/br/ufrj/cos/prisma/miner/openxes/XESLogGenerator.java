@@ -1,5 +1,6 @@
 package br.ufrj.cos.prisma.miner.openxes;
 
+import br.ufrj.cos.prisma.miner.util.Constants;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -153,7 +154,7 @@ public class XESLogGenerator {
 				if (trace == null || pi.getOrderedListOfEvents().size() == 0) {
 					continue;
 				}
-				
+
 				int addedEvents = 0;
 				for (Event e : pi.getOrderedListOfEvents()) {
 					event = createEvent(e);
@@ -162,7 +163,7 @@ public class XESLogGenerator {
 						addedEvents++;
 					}
 				}
-				
+
 				// Prevent adding empty traces
 				if (addedEvents > 0) {
 					System.out.println("trace: " + traceName);
@@ -214,16 +215,15 @@ public class XESLogGenerator {
 		XesXmlSerializer serializer = new XesXmlSerializer();
 
 		try {
-			File dir = new File(
-					"/users/talitalopes/Documents/Mestrado/Graphiti/logs/");
+			File dir = new File(Constants.LOG_LOCAL_DIR);
 			if (!dir.exists()) {
 				dir.mkdir();
 			}
 
 			File sFile = new File(dir, filename);
 
-			LogHelper.log("Serializing log with XStream at: /users/talitalopes/Documents/Mestrado/Graphiti/logs/"
-							+ filename);
+			LogHelper.log("Serializing log with XStream at: "
+					+ Constants.LOG_LOCAL_DIR + " " + filename);
 
 			OutputStream oStream = new BufferedOutputStream(
 					new FileOutputStream(sFile));
