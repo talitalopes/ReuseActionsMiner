@@ -1,6 +1,6 @@
 package br.ufrj.cos.prisma.miner.popup.actions;
 
-import java.util.Set;
+import java.util.List;
 
 import minerv1.Activity;
 
@@ -16,7 +16,7 @@ public class ParseFrameworkAction extends BaseAction {
 
 		String filePath = this.process.getDir();
 		FrameworkMiningHelper miningHelper = new FrameworkMiningHelper(filePath);
-		Set<Activity> activities = miningHelper.extractFrameworkReuseActions();
+		List<Activity> activities = miningHelper.extractFrameworkReuseActions();
 		
 		for (Activity a : activities) {
 			this.process.getActivitiesMap().put(a.getName(), a);

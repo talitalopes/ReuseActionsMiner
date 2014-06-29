@@ -45,7 +45,7 @@ public class FrameworkMiningHelper {
 	 * extension methods were implemented.
 	 * 
 	 * **/
-	public Set<Activity> extractFrameworkReuseActions() {
+	public List<Activity> extractFrameworkReuseActions() {
 		Filewalker walker = new Filewalker();
 		walker.walk(this.frameworkPath, MiningType.FRAMEWORK);
 		return walker.getActivities();
@@ -112,19 +112,19 @@ public class FrameworkMiningHelper {
 	}
 
 	public static class Filewalker {
-		Set<Activity> activities;
+		List<Activity> activities;
 		FrameworkProcess process;
 
 		public Filewalker() {
-			this.activities = new HashSet<Activity>();
+			this.activities = new ArrayList<Activity>();
 		}
 
 		public Filewalker(FrameworkProcess process) {
-			this.activities = new HashSet<Activity>();
+			this.activities = new ArrayList<Activity>();
 			this.process = process;
 		}
 
-		public Set<Activity> getActivities() {
+		public List<Activity> getActivities() {
 			return this.activities;
 		}
 
