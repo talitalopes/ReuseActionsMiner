@@ -139,23 +139,23 @@ public class XESLogGenerator {
 		return event;
 	}
 
-	public void getXESRepresentationFromProcess(FrameworkProcess p) {
+	public void getXESRepresentationFromProcess(FrameworkProcess fwProcess) {
 		try {
 			String traceName = null;
 			XTrace trace = null;
 			XEvent event = null;
 
-			for (FrameworkApplication pi : p.getApplications()) {
-				traceName = pi.getName();
+			for (FrameworkApplication application : fwProcess.getApplications()) {
+				traceName = application.getName();
 				trace = createNewTrace(traceName);
 
 				// we don't log empty traces
-				if (trace == null || pi.getOrderedListOfEvents().size() == 0) {
+				if (trace == null || application.getOrderedListOfEvents().size() == 0) {
 					continue;
 				}
 
 				int addedEvents = 0;
-				for (Event e : pi.getOrderedListOfEvents()) {
+				for (Event e : application.getOrderedListOfEvents()) {
 					event = createEvent(e);
 					if (event != null) {
 						trace.add(event);
