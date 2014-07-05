@@ -1,6 +1,8 @@
 package br.ufrj.cos.prisma.miner.popup.actions;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import minerv1.Commit;
 import minerv1.Event;
@@ -15,20 +17,22 @@ import br.ufrj.cos.prisma.helpers.LogHelper;
 
 public class MineRepositoriesActionv2 extends BaseExtractionAction {
 	boolean wait;
+	Set<String> discoveredEvents;
 
 	public MineRepositoriesActionv2() {
 		super();
 		wait = true;
+		discoveredEvents = new HashSet<String>();
 	}
 
 	@Override
 	public void run(IAction action) {
 		super.run(action);
 		mineReuseActionsFromRepositories();
-		save();
 	}
 
 	private void mineReuseActionsFromRepositories() {
+
 		for (FrameworkApplication app : process.getApplications()) {
 			if (!app.isMine()) {
 				continue;
@@ -44,26 +48,38 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 			FrameworkMiningHelper miningHelper = new FrameworkMiningHelper(
 					gitHelper.getRepoFile().getAbsolutePath(), this.process);
 
+			List<Event> reuseActionsEvents = null;
+			Commit currentCommit = null;
 			for (int currentIndex = 0; currentIndex < commits.size(); currentIndex++) {
 				LogHelper.log(String.format("Commit %d out of %d",
 						currentIndex + 1, commits.size()));
 
 				String currentCommitId = commits.get(currentIndex);
-				this.currentCommit = createCommit(currentCommitId);
-
+				System.out.println("Commit: " + currentCommitId);
 				cloneCurrentCommit(gitHelper, currentCommitId);
+				currentCommit = createCommit(currentCommitId);
+				reuseActionsEvents = miningHelper
+						.extractApplicationReuseActions();
 
-				List<Event> reuseActionsEvents = miningHelper.extractApplicationReuseActions();
-				this.currentCommit.getEvents().clear();
-				this.currentCommit.getEvents().addAll(reuseActionsEvents);
-				app.getCommits().add(this.currentCommit);
-				
+				for (Event e : reuseActionsEvents) {
+					if (!this.discoveredEvents.contains(e.getId())) {
+						addEventToCommit(e, currentCommit);
+						System.out.println("Added: " + e.getId());
+						this.discoveredEvents.add(e.getId());
+					} else {
+						System.out.println("Event not added: " + e.getId());
+					}
+				}
+
+				app.getCommits().add(currentCommit);
+
 				gitHelper.deleteRepo();
+
+				save();
 			}
 
 			gitHelper.deleteParentFolder();
-			LogHelper.log("Finishing FrameworkApplication "
-					+ app.getName());
+			LogHelper.log("Finishing FrameworkApplication " + app.getName());
 		}
 	}
 
@@ -78,6 +94,25 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 		commit.setName(id);
 		commit.setId(id);
 		return commit;
+	}
+
+	private void addEventToCommit(Event currentEvent, Commit currentCommit) {
+		int position = -1;
+
+		for (int i = 0; i < currentCommit.getEvents().size(); i++) {
+			Event e = currentCommit.getEvents().get(i);
+			if (e.getActivity().getName()
+					.equals(currentEvent.getActivity().getName())) {
+				position = i;
+				i = currentCommit.getEvents().size();
+			}
+		}
+
+		if (position >= 0) {
+			currentCommit.getEvents().add(position, currentEvent);
+		} else {
+			currentCommit.getEvents().add(currentEvent);
+		}
 	}
 
 }
