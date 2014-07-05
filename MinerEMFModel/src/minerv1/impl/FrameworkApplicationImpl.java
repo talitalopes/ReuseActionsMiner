@@ -4,9 +4,7 @@ package minerv1.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import minerv1.Commit;
 import minerv1.Event;
@@ -34,7 +32,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  *   <li>{@link minerv1.impl.FrameworkApplicationImpl#getRepositoryUrl <em>Repository Url</em>}</li>
  *   <li>{@link minerv1.impl.FrameworkApplicationImpl#getCommits <em>Commits</em>}</li>
  *   <li>{@link minerv1.impl.FrameworkApplicationImpl#isMine <em>Mine</em>}</li>
- *   <li>{@link minerv1.impl.FrameworkApplicationImpl#getEventsOrder <em>Events Order</em>}</li>
  * </ul>
  * </p>
  *
@@ -112,23 +109,12 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 	protected boolean mine = MINE_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getEventsOrder() <em>Events Order</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getEventsOrder()
-	 * @generated
-	 * @ordered
-	 */
-	protected Map<String, Integer> eventsOrder;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected FrameworkApplicationImpl() {
 		super();
-		this.eventsOrder = new HashMap<String, Integer>();
 	}
 
 	/**
@@ -221,27 +207,6 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Map<String, Integer> getEventsOrder() {
-		return eventsOrder;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setEventsOrder(Map<String, Integer> newEventsOrder) {
-		Map<String, Integer> oldEventsOrder = eventsOrder;
-		eventsOrder = newEventsOrder;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Minerv1Package.FRAMEWORK_APPLICATION__EVENTS_ORDER, oldEventsOrder, eventsOrder));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -267,8 +232,6 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 				return getCommits();
 			case Minerv1Package.FRAMEWORK_APPLICATION__MINE:
 				return isMine();
-			case Minerv1Package.FRAMEWORK_APPLICATION__EVENTS_ORDER:
-				return getEventsOrder();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -295,9 +258,6 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 			case Minerv1Package.FRAMEWORK_APPLICATION__MINE:
 				setMine((Boolean)newValue);
 				return;
-			case Minerv1Package.FRAMEWORK_APPLICATION__EVENTS_ORDER:
-				setEventsOrder((Map<String, Integer>)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -322,9 +282,6 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 			case Minerv1Package.FRAMEWORK_APPLICATION__MINE:
 				setMine(MINE_EDEFAULT);
 				return;
-			case Minerv1Package.FRAMEWORK_APPLICATION__EVENTS_ORDER:
-				setEventsOrder((Map<String, Integer>)null);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -345,8 +302,6 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 				return commits != null && !commits.isEmpty();
 			case Minerv1Package.FRAMEWORK_APPLICATION__MINE:
 				return mine != MINE_EDEFAULT;
-			case Minerv1Package.FRAMEWORK_APPLICATION__EVENTS_ORDER:
-				return eventsOrder != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -367,8 +322,6 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 		result.append(repositoryUrl);
 		result.append(", mine: ");
 		result.append(mine);
-		result.append(", eventsOrder: ");
-		result.append(eventsOrder);
 		result.append(')');
 		return result.toString();
 	}

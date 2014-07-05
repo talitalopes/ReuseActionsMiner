@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link minerv1.impl.ActivityImpl#getId <em>Id</em>}</li>
  *   <li>{@link minerv1.impl.ActivityImpl#getName <em>Name</em>}</li>
  *   <li>{@link minerv1.impl.ActivityImpl#getType <em>Type</em>}</li>
+ *   <li>{@link minerv1.impl.ActivityImpl#getPackageName <em>Package Name</em>}</li>
  * </ul>
  * </p>
  *
@@ -88,6 +89,26 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 	 * @ordered
 	 */
 	protected ActivityType type = TYPE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getPackageName() <em>Package Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPackageName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String PACKAGE_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getPackageName() <em>Package Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPackageName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String packageName = PACKAGE_NAME_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -176,6 +197,27 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getPackageName() {
+		return packageName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setPackageName(String newPackageName) {
+		String oldPackageName = packageName;
+		packageName = newPackageName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Minerv1Package.ACTIVITY__PACKAGE_NAME, oldPackageName, packageName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -185,6 +227,8 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 				return getName();
 			case Minerv1Package.ACTIVITY__TYPE:
 				return getType();
+			case Minerv1Package.ACTIVITY__PACKAGE_NAME:
+				return getPackageName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -205,6 +249,9 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 				return;
 			case Minerv1Package.ACTIVITY__TYPE:
 				setType((ActivityType)newValue);
+				return;
+			case Minerv1Package.ACTIVITY__PACKAGE_NAME:
+				setPackageName((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -227,6 +274,9 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 			case Minerv1Package.ACTIVITY__TYPE:
 				setType(TYPE_EDEFAULT);
 				return;
+			case Minerv1Package.ACTIVITY__PACKAGE_NAME:
+				setPackageName(PACKAGE_NAME_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -245,6 +295,8 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case Minerv1Package.ACTIVITY__TYPE:
 				return type != TYPE_EDEFAULT;
+			case Minerv1Package.ACTIVITY__PACKAGE_NAME:
+				return PACKAGE_NAME_EDEFAULT == null ? packageName != null : !PACKAGE_NAME_EDEFAULT.equals(packageName);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -265,6 +317,8 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 		result.append(name);
 		result.append(", type: ");
 		result.append(type);
+		result.append(", packageName: ");
+		result.append(packageName);
 		result.append(')');
 		return result.toString();
 	}

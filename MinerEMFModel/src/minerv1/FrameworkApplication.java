@@ -4,7 +4,6 @@ package minerv1;
 
 import java.util.List;
 
-import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
@@ -20,7 +19,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link minerv1.FrameworkApplication#getRepositoryUrl <em>Repository Url</em>}</li>
  *   <li>{@link minerv1.FrameworkApplication#getCommits <em>Commits</em>}</li>
  *   <li>{@link minerv1.FrameworkApplication#isMine <em>Mine</em>}</li>
- *   <li>{@link minerv1.FrameworkApplication#getEventsOrder <em>Events Order</em>}</li>
  * </ul>
  * </p>
  *
@@ -123,32 +121,6 @@ public interface FrameworkApplication extends EObject {
 	 */
 	void setMine(boolean value);
 	
-	/**
-	 * Returns the value of the '<em><b>Events Order</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Events Order</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Events Order</em>' attribute.
-	 * @see #setEventsOrder(Map)
-	 * @see minerv1.Minerv1Package#getFrameworkApplication_EventsOrder()
-	 * @model transient="true"
-	 * @generated
-	 */
-	Map<String, Integer> getEventsOrder();
-
-	/**
-	 * Sets the value of the '{@link minerv1.FrameworkApplication#getEventsOrder <em>Events Order</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Events Order</em>' attribute.
-	 * @see #getEventsOrder()
-	 * @generated
-	 */
-	void setEventsOrder(Map<String, Integer> value);
-
 	List<Event> getOrderedListOfEvents();
 
 } // FrameworkApplication

@@ -18,4 +18,6 @@ public interface ActivityValidator {
 	boolean validateId(String value);
 	boolean validateName(String value);
 	boolean validateType(ActivityType value);
+
+	boolean validatePackageName(String value);
 }

@@ -20,7 +20,6 @@ Package minerv1 <http://prisma.cos.ufrj.br/processreuseminerv1>
     Attribute repositoryUrl : EString
     Reference commits : Commit<<0..*>>
     Attribute mine : EBoolean
-    Attribute eventsOrder : EMap
 
   Class Commit
     Attribute id : EString
@@ -31,6 +30,7 @@ Package minerv1 <http://prisma.cos.ufrj.br/processreuseminerv1>
     Attribute id : EString
     Attribute name : EString
     Attribute type : ActivityType
+    Attribute packageName : EString
 
   Class Event
     Reference Activity : Activity

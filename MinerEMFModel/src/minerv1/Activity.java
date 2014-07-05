@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link minerv1.Activity#getId <em>Id</em>}</li>
  *   <li>{@link minerv1.Activity#getName <em>Name</em>}</li>
  *   <li>{@link minerv1.Activity#getType <em>Type</em>}</li>
+ *   <li>{@link minerv1.Activity#getPackageName <em>Package Name</em>}</li>
  * </ul>
  * </p>
  *
@@ -103,5 +104,31 @@ public interface Activity extends EObject {
 	 * @generated
 	 */
 	void setType(ActivityType value);
+
+	/**
+	 * Returns the value of the '<em><b>Package Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Package Name</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Package Name</em>' attribute.
+	 * @see #setPackageName(String)
+	 * @see minerv1.Minerv1Package#getActivity_PackageName()
+	 * @model transient="true"
+	 * @generated
+	 */
+	String getPackageName();
+
+	/**
+	 * Sets the value of the '{@link minerv1.Activity#getPackageName <em>Package Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Package Name</em>' attribute.
+	 * @see #getPackageName()
+	 * @generated
+	 */
+	void setPackageName(String value);
 
 } // Activity

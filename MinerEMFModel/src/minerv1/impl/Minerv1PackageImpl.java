@@ -243,15 +243,6 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getFrameworkApplication_EventsOrder() {
-		return (EAttribute)frameworkApplicationEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getCommit() {
 		return commitEClass;
 	}
@@ -317,6 +308,15 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 	 */
 	public EAttribute getActivity_Type() {
 		return (EAttribute)activityEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getActivity_PackageName() {
+		return (EAttribute)activityEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -414,7 +414,6 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 		createEAttribute(frameworkApplicationEClass, FRAMEWORK_APPLICATION__REPOSITORY_URL);
 		createEReference(frameworkApplicationEClass, FRAMEWORK_APPLICATION__COMMITS);
 		createEAttribute(frameworkApplicationEClass, FRAMEWORK_APPLICATION__MINE);
-		createEAttribute(frameworkApplicationEClass, FRAMEWORK_APPLICATION__EVENTS_ORDER);
 
 		commitEClass = createEClass(COMMIT);
 		createEAttribute(commitEClass, COMMIT__ID);
@@ -425,6 +424,7 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 		createEAttribute(activityEClass, ACTIVITY__ID);
 		createEAttribute(activityEClass, ACTIVITY__NAME);
 		createEAttribute(activityEClass, ACTIVITY__TYPE);
+		createEAttribute(activityEClass, ACTIVITY__PACKAGE_NAME);
 
 		eventEClass = createEClass(EVENT);
 		createEReference(eventEClass, EVENT__ACTIVITY);
@@ -484,12 +484,6 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 		initEAttribute(getFrameworkApplication_RepositoryUrl(), ecorePackage.getEString(), "repositoryUrl", null, 0, 1, FrameworkApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFrameworkApplication_Commits(), this.getCommit(), null, "commits", null, 0, -1, FrameworkApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFrameworkApplication_Mine(), ecorePackage.getEBoolean(), "mine", null, 0, 1, FrameworkApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		g1 = createEGenericType(ecorePackage.getEMap());
-		g2 = createEGenericType();
-		g1.getETypeArguments().add(g2);
-		g2 = createEGenericType();
-		g1.getETypeArguments().add(g2);
-		initEAttribute(getFrameworkApplication_EventsOrder(), g1, "eventsOrder", null, 0, 1, FrameworkApplication.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(commitEClass, Commit.class, "Commit", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCommit_Id(), ecorePackage.getEString(), "id", null, 0, 1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -500,6 +494,7 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 		initEAttribute(getActivity_Id(), ecorePackage.getEString(), "id", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getActivity_Name(), ecorePackage.getEString(), "name", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getActivity_Type(), this.getActivityType(), "type", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getActivity_PackageName(), ecorePackage.getEString(), "packageName", null, 0, 1, Activity.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eventEClass, Event.class, "Event", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getEvent_Activity(), this.getActivity(), null, "Activity", null, 0, 1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
