@@ -243,6 +243,15 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getFrameworkApplication_EventsOrder() {
+		return (EAttribute)frameworkApplicationEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getCommit() {
 		return commitEClass;
 	}
@@ -351,6 +360,15 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getEvent_Id() {
+		return (EAttribute)eventEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getActivityType() {
 		return activityTypeEEnum;
 	}
@@ -396,6 +414,7 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 		createEAttribute(frameworkApplicationEClass, FRAMEWORK_APPLICATION__REPOSITORY_URL);
 		createEReference(frameworkApplicationEClass, FRAMEWORK_APPLICATION__COMMITS);
 		createEAttribute(frameworkApplicationEClass, FRAMEWORK_APPLICATION__MINE);
+		createEAttribute(frameworkApplicationEClass, FRAMEWORK_APPLICATION__EVENTS_ORDER);
 
 		commitEClass = createEClass(COMMIT);
 		createEAttribute(commitEClass, COMMIT__ID);
@@ -411,6 +430,7 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 		createEReference(eventEClass, EVENT__ACTIVITY);
 		createEAttribute(eventEClass, EVENT__DATE);
 		createEAttribute(eventEClass, EVENT__LIFECYCLE_STATUS);
+		createEAttribute(eventEClass, EVENT__ID);
 
 		// Create enums
 		activityTypeEEnum = createEEnum(ACTIVITY_TYPE);
@@ -464,6 +484,12 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 		initEAttribute(getFrameworkApplication_RepositoryUrl(), ecorePackage.getEString(), "repositoryUrl", null, 0, 1, FrameworkApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFrameworkApplication_Commits(), this.getCommit(), null, "commits", null, 0, -1, FrameworkApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFrameworkApplication_Mine(), ecorePackage.getEBoolean(), "mine", null, 0, 1, FrameworkApplication.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(ecorePackage.getEMap());
+		g2 = createEGenericType();
+		g1.getETypeArguments().add(g2);
+		g2 = createEGenericType();
+		g1.getETypeArguments().add(g2);
+		initEAttribute(getFrameworkApplication_EventsOrder(), g1, "eventsOrder", null, 0, 1, FrameworkApplication.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(commitEClass, Commit.class, "Commit", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCommit_Id(), ecorePackage.getEString(), "id", null, 0, 1, Commit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -479,6 +505,7 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 		initEReference(getEvent_Activity(), this.getActivity(), null, "Activity", null, 0, 1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEvent_Date(), ecorePackage.getEDate(), "date", null, 0, 1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEvent_LifecycleStatus(), ecorePackage.getEString(), "lifecycleStatus", null, 0, 1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getEvent_Id(), ecorePackage.getEString(), "id", null, 0, 1, Event.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(activityTypeEEnum, ActivityType.class, "ActivityType");

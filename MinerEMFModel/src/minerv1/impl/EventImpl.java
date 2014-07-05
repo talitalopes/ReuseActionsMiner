@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link minerv1.impl.EventImpl#getActivity <em>Activity</em>}</li>
  *   <li>{@link minerv1.impl.EventImpl#getDate <em>Date</em>}</li>
  *   <li>{@link minerv1.impl.EventImpl#getLifecycleStatus <em>Lifecycle Status</em>}</li>
+ *   <li>{@link minerv1.impl.EventImpl#getId <em>Id</em>}</li>
  * </ul>
  * </p>
  *
@@ -81,6 +82,26 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 	 * @ordered
 	 */
 	protected String lifecycleStatus = LIFECYCLE_STATUS_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String ID_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getId() <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getId()
+	 * @generated
+	 * @ordered
+	 */
+	protected String id = ID_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -186,6 +207,27 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setId(String newId) {
+		String oldId = id;
+		id = newId;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Minerv1Package.EVENT__ID, oldId, id));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -196,6 +238,8 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 				return getDate();
 			case Minerv1Package.EVENT__LIFECYCLE_STATUS:
 				return getLifecycleStatus();
+			case Minerv1Package.EVENT__ID:
+				return getId();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -205,6 +249,7 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -216,6 +261,9 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 				return;
 			case Minerv1Package.EVENT__LIFECYCLE_STATUS:
 				setLifecycleStatus((String)newValue);
+				return;
+			case Minerv1Package.EVENT__ID:
+				setId((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -238,6 +286,9 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 			case Minerv1Package.EVENT__LIFECYCLE_STATUS:
 				setLifecycleStatus(LIFECYCLE_STATUS_EDEFAULT);
 				return;
+			case Minerv1Package.EVENT__ID:
+				setId(ID_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -256,6 +307,8 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 				return DATE_EDEFAULT == null ? date != null : !DATE_EDEFAULT.equals(date);
 			case Minerv1Package.EVENT__LIFECYCLE_STATUS:
 				return LIFECYCLE_STATUS_EDEFAULT == null ? lifecycleStatus != null : !LIFECYCLE_STATUS_EDEFAULT.equals(lifecycleStatus);
+			case Minerv1Package.EVENT__ID:
+				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -274,6 +327,8 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 		result.append(date);
 		result.append(", lifecycleStatus: ");
 		result.append(lifecycleStatus);
+		result.append(", id: ");
+		result.append(id);
 		result.append(')');
 		return result.toString();
 	}

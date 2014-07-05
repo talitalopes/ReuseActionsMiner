@@ -186,13 +186,22 @@ public interface Minerv1Package extends EPackage {
 	int FRAMEWORK_APPLICATION__MINE = 3;
 
 	/**
+	 * The feature id for the '<em><b>Events Order</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FRAMEWORK_APPLICATION__EVENTS_ORDER = 4;
+
+	/**
 	 * The number of structural features of the '<em>Framework Application</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FRAMEWORK_APPLICATION_FEATURE_COUNT = 4;
+	int FRAMEWORK_APPLICATION_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Framework Application</em>' class.
@@ -353,13 +362,22 @@ public interface Minerv1Package extends EPackage {
 	int EVENT__LIFECYCLE_STATUS = 2;
 
 	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT__ID = 3;
+
+	/**
 	 * The number of structural features of the '<em>Event</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EVENT_FEATURE_COUNT = 3;
+	int EVENT_FEATURE_COUNT = 4;
 
 	/**
 	 * The number of operations of the '<em>Event</em>' class.
@@ -512,6 +530,17 @@ public interface Minerv1Package extends EPackage {
 	EAttribute getFrameworkApplication_Mine();
 
 	/**
+	 * Returns the meta object for the attribute '{@link minerv1.FrameworkApplication#getEventsOrder <em>Events Order</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Events Order</em>'.
+	 * @see minerv1.FrameworkApplication#getEventsOrder()
+	 * @see #getFrameworkApplication()
+	 * @generated
+	 */
+	EAttribute getFrameworkApplication_EventsOrder();
+
+	/**
 	 * Returns the meta object for class '{@link minerv1.Commit <em>Commit</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -639,6 +668,17 @@ public interface Minerv1Package extends EPackage {
 	 * @generated
 	 */
 	EAttribute getEvent_LifecycleStatus();
+
+	/**
+	 * Returns the meta object for the attribute '{@link minerv1.Event#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see minerv1.Event#getId()
+	 * @see #getEvent()
+	 * @generated
+	 */
+	EAttribute getEvent_Id();
 
 	/**
 	 * Returns the meta object for enum '{@link minerv1.ActivityType <em>Activity Type</em>}'.
@@ -774,6 +814,14 @@ public interface Minerv1Package extends EPackage {
 		EAttribute FRAMEWORK_APPLICATION__MINE = eINSTANCE.getFrameworkApplication_Mine();
 
 		/**
+		 * The meta object literal for the '<em><b>Events Order</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FRAMEWORK_APPLICATION__EVENTS_ORDER = eINSTANCE.getFrameworkApplication_EventsOrder();
+
+		/**
 		 * The meta object literal for the '{@link minerv1.impl.CommitImpl <em>Commit</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -874,6 +922,14 @@ public interface Minerv1Package extends EPackage {
 		 * @generated
 		 */
 		EAttribute EVENT__LIFECYCLE_STATUS = eINSTANCE.getEvent_LifecycleStatus();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EVENT__ID = eINSTANCE.getEvent_Id();
 
 		/**
 		 * The meta object literal for the '{@link minerv1.ActivityType <em>Activity Type</em>}' enum.

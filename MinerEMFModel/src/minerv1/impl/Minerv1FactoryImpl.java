@@ -2,15 +2,22 @@
  */
 package minerv1.impl;
 
-import minerv1.*;
+import java.util.List;
+
+import minerv1.Activity;
+import minerv1.ActivityType;
+import minerv1.Commit;
+import minerv1.Event;
+import minerv1.FrameworkApplication;
+import minerv1.FrameworkProcess;
+import minerv1.Minerv1Factory;
+import minerv1.Minerv1Package;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 /**
@@ -124,6 +131,11 @@ public class Minerv1FactoryImpl extends EFactoryImpl implements Minerv1Factory {
 	 */
 	public Commit createCommit() {
 		CommitImpl commit = new CommitImpl();
+		return commit;
+	}
+
+	public Commit createCommitWithEvents(List<Event> events) {
+		CommitImpl commit = new CommitImpl(events);
 		return commit;
 	}
 

@@ -4,6 +4,7 @@
  */
 package minerv1.validation;
 
+import java.util.Map;
 import minerv1.Commit;
 import org.eclipse.emf.common.util.EList;
 
@@ -23,6 +24,8 @@ public interface FrameworkApplicationValidator {
 	boolean validateCommits(EList<Commit> value);
 
 	boolean validateMine(boolean value);
+
+	boolean validateEventsOrder(Map<?, ?> value);
 
 	boolean validateCommits(Commit value);
 }

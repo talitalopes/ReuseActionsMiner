@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link minerv1.Event#getActivity <em>Activity</em>}</li>
  *   <li>{@link minerv1.Event#getDate <em>Date</em>}</li>
  *   <li>{@link minerv1.Event#getLifecycleStatus <em>Lifecycle Status</em>}</li>
+ *   <li>{@link minerv1.Event#getId <em>Id</em>}</li>
  * </ul>
  * </p>
  *
@@ -102,5 +103,31 @@ public interface Event extends EObject {
 	 * @generated
 	 */
 	void setLifecycleStatus(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Id</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Id</em>' attribute.
+	 * @see #setId(String)
+	 * @see minerv1.Minerv1Package#getEvent_Id()
+	 * @model transient="true"
+	 * @generated
+	 */
+	String getId();
+
+	/**
+	 * Sets the value of the '{@link minerv1.Event#getId <em>Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Id</em>' attribute.
+	 * @see #getId()
+	 * @generated
+	 */
+	void setId(String value);
 
 } // Event

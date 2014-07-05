@@ -3,16 +3,16 @@
 package minerv1.impl;
 
 import java.util.Collection;
+import java.util.List;
+
 import minerv1.Commit;
 import minerv1.Event;
 import minerv1.Minerv1Package;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
@@ -92,6 +92,11 @@ public class CommitImpl extends MinimalEObjectImpl.Container implements Commit {
 	 */
 	protected CommitImpl() {
 		super();
+	}
+
+	protected CommitImpl(List<Event> events) {
+		super();
+		this.getEvents().addAll(events);
 	}
 
 	/**
@@ -270,4 +275,24 @@ public class CommitImpl extends MinimalEObjectImpl.Container implements Commit {
 		return result.toString();
 	}
 
+	public void addEvent(Event e) {
+		if (hasEvent(e.getId())) {
+			return;
+		}
+		this.getEvents().add(e);
+	}
+	
+	public boolean hasEvent(String eventId) {
+		if (this.events == null) {
+			return false; 
+		}
+		
+		for (Event e: this.events) {
+			if (e.getId().equals(eventId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 } //CommitImpl

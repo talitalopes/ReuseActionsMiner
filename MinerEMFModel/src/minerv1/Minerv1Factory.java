@@ -2,6 +2,8 @@
  */
 package minerv1;
 
+import java.util.List;
+
 import org.eclipse.emf.ecore.EFactory;
 
 /**
@@ -47,7 +49,9 @@ public interface Minerv1Factory extends EFactory {
 	 * @generated
 	 */
 	Commit createCommit();
-
+	
+	Commit createCommitWithEvents(List<Event> events);
+	
 	/**
 	 * Returns a new object of class '<em>Activity</em>'.
 	 * <!-- begin-user-doc -->

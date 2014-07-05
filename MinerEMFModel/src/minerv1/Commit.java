@@ -92,4 +92,8 @@ public interface Commit extends EObject {
 	 */
 	EList<Event> getEvents();
 
+	public void addEvent(Event e);
+	
+	public boolean hasEvent(String eventId);
+	
 } // Commit

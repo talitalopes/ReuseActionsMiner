@@ -65,6 +65,7 @@ public class FrameworkApplicationItemProvider
 			addNamePropertyDescriptor(object);
 			addRepositoryUrlPropertyDescriptor(object);
 			addMinePropertyDescriptor(object);
+			addEventsOrderPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -131,6 +132,28 @@ public class FrameworkApplicationItemProvider
 				 false,
 				 false,
 				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Events Order feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addEventsOrderPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_FrameworkApplication_eventsOrder_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_FrameworkApplication_eventsOrder_feature", "_UI_FrameworkApplication_type"),
+				 Minerv1Package.Literals.FRAMEWORK_APPLICATION__EVENTS_ORDER,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -205,6 +228,7 @@ public class FrameworkApplicationItemProvider
 			case Minerv1Package.FRAMEWORK_APPLICATION__NAME:
 			case Minerv1Package.FRAMEWORK_APPLICATION__REPOSITORY_URL:
 			case Minerv1Package.FRAMEWORK_APPLICATION__MINE:
+			case Minerv1Package.FRAMEWORK_APPLICATION__EVENTS_ORDER:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case Minerv1Package.FRAMEWORK_APPLICATION__COMMITS:

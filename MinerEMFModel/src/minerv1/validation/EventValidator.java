@@ -6,6 +6,7 @@ package minerv1.validation;
 
 import java.util.Date;
 
+import java.util.Map;
 import minerv1.Activity;
 
 /**
@@ -20,4 +21,8 @@ public interface EventValidator {
 	boolean validateActivity(Activity value);
 	boolean validateDate(Date value);
 	boolean validateLifecycleStatus(String value);
+
+	boolean validateEventsOrder(Map<?, ?> value);
+
+	boolean validateId(String value);
 }
