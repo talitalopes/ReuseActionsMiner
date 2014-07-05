@@ -20,7 +20,6 @@ import minerv1.ActivityType;
 import minerv1.Event;
 import minerv1.FrameworkProcess;
 import minerv1.Minerv1Factory;
-import br.ufrj.cos.prisma.model.FrameworkMethod;
 
 public class FrameworkMiningHelper {
 
@@ -30,6 +29,7 @@ public class FrameworkMiningHelper {
 
 	String frameworkPath;
 	FrameworkProcess process;
+	int methodsCount;
 
 	public FrameworkMiningHelper(String frameworkPath) {
 		this.frameworkPath = frameworkPath;
@@ -48,6 +48,7 @@ public class FrameworkMiningHelper {
 	public List<Activity> extractFrameworkReuseActions() {
 		Filewalker walker = new Filewalker();
 		walker.walk(this.frameworkPath, MiningType.FRAMEWORK);
+		System.out.println("Methods count: " + walker.getMethods().size());
 		return walker.getActivities();
 	}
 
@@ -61,16 +62,11 @@ public class FrameworkMiningHelper {
 		Filewalker walker = new Filewalker(process);
 		walker.walk(this.frameworkPath, MiningType.APPLICATION);
 
-		List<Event> events = new ArrayList<Event>();
-		for (Activity classActivity : walker.getActivities()) {
-			LogHelper.log("Activity: " + classActivity.getName());
-			Event e = Minerv1Factory.eINSTANCE.createEvent();
-			e.setActivity(classActivity);
-			events.add(e);
+		for (Event e: walker.getEvents()) {
+			System.out.println("Event: " + e.getId());
 		}
-
-		LogHelper.log("Finish mining reuse actions from application");
-		return events;
+		
+		return walker.getEvents();
 	}
 
 	/**
@@ -78,18 +74,18 @@ public class FrameworkMiningHelper {
 	 */
 	@SuppressWarnings("rawtypes")
 	protected static class MethodVisitor extends VoidVisitorAdapter {
-		Set<FrameworkMethod> methods;
+		Set<MethodDeclaration> methods;
 
 		public MethodVisitor() {
-			methods = new HashSet<FrameworkMethod>();
+			methods = new HashSet<MethodDeclaration>();
 		}
 
 		@Override
 		public void visit(MethodDeclaration n, Object arg) {
-			methods.add(new FrameworkMethod(n));
+			methods.add(n);
 		}
 
-		public Set<FrameworkMethod> getAllMethods() {
+		public Set<MethodDeclaration> getAllMethods() {
 			return methods;
 		}
 	}
@@ -112,15 +108,23 @@ public class FrameworkMiningHelper {
 	}
 
 	public static class Filewalker {
+		List<MethodDeclaration> methods;
 		List<Activity> activities;
+		List<Event> events;
 		FrameworkProcess process;
 
 		public Filewalker() {
 			this.activities = new ArrayList<Activity>();
+			this.methods = new ArrayList<MethodDeclaration>();
+		}
+
+		public List<Event> getEvents() {
+			return this.events;
 		}
 
 		public Filewalker(FrameworkProcess process) {
-			this.activities = new ArrayList<Activity>();
+			this.events = new ArrayList<Event>();
+			this.methods = new ArrayList<MethodDeclaration>();
 			this.process = process;
 		}
 
@@ -128,6 +132,10 @@ public class FrameworkMiningHelper {
 			return this.activities;
 		}
 
+		public List<MethodDeclaration> getMethods() {
+			return this.methods;
+		}
+		
 		public void walk(String path, MiningType type) {
 			File root = new File(path);
 			File[] list = root.listFiles();
@@ -173,8 +181,13 @@ public class FrameworkMiningHelper {
 
 			for (ClassOrInterfaceType type : classExtensions) {
 				if (process.hasActivity(type.getName())) {
-					this.activities.add(process.getActivitiesMap().get(
-							type.getName()));
+					String eventId = String.format("%s|%s", classDeclaration.getName(), type.getName()); 
+					
+					Event e = Minerv1Factory.eINSTANCE.createEvent();
+					e.setActivity(process.getActivitiesMap().get(type.getName()));
+					e.setId(eventId);
+					events.add(e);
+
 				}
 			}
 
@@ -196,6 +209,12 @@ public class FrameworkMiningHelper {
 			activity.setName(classVisitor.getClassOrInterfaceName().getName());
 			this.activities.add(activity);
 
+			MethodVisitor methodVisitor = getMethodVisitor(filePath);
+			if (methodVisitor == null) {
+				return;
+			}
+			this.methods.addAll(methodVisitor.getAllMethods());
+					
 			// FrameworkClass fwClass = new FrameworkClass(
 			// classVisitor.getClassOrInterfaceName());
 			// MethodVisitor methodVisitor = new MethodVisitor();
@@ -230,6 +249,33 @@ public class FrameworkMiningHelper {
 			ClassVisitor classVisitor = new ClassVisitor();
 			classVisitor.visit(cu, null);
 			return classVisitor;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public MethodVisitor getMethodVisitor(String filePath) throws Exception {
+			if (!filePath.contains(".java")) {
+				return null;
+			}
+
+			FileInputStream in = new FileInputStream(filePath);
+			CompilationUnit cu = null;
+			try {
+				// parse the file
+				cu = JavaParser.parse(in);
+			} catch (ParseException e) {
+				System.out.println("ERROR: couldn't parse file: " + filePath);
+			} finally {
+				in.close();
+			}
+
+			if (cu == null) {
+				return null;
+			}
+			
+			// Visit class
+			MethodVisitor methodVisitor = new MethodVisitor();
+			methodVisitor.visit(cu, null);
+			return methodVisitor;
 		}
 	}
 
