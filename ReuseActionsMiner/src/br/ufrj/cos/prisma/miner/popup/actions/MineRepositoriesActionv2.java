@@ -78,6 +78,7 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 				save();
 			}
 
+			app.setMine(false);
 			gitHelper.deleteParentFolder();
 			LogHelper.log("Finishing FrameworkApplication " + app.getName());
 		}
