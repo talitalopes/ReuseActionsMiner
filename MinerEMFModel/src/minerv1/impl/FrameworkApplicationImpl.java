@@ -334,12 +334,12 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 			for (Event e1: commit.getEvents()) {
 				int position = -1;
 				
-				for (int i = 0; i < events.size(); i++) {
+				for (int i = events.size() - 1; i >= 0; i--) {
 					String existingActivity = events.get(i).getActivity().getName();
 					
 					if (e1.getActivity().getName().equals(existingActivity)) {
 						position = i;
-						i = events.size();
+						i = -1;
 					}
 					
 				}
@@ -350,7 +350,6 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 					events.add(position, e1);
 				}
 			}
-//			events.addAll(commit.getEvents());
 		}
 		
 		return events;

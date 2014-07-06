@@ -3,6 +3,7 @@ package br.ufrj.cos.prisma.helpers;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
+import japa.parser.ast.PackageDeclaration;
 import japa.parser.ast.body.ClassOrInterfaceDeclaration;
 import japa.parser.ast.body.MethodDeclaration;
 import japa.parser.ast.type.ClassOrInterfaceType;
@@ -62,10 +63,10 @@ public class FrameworkMiningHelper {
 		Filewalker walker = new Filewalker(process);
 		walker.walk(this.frameworkPath, MiningType.APPLICATION);
 
-		for (Event e: walker.getEvents()) {
+		for (Event e : walker.getEvents()) {
 			System.out.println("Event: " + e.getId());
 		}
-		
+
 		return walker.getEvents();
 	}
 
@@ -96,6 +97,7 @@ public class FrameworkMiningHelper {
 	@SuppressWarnings("rawtypes")
 	private static class ClassVisitor extends VoidVisitorAdapter {
 		ClassOrInterfaceDeclaration classOrInterfaceDeclaration;
+		PackageDeclaration packageDeclaration;
 
 		@Override
 		public void visit(ClassOrInterfaceDeclaration c, Object arg) {
@@ -105,6 +107,15 @@ public class FrameworkMiningHelper {
 		public ClassOrInterfaceDeclaration getClassOrInterfaceName() {
 			return this.classOrInterfaceDeclaration;
 		}
+
+		public void setPackage(PackageDeclaration _package) {
+			this.packageDeclaration = _package;
+		}
+
+		public String getPackage() {
+			return this.packageDeclaration.getName().toString();
+		}
+
 	}
 
 	public static class Filewalker {
@@ -135,7 +146,7 @@ public class FrameworkMiningHelper {
 		public List<MethodDeclaration> getMethods() {
 			return this.methods;
 		}
-		
+
 		public void walk(String path, MiningType type) {
 			File root = new File(path);
 			File[] list = root.listFiles();
@@ -173,6 +184,10 @@ public class FrameworkMiningHelper {
 
 			ClassOrInterfaceDeclaration classDeclaration = classVisitor
 					.getClassOrInterfaceName();
+			if (classDeclaration == null) {
+				return;
+			}
+			
 			List<ClassOrInterfaceType> classExtensions = classDeclaration
 					.getExtends();
 			if (classExtensions == null) {
@@ -180,11 +195,17 @@ public class FrameworkMiningHelper {
 			}
 
 			for (ClassOrInterfaceType type : classExtensions) {
+
 				if (process.hasActivity(type.getName())) {
-					String eventId = String.format("%s|%s", classDeclaration.getName(), type.getName()); 
-					
+					String eventId = String.format("%s|%s",
+							classDeclaration.getName(), type.getName());
+
 					Event e = Minerv1Factory.eINSTANCE.createEvent();
-					e.setActivity(process.getActivitiesMap().get(type.getName()));
+					int index = process.getActivitiesMap()
+							.get(type.getName());
+					
+					e.setActivity(process.getActivities().get(index));
+					System.out.println("Event activity: " + process.getActivities().get(index));
 					e.setId(eventId);
 					events.add(e);
 
@@ -199,14 +220,16 @@ public class FrameworkMiningHelper {
 			if (classVisitor == null) {
 				return;
 			}
-			// classVisitor.visit(cu, null);
 
 			// Add class to framework
 			Activity activity = (Activity) Minerv1Factory.eINSTANCE
 					.createActivity();
+
 			activity.setId(classVisitor.getClassOrInterfaceName().getName());
 			activity.setType(ActivityType.CLASS_EXTENSION);
-			activity.setName(classVisitor.getClassOrInterfaceName().getName());
+			String activityName = classVisitor.getClassOrInterfaceName().getName();
+			activity.setName(activityName);
+			activity.setPackageName(classVisitor.getPackage());
 			this.activities.add(activity);
 
 			MethodVisitor methodVisitor = getMethodVisitor(filePath);
@@ -214,7 +237,7 @@ public class FrameworkMiningHelper {
 				return;
 			}
 			this.methods.addAll(methodVisitor.getAllMethods());
-					
+
 			// FrameworkClass fwClass = new FrameworkClass(
 			// classVisitor.getClassOrInterfaceName());
 			// MethodVisitor methodVisitor = new MethodVisitor();
@@ -235,6 +258,7 @@ public class FrameworkMiningHelper {
 			try {
 				// parse the file
 				cu = JavaParser.parse(in);
+
 			} catch (ParseException e) {
 				System.out.println("ERROR: couldn't parse file: " + filePath);
 			} finally {
@@ -244,13 +268,14 @@ public class FrameworkMiningHelper {
 			if (cu == null) {
 				return null;
 			}
-			
+
 			// Visit class
 			ClassVisitor classVisitor = new ClassVisitor();
 			classVisitor.visit(cu, null);
+			classVisitor.setPackage(cu.getPackage());
 			return classVisitor;
 		}
-		
+
 		@SuppressWarnings("unchecked")
 		public MethodVisitor getMethodVisitor(String filePath) throws Exception {
 			if (!filePath.contains(".java")) {
@@ -271,7 +296,7 @@ public class FrameworkMiningHelper {
 			if (cu == null) {
 				return null;
 			}
-			
+
 			// Visit class
 			MethodVisitor methodVisitor = new MethodVisitor();
 			methodVisitor.visit(cu, null);

@@ -4,7 +4,6 @@ package br.ufrj.cos.prisma.model.miner.provider;
 
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import minerv1.Event;
@@ -64,6 +63,7 @@ public class EventItemProvider
 			addActivityPropertyDescriptor(object);
 			addDatePropertyDescriptor(object);
 			addLifecycleStatusPropertyDescriptor(object);
+			addIdPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -135,6 +135,28 @@ public class EventItemProvider
 	}
 
 	/**
+	 * This adds a property descriptor for the Id feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addIdPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Event_id_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Event_id_feature", "_UI_Event_type"),
+				 Minerv1Package.Literals.EVENT__ID,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This returns Event.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -153,8 +175,7 @@ public class EventItemProvider
 	 */
 	@Override
 	public String getText(Object object) {
-		Date labelValue = ((Event)object).getDate();
-		String label = labelValue == null ? null : labelValue.toString();
+		String label = ((Event)object).getId();
 		return label == null || label.length() == 0 ?
 			getString("_UI_Event_type") :
 			getString("_UI_Event_type") + " " + label;
@@ -174,6 +195,7 @@ public class EventItemProvider
 		switch (notification.getFeatureID(Event.class)) {
 			case Minerv1Package.EVENT__DATE:
 			case Minerv1Package.EVENT__LIFECYCLE_STATUS:
+			case Minerv1Package.EVENT__ID:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

@@ -63,6 +63,7 @@ public class ActivityItemProvider
 			addIdPropertyDescriptor(object);
 			addNamePropertyDescriptor(object);
 			addTypePropertyDescriptor(object);
+			addPackageNamePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -134,6 +135,28 @@ public class ActivityItemProvider
 	}
 
 	/**
+	 * This adds a property descriptor for the Package Name feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addPackageNamePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Activity_packageName_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Activity_packageName_feature", "_UI_Activity_type"),
+				 Minerv1Package.Literals.ACTIVITY__PACKAGE_NAME,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This returns Activity.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -173,6 +196,7 @@ public class ActivityItemProvider
 			case Minerv1Package.ACTIVITY__ID:
 			case Minerv1Package.ACTIVITY__NAME:
 			case Minerv1Package.ACTIVITY__TYPE:
+			case Minerv1Package.ACTIVITY__PACKAGE_NAME:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

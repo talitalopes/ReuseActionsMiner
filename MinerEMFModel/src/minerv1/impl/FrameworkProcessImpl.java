@@ -124,7 +124,7 @@ public class FrameworkProcessImpl extends MinimalEObjectImpl.Container
 	 * @generated
 	 * @ordered
 	 */
-	protected Map<String, Activity> activitiesMap;
+	protected Map<String, Integer> activitiesMap;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -132,7 +132,7 @@ public class FrameworkProcessImpl extends MinimalEObjectImpl.Container
 	 */
 	protected FrameworkProcessImpl() {
 		super();
-		this.activitiesMap = new HashMap<String, Activity>();
+		this.activitiesMap = new HashMap<String, Integer>();
 	}
 
 	/**
@@ -227,7 +227,7 @@ public class FrameworkProcessImpl extends MinimalEObjectImpl.Container
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Map<String, Activity> getActivitiesMap() {
+	public Map<String, Integer> getActivitiesMap() {
 		return activitiesMap;
 	}
 
@@ -235,8 +235,8 @@ public class FrameworkProcessImpl extends MinimalEObjectImpl.Container
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setActivitiesMap(Map<String, Activity> newActivitiesMap) {
-		Map<String, Activity> oldActivitiesMap = activitiesMap;
+	public void setActivitiesMap(Map<String, Integer> newActivitiesMap) {
+		Map<String, Integer> oldActivitiesMap = activitiesMap;
 		activitiesMap = newActivitiesMap;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, Minerv1Package.FRAMEWORK_PROCESS__ACTIVITIES_MAP, oldActivitiesMap, activitiesMap));
@@ -307,7 +307,7 @@ public class FrameworkProcessImpl extends MinimalEObjectImpl.Container
 				setKeyword((String)newValue);
 				return;
 			case Minerv1Package.FRAMEWORK_PROCESS__ACTIVITIES_MAP:
-				setActivitiesMap((Map<String, Activity>)newValue);
+				setActivitiesMap((Map<String, Integer>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -336,7 +336,7 @@ public class FrameworkProcessImpl extends MinimalEObjectImpl.Container
 				setKeyword(KEYWORD_EDEFAULT);
 				return;
 			case Minerv1Package.FRAMEWORK_PROCESS__ACTIVITIES_MAP:
-				setActivitiesMap((Map<String, Activity>)null);
+				setActivitiesMap((Map<String, Integer>)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -395,8 +395,10 @@ public class FrameworkProcessImpl extends MinimalEObjectImpl.Container
 			return;
 		}
 		
+		int index = 0;
 		for (Activity activity: this.activities) {
-			this.activitiesMap.put(activity.getName(), activity);
+			this.activitiesMap.put(activity.getName(), index);
+			index++;
 		}
 	}
 	

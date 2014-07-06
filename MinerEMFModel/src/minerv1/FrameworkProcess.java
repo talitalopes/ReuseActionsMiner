@@ -152,7 +152,7 @@ public interface FrameworkProcess extends EObject {
 	 * @model transient="true"
 	 * @generated
 	 */
-	Map<String, Activity> getActivitiesMap();
+	Map<String, Integer> getActivitiesMap();
 
 	/**
 	 * Sets the value of the '{@link minerv1.FrameworkProcess#getActivitiesMap <em>Activities Map</em>}' attribute.
@@ -162,7 +162,7 @@ public interface FrameworkProcess extends EObject {
 	 * @see #getActivitiesMap()
 	 * @generated
 	 */
-	void setActivitiesMap(Map<String, Activity> value);
+	void setActivitiesMap(Map<String, Integer> value);
 
 	public boolean hasActivity(String name);
 	

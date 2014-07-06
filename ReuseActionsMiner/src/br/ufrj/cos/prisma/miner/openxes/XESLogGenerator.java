@@ -38,7 +38,7 @@ public class XESLogGenerator {
 	private XFactoryBufferedImpl factory;
 	private XLog log;
 	private boolean classesOnly = false;
-
+	
 	public XESLogGenerator() {
 		init();
 	}
@@ -88,7 +88,8 @@ public class XESLogGenerator {
 		}
 
 		String type = appEvent.getActivity().getType().getName();
-		String eventName = appEvent.getActivity().getName();
+		String eventName = String.format("%s.%s", appEvent.getActivity()
+				.getPackageName(), appEvent.getActivity().getName());
 
 		// DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
@@ -150,7 +151,8 @@ public class XESLogGenerator {
 				trace = createNewTrace(traceName);
 
 				// we don't log empty traces
-				if (trace == null || application.getOrderedListOfEvents().size() == 0) {
+				if (trace == null
+						|| application.getOrderedListOfEvents().size() == 0) {
 					continue;
 				}
 

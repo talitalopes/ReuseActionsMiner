@@ -18,12 +18,21 @@ public class ParseFrameworkAction extends BaseAction {
 		FrameworkMiningHelper miningHelper = new FrameworkMiningHelper(filePath);
 		List<Activity> activities = miningHelper.extractFrameworkReuseActions();
 		
-		for (Activity a : activities) {
-			this.process.getActivitiesMap().put(a.getName(), a);
-		}
+		int index = 0;
 		this.process.getActivities().clear();
-		this.process.getActivities().addAll(
-				this.process.getActivitiesMap().values());
+		for (Activity a : activities) {
+			if (this.process.getActivitiesMap().containsKey(a.getName())) {
+				continue;
+			}
+			
+			this.process.getActivitiesMap().put(a.getName(), index);
+			index++;
+			this.process.getActivities().add(a);
+			System.out.println("Package Name: " + a.getPackageName());
+		}
+//		this.process.getActivities().clear();
+//		this.process.getActivities().addAll(
+//				this.process.getActivitiesMap().values());
 
 		save();
 	}

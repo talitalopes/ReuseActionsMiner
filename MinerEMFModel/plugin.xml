@@ -14,12 +14,4 @@
             genModel="model/minerv1.genmodel"/>
    </extension>
 
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <!-- @generated miner -->
-      <package
-            uri="http://prisma.cos.ufrj.br/processreuseminer"
-            class="miner.MinerPackage"
-            genModel="model/miner.genmodel"/>
-   </extension>
-
 </plugin>
