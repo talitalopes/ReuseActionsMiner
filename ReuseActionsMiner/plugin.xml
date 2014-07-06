@@ -62,6 +62,9 @@
 			<separator
                   name="group2">
             </separator>
+			<separator
+                  name="group3">
+            </separator>            
          </menu>
          <action
                label="List repositories"
@@ -71,30 +74,30 @@
                id="Miner.popup.actions.ListRepositoriesForExtraction">
          </action>
          <action
-               label="Parse without JDT"
+               label="Parse Framework"
                class="br.ufrj.cos.prisma.miner.popup.actions.ParseFrameworkAction"
-               menubarPath="ProcessReuseMiner.menu1/group1"
+               menubarPath="ProcessReuseMiner.menu1/group2"
                enablesFor="1"
                id="Miner.popup.actions.NewParser">
          </action>
-		 <action
+		 <!--action
                label="Mine Workspace"
                class="br.ufrj.cos.prisma.miner.popup.actions.MineWorkspaceAction"
                menubarPath="ProcessReuseMiner.menu1/group1"
                enablesFor="1"
                id="Miner.popup.actions.MineWorkspaceAction">
-         </action>
+         </action-->
          <action
-               label="Mine Repositories v2"
+               label="Mine Repositories from List"
                class="br.ufrj.cos.prisma.miner.popup.actions.MineRepositoriesActionv2"
-               menubarPath="ProcessReuseMiner.menu1/group1"
+               menubarPath="ProcessReuseMiner.menu1/group2"
                enablesFor="1"
                id="Miner.popup.actions.MineRepositoriesActionv2">
          </action>         
          <action
                label="Generate XES Log"
                class="br.ufrj.cos.prisma.miner.popup.actions.GenerateXESLogAction"
-               menubarPath="ProcessReuseMiner.menu1/group2"
+               menubarPath="ProcessReuseMiner.menu1/group3"
                enablesFor="1"
                id="Miner.popup.actions.GenerateXESLogAction">
          </action>
