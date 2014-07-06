@@ -116,7 +116,7 @@ public interface Activity extends EObject {
 	 * @return the value of the '<em>Package Name</em>' attribute.
 	 * @see #setPackageName(String)
 	 * @see minerv1.Minerv1Package#getActivity_PackageName()
-	 * @model transient="true"
+	 * @model
 	 * @generated
 	 */
 	String getPackageName();

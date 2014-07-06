@@ -235,6 +235,7 @@ public class FrameworkProcessImpl extends MinimalEObjectImpl.Container
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void setActivitiesMap(Map<String, Integer> newActivitiesMap) {
 		Map<String, Integer> oldActivitiesMap = activitiesMap;
 		activitiesMap = newActivitiesMap;

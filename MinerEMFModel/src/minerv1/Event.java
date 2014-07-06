@@ -115,7 +115,7 @@ public interface Event extends EObject {
 	 * @return the value of the '<em>Id</em>' attribute.
 	 * @see #setId(String)
 	 * @see minerv1.Minerv1Package#getEvent_Id()
-	 * @model transient="true"
+	 * @model
 	 * @generated
 	 */
 	String getId();
