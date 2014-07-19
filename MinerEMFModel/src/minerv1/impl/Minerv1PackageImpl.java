@@ -369,6 +369,15 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getEvent_Dependencies() {
+		return (EAttribute)eventEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getActivityType() {
 		return activityTypeEEnum;
 	}
@@ -431,6 +440,7 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 		createEAttribute(eventEClass, EVENT__DATE);
 		createEAttribute(eventEClass, EVENT__LIFECYCLE_STATUS);
 		createEAttribute(eventEClass, EVENT__ID);
+		createEAttribute(eventEClass, EVENT__DEPENDENCIES);
 
 		// Create enums
 		activityTypeEEnum = createEEnum(ACTIVITY_TYPE);
@@ -501,6 +511,10 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 		initEAttribute(getEvent_Date(), ecorePackage.getEDate(), "date", null, 0, 1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEvent_LifecycleStatus(), ecorePackage.getEString(), "lifecycleStatus", null, 0, 1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEvent_Id(), ecorePackage.getEString(), "id", null, 0, 1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(ecorePackage.getEEList());
+		g2 = createEGenericType();
+		g1.getETypeArguments().add(g2);
+		initEAttribute(getEvent_Dependencies(), g1, "dependencies", null, 0, 1, Event.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(activityTypeEEnum, ActivityType.class, "ActivityType");

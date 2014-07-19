@@ -8,6 +8,7 @@ import java.util.Date;
 
 import java.util.Map;
 import minerv1.Activity;
+import org.eclipse.emf.common.util.EList;
 
 /**
  * A sample validator interface for {@link minerv1.Event}.
@@ -25,4 +26,6 @@ public interface EventValidator {
 	boolean validateEventsOrder(Map<?, ?> value);
 
 	boolean validateId(String value);
+
+	boolean validateDependencies(EList<String> value);
 }

@@ -46,5 +46,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lifecycleStatus" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dependencies" transient="true">
+      <eGenericType eClassifier="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EEList">
+        <eTypeArguments/>
+      </eGenericType>
+    </eStructuralFeatures>
   </eClassifiers>
 </ecore:EPackage>

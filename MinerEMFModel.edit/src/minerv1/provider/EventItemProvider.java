@@ -64,6 +64,7 @@ public class EventItemProvider
 			addDatePropertyDescriptor(object);
 			addLifecycleStatusPropertyDescriptor(object);
 			addIdPropertyDescriptor(object);
+			addDependenciesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -157,6 +158,28 @@ public class EventItemProvider
 	}
 
 	/**
+	 * This adds a property descriptor for the Dependencies feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addDependenciesPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Event_dependencies_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Event_dependencies_feature", "_UI_Event_type"),
+				 Minerv1Package.Literals.EVENT__DEPENDENCIES,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
 	 * This returns Event.gif.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -196,6 +219,7 @@ public class EventItemProvider
 			case Minerv1Package.EVENT__DATE:
 			case Minerv1Package.EVENT__LIFECYCLE_STATUS:
 			case Minerv1Package.EVENT__ID:
+			case Minerv1Package.EVENT__DEPENDENCIES:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}

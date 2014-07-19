@@ -10,6 +10,7 @@ import minerv1.Minerv1Package;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -27,6 +28,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link minerv1.impl.EventImpl#getDate <em>Date</em>}</li>
  *   <li>{@link minerv1.impl.EventImpl#getLifecycleStatus <em>Lifecycle Status</em>}</li>
  *   <li>{@link minerv1.impl.EventImpl#getId <em>Id</em>}</li>
+ *   <li>{@link minerv1.impl.EventImpl#getDependencies <em>Dependencies</em>}</li>
  * </ul>
  * </p>
  *
@@ -102,6 +104,16 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 	 * @ordered
 	 */
 	protected String id = ID_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getDependencies() <em>Dependencies</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDependencies()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<String> dependencies;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -228,6 +240,27 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<String> getDependencies() {
+		return dependencies;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDependencies(EList<String> newDependencies) {
+		EList<?> oldDependencies = dependencies;
+		dependencies = newDependencies;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Minerv1Package.EVENT__DEPENDENCIES, oldDependencies, dependencies));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -240,6 +273,8 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 				return getLifecycleStatus();
 			case Minerv1Package.EVENT__ID:
 				return getId();
+			case Minerv1Package.EVENT__DEPENDENCIES:
+				return getDependencies();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -265,6 +300,9 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 			case Minerv1Package.EVENT__ID:
 				setId((String)newValue);
 				return;
+			case Minerv1Package.EVENT__DEPENDENCIES:
+				setDependencies((EList<String>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -289,6 +327,9 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 			case Minerv1Package.EVENT__ID:
 				setId(ID_EDEFAULT);
 				return;
+			case Minerv1Package.EVENT__DEPENDENCIES:
+				setDependencies((EList<String>)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -309,6 +350,8 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 				return LIFECYCLE_STATUS_EDEFAULT == null ? lifecycleStatus != null : !LIFECYCLE_STATUS_EDEFAULT.equals(lifecycleStatus);
 			case Minerv1Package.EVENT__ID:
 				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+			case Minerv1Package.EVENT__DEPENDENCIES:
+				return dependencies != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -329,6 +372,8 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 		result.append(lifecycleStatus);
 		result.append(", id: ");
 		result.append(id);
+		result.append(", dependencies: ");
+		result.append(dependencies);
 		result.append(')');
 		return result.toString();
 	}

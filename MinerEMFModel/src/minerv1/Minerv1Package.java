@@ -371,13 +371,22 @@ public interface Minerv1Package extends EPackage {
 	int EVENT__ID = 3;
 
 	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT__DEPENDENCIES = 4;
+
+	/**
 	 * The number of structural features of the '<em>Event</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EVENT_FEATURE_COUNT = 4;
+	int EVENT_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Event</em>' class.
@@ -681,6 +690,17 @@ public interface Minerv1Package extends EPackage {
 	EAttribute getEvent_Id();
 
 	/**
+	 * Returns the meta object for the attribute '{@link minerv1.Event#getDependencies <em>Dependencies</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Dependencies</em>'.
+	 * @see minerv1.Event#getDependencies()
+	 * @see #getEvent()
+	 * @generated
+	 */
+	EAttribute getEvent_Dependencies();
+
+	/**
 	 * Returns the meta object for enum '{@link minerv1.ActivityType <em>Activity Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -930,6 +950,14 @@ public interface Minerv1Package extends EPackage {
 		 * @generated
 		 */
 		EAttribute EVENT__ID = eINSTANCE.getEvent_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Dependencies</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EVENT__DEPENDENCIES = eINSTANCE.getEvent_Dependencies();
 
 		/**
 		 * The meta object literal for the '{@link minerv1.ActivityType <em>Activity Type</em>}' enum.
