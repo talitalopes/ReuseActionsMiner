@@ -3,6 +3,7 @@ package br.ufrj.cos.prisma.helpers;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
+import japa.parser.ast.ImportDeclaration;
 import japa.parser.ast.PackageDeclaration;
 import japa.parser.ast.body.ClassOrInterfaceDeclaration;
 import japa.parser.ast.body.MethodDeclaration;
@@ -98,6 +99,7 @@ public class FrameworkMiningHelper {
 	private static class ClassVisitor extends VoidVisitorAdapter {
 		ClassOrInterfaceDeclaration classOrInterfaceDeclaration;
 		PackageDeclaration packageDeclaration;
+		List<ImportDeclaration> imports;
 
 		@Override
 		public void visit(ClassOrInterfaceDeclaration c, Object arg) {
@@ -115,9 +117,17 @@ public class FrameworkMiningHelper {
 		public String getPackage() {
 			return this.packageDeclaration.getName().toString();
 		}
+		
+		public void setImports(List<ImportDeclaration> imports) {
+			this.imports = imports;
+		}
+		
+		public List<ImportDeclaration> getImports() {
+			return this.imports;
+		}
 
 	}
-
+	
 	public static class Filewalker {
 		List<MethodDeclaration> methods;
 		List<Activity> activities;
@@ -195,11 +205,13 @@ public class FrameworkMiningHelper {
 			}
 
 			for (ClassOrInterfaceType type : classExtensions) {
-
+				System.out.println("imports" +  classVisitor.getImports());
+				
 				if (process.hasActivity(type.getName())) {
-					String eventId = String.format("%s|%s",
-							classDeclaration.getName(), type.getName());
-
+					// Event id = class complete name (package + name)
+					String eventId = String.format("%s.%s",
+							classVisitor.getPackage(), classDeclaration.getName());
+					
 					Event e = Minerv1Factory.eINSTANCE.createEvent();
 					int index = process.getActivitiesMap()
 							.get(type.getName());
@@ -273,6 +285,7 @@ public class FrameworkMiningHelper {
 			ClassVisitor classVisitor = new ClassVisitor();
 			classVisitor.visit(cu, null);
 			classVisitor.setPackage(cu.getPackage());
+			classVisitor.setImports(cu.getImports());
 			return classVisitor;
 		}
 
