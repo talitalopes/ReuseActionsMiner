@@ -217,6 +217,13 @@ public class FrameworkMiningHelper {
 							.get(type.getName());
 					
 					e.setActivity(process.getActivities().get(index));
+					
+					for (ImportDeclaration imp: classVisitor.getImports()) {
+						String importName = imp.getName().toString();
+						System.out.println(importName);
+						e.getDependencies().add(importName);
+					}
+					
 					System.out.println("Event activity: " + process.getActivities().get(index));
 					e.setId(eventId);
 					events.add(e);

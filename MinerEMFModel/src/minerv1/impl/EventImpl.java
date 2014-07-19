@@ -10,6 +10,7 @@ import minerv1.Minerv1Package;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -241,6 +242,9 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 	 * @generated
 	 */
 	public EList<String> getDependencies() {
+		if (dependencies == null) {
+			dependencies = new BasicEList<String>();
+		}
 		return dependencies;
 	}
 
