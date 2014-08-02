@@ -1,7 +1,11 @@
 package br.ufrj.cos.prisma.miner.popup.actions;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+
+import javax.swing.text.DateFormatter;
 
 import minerv1.Event;
 import minerv1.FrameworkApplication;
@@ -38,12 +42,11 @@ public class GenerateXESLogAction extends BaseAction {
 	}
 	
 	private static String generateFilename(String prefix) {
-		return String.format("%s-%d-%d-%d_%d-%d.xes",
+		SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd_HH:mm");
+		String date = dateFormat.format(Calendar.getInstance().getTime());
+		
+		return String.format("%s-%s.xes",
 				prefix,
-				Calendar.getInstance().get(Calendar.YEAR),
-				Calendar.getInstance().get(Calendar.MONTH + 1), 
-				Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
-				Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-				Calendar.getInstance().get(Calendar.MINUTE));
+				date);
 	}
 }
