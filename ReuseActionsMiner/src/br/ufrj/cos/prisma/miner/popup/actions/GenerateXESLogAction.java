@@ -29,7 +29,7 @@ public class GenerateXESLogAction extends BaseAction {
 		
 		XESLogGenerator xesGen = new XESLogGenerator(true);
 		xesGen.getXESRepresentationFromProcess(process);
-		xesGen.serialize(generateFilename("test"));
+		xesGen.serialize(generateFilename(process.getKeyword()));
 	}
 	
 	public static void generateLog(FrameworkProcess process, boolean classesOnly) {
