@@ -64,7 +64,11 @@
             </separator>
 			<separator
                   name="group3">
+            </separator>
+            <separator
+                  name="group4">
             </separator>            
+                        
          </menu>
          <action
                label="List repositories"
@@ -101,7 +105,13 @@
                enablesFor="1"
                id="Miner.popup.actions.GenerateXESLogAction">
          </action>
-         
+         <action
+         		label="Calculate similarity"
+               class="br.ufrj.cos.prisma.miner.popup.actions.SimilarityCalculationAction"
+               menubarPath="ProcessReuseMiner.menu1/group4"
+               enablesFor="1"
+               id="Miner.popup.actions.SimilarityCalculationAction">
+         </action>
       </objectContribution>
    </extension>
  <extension
