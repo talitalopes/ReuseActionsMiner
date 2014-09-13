@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link minerv1.Event#getLifecycleStatus <em>Lifecycle Status</em>}</li>
  *   <li>{@link minerv1.Event#getId <em>Id</em>}</li>
  *   <li>{@link minerv1.Event#getDependencies <em>Dependencies</em>}</li>
+ *   <li>{@link minerv1.Event#isWrittenToLog <em>Written To Log</em>}</li>
  * </ul>
  * </p>
  *
@@ -133,29 +134,45 @@ public interface Event extends EObject {
 	void setId(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Dependencies</b></em>' attribute.
+	 * Returns the value of the '<em><b>Dependencies</b></em>' containment reference list.
+	 * The list contents are of type {@link minerv1.EventDependency}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Dependencies</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Dependencies</em>' attribute.
-	 * @see #setDependencies(EList)
+	 * @return the value of the '<em>Dependencies</em>' containment reference list.
 	 * @see minerv1.Minerv1Package#getEvent_Dependencies()
-	 * @model many="false" transient="true"
+	 * @model containment="true"
 	 * @generated
 	 */
-	EList<String> getDependencies();
+	EList<EventDependency> getDependencies();
 
 	/**
-	 * Sets the value of the '{@link minerv1.Event#getDependencies <em>Dependencies</em>}' attribute.
+	 * Returns the value of the '<em><b>Written To Log</b></em>' attribute.
 	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Written To Log</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Dependencies</em>' attribute.
-	 * @see #getDependencies()
+	 * @return the value of the '<em>Written To Log</em>' attribute.
+	 * @see #setWrittenToLog(boolean)
+	 * @see minerv1.Minerv1Package#getEvent_WrittenToLog()
+	 * @model
 	 * @generated
 	 */
-	void setDependencies(EList<String> value);
+	boolean isWrittenToLog();
+
+	/**
+	 * Sets the value of the '{@link minerv1.Event#isWrittenToLog <em>Written To Log</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Written To Log</em>' attribute.
+	 * @see #isWrittenToLog()
+	 * @generated
+	 */
+	void setWrittenToLog(boolean value);
 
 } // Event

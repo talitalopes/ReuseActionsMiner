@@ -96,6 +96,12 @@ public class Minerv1Switch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case Minerv1Package.EVENT_DEPENDENCY: {
+				EventDependency eventDependency = (EventDependency)theEObject;
+				T result = caseEventDependency(eventDependency);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -172,6 +178,21 @@ public class Minerv1Switch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseEvent(Event object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Event Dependency</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Event Dependency</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEventDependency(EventDependency object) {
 		return null;
 	}
 

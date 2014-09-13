@@ -6,6 +6,7 @@ import minerv1.Activity;
 import minerv1.ActivityType;
 import minerv1.Commit;
 import minerv1.Event;
+import minerv1.EventDependency;
 import minerv1.FrameworkApplication;
 import minerv1.FrameworkProcess;
 import minerv1.Minerv1Factory;
@@ -61,6 +62,13 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 	 * @generated
 	 */
 	private EClass eventEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass eventDependencyEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -369,8 +377,44 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getEvent_Dependencies() {
-		return (EAttribute)eventEClass.getEStructuralFeatures().get(4);
+	public EReference getEvent_Dependencies() {
+		return (EReference)eventEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getEvent_WrittenToLog() {
+		return (EAttribute)eventEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getEventDependency() {
+		return eventDependencyEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getEventDependency_Id() {
+		return (EAttribute)eventDependencyEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getEventDependency_Event() {
+		return (EReference)eventDependencyEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -440,7 +484,12 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 		createEAttribute(eventEClass, EVENT__DATE);
 		createEAttribute(eventEClass, EVENT__LIFECYCLE_STATUS);
 		createEAttribute(eventEClass, EVENT__ID);
-		createEAttribute(eventEClass, EVENT__DEPENDENCIES);
+		createEReference(eventEClass, EVENT__DEPENDENCIES);
+		createEAttribute(eventEClass, EVENT__WRITTEN_TO_LOG);
+
+		eventDependencyEClass = createEClass(EVENT_DEPENDENCY);
+		createEAttribute(eventDependencyEClass, EVENT_DEPENDENCY__ID);
+		createEReference(eventDependencyEClass, EVENT_DEPENDENCY__EVENT);
 
 		// Create enums
 		activityTypeEEnum = createEEnum(ACTIVITY_TYPE);
@@ -511,10 +560,12 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 		initEAttribute(getEvent_Date(), ecorePackage.getEDate(), "date", null, 0, 1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEvent_LifecycleStatus(), ecorePackage.getEString(), "lifecycleStatus", null, 0, 1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getEvent_Id(), ecorePackage.getEString(), "id", null, 0, 1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		g1 = createEGenericType(ecorePackage.getEEList());
-		g2 = createEGenericType();
-		g1.getETypeArguments().add(g2);
-		initEAttribute(getEvent_Dependencies(), g1, "dependencies", null, 0, 1, Event.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getEvent_Dependencies(), this.getEventDependency(), null, "dependencies", null, 0, -1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getEvent_WrittenToLog(), ecorePackage.getEBoolean(), "writtenToLog", null, 0, 1, Event.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(eventDependencyEClass, EventDependency.class, "EventDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getEventDependency_Id(), ecorePackage.getEString(), "id", null, 0, 1, EventDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getEventDependency_Event(), this.getEvent(), null, "event", null, 0, 1, EventDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(activityTypeEEnum, ActivityType.class, "ActivityType");

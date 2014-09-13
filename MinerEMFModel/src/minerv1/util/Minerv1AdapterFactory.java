@@ -88,6 +88,10 @@ public class Minerv1AdapterFactory extends AdapterFactoryImpl {
 				return createEventAdapter();
 			}
 			@Override
+			public Adapter caseEventDependency(EventDependency object) {
+				return createEventDependencyAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -174,6 +178,20 @@ public class Minerv1AdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createEventAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link minerv1.EventDependency <em>Event Dependency</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see minerv1.EventDependency
+	 * @generated
+	 */
+	public Adapter createEventDependencyAdapter() {
 		return null;
 	}
 

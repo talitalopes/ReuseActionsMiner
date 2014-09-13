@@ -13,13 +13,16 @@ import japa.parser.ast.visitor.VoidVisitorAdapter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import minerv1.Activity;
 import minerv1.ActivityType;
 import minerv1.Event;
+import minerv1.EventDependency;
 import minerv1.FrameworkProcess;
 import minerv1.Minerv1Factory;
 
@@ -63,10 +66,6 @@ public class FrameworkMiningHelper {
 		LogHelper.log("Mining reuse actions from application");
 		Filewalker walker = new Filewalker(process);
 		walker.walk(this.frameworkPath, MiningType.APPLICATION);
-
-		for (Event e : walker.getEvents()) {
-			System.out.println("Event: " + e.getId());
-		}
 
 		return walker.getEvents();
 	}
@@ -131,7 +130,7 @@ public class FrameworkMiningHelper {
 	public static class Filewalker {
 		List<MethodDeclaration> methods;
 		List<Activity> activities;
-		List<Event> events;
+		Map<String, Event> events;
 		FrameworkProcess process;
 
 		public Filewalker() {
@@ -140,11 +139,28 @@ public class FrameworkMiningHelper {
 		}
 
 		public List<Event> getEvents() {
-			return this.events;
+			for (Event e: this.events.values()) {
+				
+				List<EventDependency> dependenciesToRemove = new ArrayList<EventDependency>();
+				for (EventDependency dep: e.getDependencies()) {
+					
+					if (events.containsKey(dep.getId())) {
+						dep.setEvent(events.get(dep.getId()));
+					
+					} else {
+						dependenciesToRemove.add(dep);
+					}
+					
+				}
+				
+				e.getDependencies().removeAll(dependenciesToRemove);
+			}
+			
+			return new ArrayList<Event>(this.events.values());
 		}
 
 		public Filewalker(FrameworkProcess process) {
-			this.events = new ArrayList<Event>();
+			this.events = new HashMap<String, Event>();
 			this.methods = new ArrayList<MethodDeclaration>();
 			this.process = process;
 		}
@@ -179,6 +195,7 @@ public class FrameworkMiningHelper {
 					}
 				}
 			}
+			
 		}
 
 		public void findReuseActions(String filePath) throws Exception {
@@ -205,8 +222,7 @@ public class FrameworkMiningHelper {
 			}
 
 			for (ClassOrInterfaceType type : classExtensions) {
-				System.out.println("imports" +  classVisitor.getImports());
-				
+
 				if (process.hasActivity(type.getName())) {
 					// Event id = class complete name (package + name)
 					String eventId = String.format("%s.%s",
@@ -221,13 +237,15 @@ public class FrameworkMiningHelper {
 					for (ImportDeclaration imp: classVisitor.getImports()) {
 						String importName = imp.getName().toString();
 						System.out.println(importName);
-						e.getDependencies().add(importName);
+						
+						EventDependency dep = Minerv1Factory.eINSTANCE.createEventDependency();
+						dep.setId(importName);
+						e.getDependencies().add(dep);
 					}
 					
 					System.out.println("Event activity: " + process.getActivities().get(index));
 					e.setId(eventId);
-					events.add(e);
-
+					events.put(eventId, e);
 				}
 			}
 

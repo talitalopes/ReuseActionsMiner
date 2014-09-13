@@ -4,6 +4,7 @@ package minerv1.impl;
 
 import java.util.List;
 
+import minerv1.*;
 import minerv1.Activity;
 import minerv1.ActivityType;
 import minerv1.Commit;
@@ -69,6 +70,7 @@ public class Minerv1FactoryImpl extends EFactoryImpl implements Minerv1Factory {
 			case Minerv1Package.COMMIT: return createCommit();
 			case Minerv1Package.ACTIVITY: return createActivity();
 			case Minerv1Package.EVENT: return createEvent();
+			case Minerv1Package.EVENT_DEPENDENCY: return createEventDependency();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -157,6 +159,16 @@ public class Minerv1FactoryImpl extends EFactoryImpl implements Minerv1Factory {
 	public Event createEvent() {
 		EventImpl event = new EventImpl();
 		return event;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EventDependency createEventDependency() {
+		EventDependencyImpl eventDependency = new EventDependencyImpl();
+		return eventDependency;
 	}
 
 	/**

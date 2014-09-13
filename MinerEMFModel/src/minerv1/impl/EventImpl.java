@@ -2,21 +2,25 @@
  */
 package minerv1.impl;
 
+import java.util.Collection;
 import java.util.Date;
 
 import minerv1.Activity;
 import minerv1.Event;
+import minerv1.EventDependency;
 import minerv1.Minerv1Package;
 
 import org.eclipse.emf.common.notify.Notification;
 
-import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -30,6 +34,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link minerv1.impl.EventImpl#getLifecycleStatus <em>Lifecycle Status</em>}</li>
  *   <li>{@link minerv1.impl.EventImpl#getId <em>Id</em>}</li>
  *   <li>{@link minerv1.impl.EventImpl#getDependencies <em>Dependencies</em>}</li>
+ *   <li>{@link minerv1.impl.EventImpl#isWrittenToLog <em>Written To Log</em>}</li>
  * </ul>
  * </p>
  *
@@ -107,14 +112,34 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 	protected String id = ID_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getDependencies() <em>Dependencies</em>}' attribute.
+	 * The cached value of the '{@link #getDependencies() <em>Dependencies</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getDependencies()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<String> dependencies;
+	protected EList<EventDependency> dependencies;
+
+	/**
+	 * The default value of the '{@link #isWrittenToLog() <em>Written To Log</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isWrittenToLog()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean WRITTEN_TO_LOG_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isWrittenToLog() <em>Written To Log</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isWrittenToLog()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean writtenToLog = WRITTEN_TO_LOG_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -241,9 +266,9 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<String> getDependencies() {
+	public EList<EventDependency> getDependencies() {
 		if (dependencies == null) {
-			dependencies = new BasicEList<String>();
+			dependencies = new EObjectContainmentEList<EventDependency>(EventDependency.class, this, Minerv1Package.EVENT__DEPENDENCIES);
 		}
 		return dependencies;
 	}
@@ -253,11 +278,34 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setDependencies(EList<String> newDependencies) {
-		EList<?> oldDependencies = dependencies;
-		dependencies = newDependencies;
+	public boolean isWrittenToLog() {
+		return writtenToLog;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setWrittenToLog(boolean newWrittenToLog) {
+		boolean oldWrittenToLog = writtenToLog;
+		writtenToLog = newWrittenToLog;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, Minerv1Package.EVENT__DEPENDENCIES, oldDependencies, dependencies));
+			eNotify(new ENotificationImpl(this, Notification.SET, Minerv1Package.EVENT__WRITTEN_TO_LOG, oldWrittenToLog, writtenToLog));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case Minerv1Package.EVENT__DEPENDENCIES:
+				return ((InternalEList<?>)getDependencies()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -279,6 +327,8 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 				return getId();
 			case Minerv1Package.EVENT__DEPENDENCIES:
 				return getDependencies();
+			case Minerv1Package.EVENT__WRITTEN_TO_LOG:
+				return isWrittenToLog();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -305,7 +355,11 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 				setId((String)newValue);
 				return;
 			case Minerv1Package.EVENT__DEPENDENCIES:
-				setDependencies((EList<String>)newValue);
+				getDependencies().clear();
+				getDependencies().addAll((Collection<? extends EventDependency>)newValue);
+				return;
+			case Minerv1Package.EVENT__WRITTEN_TO_LOG:
+				setWrittenToLog((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -332,7 +386,10 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 				setId(ID_EDEFAULT);
 				return;
 			case Minerv1Package.EVENT__DEPENDENCIES:
-				setDependencies((EList<String>)null);
+				getDependencies().clear();
+				return;
+			case Minerv1Package.EVENT__WRITTEN_TO_LOG:
+				setWrittenToLog(WRITTEN_TO_LOG_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -355,7 +412,9 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 			case Minerv1Package.EVENT__ID:
 				return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
 			case Minerv1Package.EVENT__DEPENDENCIES:
-				return dependencies != null;
+				return dependencies != null && !dependencies.isEmpty();
+			case Minerv1Package.EVENT__WRITTEN_TO_LOG:
+				return writtenToLog != WRITTEN_TO_LOG_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -376,8 +435,8 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 		result.append(lifecycleStatus);
 		result.append(", id: ");
 		result.append(id);
-		result.append(", dependencies: ");
-		result.append(dependencies);
+		result.append(", writtenToLog: ");
+		result.append(writtenToLog);
 		result.append(')');
 		return result.toString();
 	}

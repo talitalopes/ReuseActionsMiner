@@ -37,7 +37,12 @@ Package minerv1 <http://prisma.cos.ufrj.br/processreuseminerv1>
     Attribute date : EDate
     Attribute lifecycleStatus : EString
     Attribute id : EString
-    Attribute dependencies : EEList
+    Reference dependencies : EventDependency<<0..*>>
+    Attribute writtenToLog : EBoolean
+
+  Class EventDependency
+    Attribute id : EString
+    Reference event : Event
 
   Enum ActivityType
     Literal METHOD_EXTENSION = 0

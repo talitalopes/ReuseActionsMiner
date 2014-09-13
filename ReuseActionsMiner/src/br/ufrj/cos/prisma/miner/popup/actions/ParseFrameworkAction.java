@@ -15,6 +15,8 @@ public class ParseFrameworkAction extends BaseAction {
 		super.run(arg0);
 
 		String filePath = this.process.getDir();
+		System.out.println("File path: " + filePath);
+		
 		FrameworkMiningHelper miningHelper = new FrameworkMiningHelper(filePath);
 		List<Activity> activities = miningHelper.extractFrameworkReuseActions();
 		
@@ -30,10 +32,8 @@ public class ParseFrameworkAction extends BaseAction {
 			this.process.getActivities().add(a);
 			System.out.println("Package Name: " + a.getPackageName());
 		}
-//		this.process.getActivities().clear();
-//		this.process.getActivities().addAll(
-//				this.process.getActivitiesMap().values());
-
+		
+		System.out.println("Activities count: " + this.process.getActivities().size());
 		save();
 	}
 

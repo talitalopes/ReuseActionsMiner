@@ -371,7 +371,7 @@ public interface Minerv1Package extends EPackage {
 	int EVENT__ID = 3;
 
 	/**
-	 * The feature id for the '<em><b>Dependencies</b></em>' attribute.
+	 * The feature id for the '<em><b>Dependencies</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -380,13 +380,22 @@ public interface Minerv1Package extends EPackage {
 	int EVENT__DEPENDENCIES = 4;
 
 	/**
+	 * The feature id for the '<em><b>Written To Log</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT__WRITTEN_TO_LOG = 5;
+
+	/**
 	 * The number of structural features of the '<em>Event</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EVENT_FEATURE_COUNT = 5;
+	int EVENT_FEATURE_COUNT = 6;
 
 	/**
 	 * The number of operations of the '<em>Event</em>' class.
@@ -398,6 +407,52 @@ public interface Minerv1Package extends EPackage {
 	int EVENT_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link minerv1.impl.EventDependencyImpl <em>Event Dependency</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see minerv1.impl.EventDependencyImpl
+	 * @see minerv1.impl.Minerv1PackageImpl#getEventDependency()
+	 * @generated
+	 */
+	int EVENT_DEPENDENCY = 5;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_DEPENDENCY__ID = 0;
+
+	/**
+	 * The feature id for the '<em><b>Event</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_DEPENDENCY__EVENT = 1;
+
+	/**
+	 * The number of structural features of the '<em>Event Dependency</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_DEPENDENCY_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Event Dependency</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EVENT_DEPENDENCY_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link minerv1.ActivityType <em>Activity Type</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -405,7 +460,7 @@ public interface Minerv1Package extends EPackage {
 	 * @see minerv1.impl.Minerv1PackageImpl#getActivityType()
 	 * @generated
 	 */
-	int ACTIVITY_TYPE = 5;
+	int ACTIVITY_TYPE = 6;
 
 
 	/**
@@ -690,15 +745,58 @@ public interface Minerv1Package extends EPackage {
 	EAttribute getEvent_Id();
 
 	/**
-	 * Returns the meta object for the attribute '{@link minerv1.Event#getDependencies <em>Dependencies</em>}'.
+	 * Returns the meta object for the containment reference list '{@link minerv1.Event#getDependencies <em>Dependencies</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Dependencies</em>'.
+	 * @return the meta object for the containment reference list '<em>Dependencies</em>'.
 	 * @see minerv1.Event#getDependencies()
 	 * @see #getEvent()
 	 * @generated
 	 */
-	EAttribute getEvent_Dependencies();
+	EReference getEvent_Dependencies();
+
+	/**
+	 * Returns the meta object for the attribute '{@link minerv1.Event#isWrittenToLog <em>Written To Log</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Written To Log</em>'.
+	 * @see minerv1.Event#isWrittenToLog()
+	 * @see #getEvent()
+	 * @generated
+	 */
+	EAttribute getEvent_WrittenToLog();
+
+	/**
+	 * Returns the meta object for class '{@link minerv1.EventDependency <em>Event Dependency</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Event Dependency</em>'.
+	 * @see minerv1.EventDependency
+	 * @generated
+	 */
+	EClass getEventDependency();
+
+	/**
+	 * Returns the meta object for the attribute '{@link minerv1.EventDependency#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see minerv1.EventDependency#getId()
+	 * @see #getEventDependency()
+	 * @generated
+	 */
+	EAttribute getEventDependency_Id();
+
+	/**
+	 * Returns the meta object for the reference '{@link minerv1.EventDependency#getEvent <em>Event</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Event</em>'.
+	 * @see minerv1.EventDependency#getEvent()
+	 * @see #getEventDependency()
+	 * @generated
+	 */
+	EReference getEventDependency_Event();
 
 	/**
 	 * Returns the meta object for enum '{@link minerv1.ActivityType <em>Activity Type</em>}'.
@@ -952,12 +1050,46 @@ public interface Minerv1Package extends EPackage {
 		EAttribute EVENT__ID = eINSTANCE.getEvent_Id();
 
 		/**
-		 * The meta object literal for the '<em><b>Dependencies</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Dependencies</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute EVENT__DEPENDENCIES = eINSTANCE.getEvent_Dependencies();
+		EReference EVENT__DEPENDENCIES = eINSTANCE.getEvent_Dependencies();
+
+		/**
+		 * The meta object literal for the '<em><b>Written To Log</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EVENT__WRITTEN_TO_LOG = eINSTANCE.getEvent_WrittenToLog();
+
+		/**
+		 * The meta object literal for the '{@link minerv1.impl.EventDependencyImpl <em>Event Dependency</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see minerv1.impl.EventDependencyImpl
+		 * @see minerv1.impl.Minerv1PackageImpl#getEventDependency()
+		 * @generated
+		 */
+		EClass EVENT_DEPENDENCY = eINSTANCE.getEventDependency();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EVENT_DEPENDENCY__ID = eINSTANCE.getEventDependency_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Event</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EVENT_DEPENDENCY__EVENT = eINSTANCE.getEventDependency_Event();
 
 		/**
 		 * The meta object literal for the '{@link minerv1.ActivityType <em>Activity Type</em>}' enum.

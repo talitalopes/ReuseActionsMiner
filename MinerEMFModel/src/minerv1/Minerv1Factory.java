@@ -71,6 +71,15 @@ public interface Minerv1Factory extends EFactory {
 	Event createEvent();
 
 	/**
+	 * Returns a new object of class '<em>Event Dependency</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Event Dependency</em>'.
+	 * @generated
+	 */
+	EventDependency createEventDependency();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

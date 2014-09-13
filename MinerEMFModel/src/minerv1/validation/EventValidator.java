@@ -28,4 +28,6 @@ public interface EventValidator {
 	boolean validateId(String value);
 
 	boolean validateDependencies(EList<String> value);
+
+	boolean validateWrittenToLog(boolean value);
 }
