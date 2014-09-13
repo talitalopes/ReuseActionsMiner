@@ -147,12 +147,20 @@ public class XESLogGenerator {
 			XEvent event = null;
 
 			for (FrameworkApplication application : fwProcess.getApplications()) {
-				traceName = application.getName();
-				trace = createNewTrace(traceName);
-
-				// we don't log empty traces
-				if (trace == null
-						|| application.getOrderedListOfEvents().size() == 0) {
+				if (application == null) {
+					System.out.println("Null application");
+					continue;
+				}
+				
+				String appName = application.getName();
+				if (application.getOrderedListOfEvents().size() == 0) {
+					System.out.println("Empty trace for application: " + appName);
+					continue;
+				}
+				
+				trace = createNewTrace(appName);
+				if (trace == null) {
+					System.out.println("Error creating trace for application " + appName);	
 					continue;
 				}
 
@@ -167,7 +175,6 @@ public class XESLogGenerator {
 
 				// Prevent adding empty traces
 				if (addedEvents > 0) {
-					System.out.println("trace: " + traceName);
 					log.add(trace);
 				}
 			}

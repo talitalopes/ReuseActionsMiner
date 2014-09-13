@@ -1,11 +1,8 @@
 package br.ufrj.cos.prisma.miner.popup.actions;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-
-import javax.swing.text.DateFormatter;
 
 import minerv1.Event;
 import minerv1.FrameworkApplication;
