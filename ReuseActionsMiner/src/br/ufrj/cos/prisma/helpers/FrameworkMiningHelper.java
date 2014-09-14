@@ -130,7 +130,8 @@ public class FrameworkMiningHelper {
 	public static class Filewalker {
 		List<MethodDeclaration> methods;
 		List<Activity> activities;
-		Map<String, Event> events;
+		Map<String, Event> eventsMap;
+		List<Event> events;
 		FrameworkProcess process;
 
 		public Filewalker() {
@@ -139,13 +140,13 @@ public class FrameworkMiningHelper {
 		}
 
 		public List<Event> getEvents() {
-			for (Event e: this.events.values()) {
+			for (Event e: this.eventsMap.values()) {
 				
 				List<EventDependency> dependenciesToRemove = new ArrayList<EventDependency>();
 				for (EventDependency dep: e.getDependencies()) {
 					
-					if (events.containsKey(dep.getId())) {
-						dep.setEvent(events.get(dep.getId()));
+					if (eventsMap.containsKey(dep.getId())) {
+						dep.setEvent(eventsMap.get(dep.getId()));
 					
 					} else {
 						dependenciesToRemove.add(dep);
@@ -156,11 +157,14 @@ public class FrameworkMiningHelper {
 				e.getDependencies().removeAll(dependenciesToRemove);
 			}
 			
-			return new ArrayList<Event>(this.events.values());
+			
+			
+			return new ArrayList<Event>(this.eventsMap.values());
 		}
 
 		public Filewalker(FrameworkProcess process) {
-			this.events = new HashMap<String, Event>();
+			this.eventsMap = new HashMap<String, Event>();
+			this.events = new ArrayList<Event>(); 
 			this.methods = new ArrayList<MethodDeclaration>();
 			this.process = process;
 		}
@@ -245,7 +249,8 @@ public class FrameworkMiningHelper {
 					
 					System.out.println("Event activity: " + process.getActivities().get(index));
 					e.setId(eventId);
-					events.put(eventId, e);
+					events.add(e);
+					eventsMap.put(eventId, e);
 				}
 			}
 

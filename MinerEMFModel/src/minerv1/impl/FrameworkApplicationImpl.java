@@ -8,6 +8,7 @@ import java.util.List;
 
 import minerv1.Commit;
 import minerv1.Event;
+import minerv1.EventDependency;
 import minerv1.FrameworkApplication;
 import minerv1.Minerv1Package;
 
@@ -326,33 +327,50 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 		return result.toString();
 	}
 
+	public void addEvent(Event e, List<Event> sortedEvents) {
+		if (sortedEvents.contains(e)) {
+			return;
+		}
+		
+		int position = -1;
+		for (int i = sortedEvents.size() - 1; i >= 0; i--) {
+			if (sortedEvents.get(i).getActivity() == null) {
+				continue;
+			}
+			
+			// Grouping equal activities
+			String existingActivity = sortedEvents.get(i).getActivity().getName();
+			if (e.getActivity().getName().equals(existingActivity)) {
+				position = i;
+				i = -1;
+			}
+		}
+		
+		// add event dependencies first
+		for (EventDependency dep: e.getDependencies()) {
+			addEvent(dep.getEvent(), sortedEvents);
+		}
+
+		// insert close to other activities with the same name
+		if (position == -1) {
+			sortedEvents.add(e);
+		} else {
+			sortedEvents.add(position, e);
+		}
+		
+	}
+	
 	public List<Event> getOrderedListOfEvents() {
-		List<Event> events = new ArrayList<Event>();
+		List<Event> sortedEvents = new ArrayList<Event>();
 		
 		for (Commit commit: getCommits()) {
 			
 			for (Event e1: commit.getEvents()) {
-				int position = -1;
-				
-				for (int i = events.size() - 1; i >= 0; i--) {
-					String existingActivity = events.get(i).getActivity().getName();
-					
-					if (e1.getActivity().getName().equals(existingActivity)) {
-						position = i;
-						i = -1;
-					}
-					
-				}
-				
-				if (position == -1) {
-					events.add(e1);
-				} else {
-					events.add(position, e1);
-				}
+				addEvent(e1, sortedEvents);
 			}
 		}
 		
-		return events;
+		return sortedEvents;
 	}
 	
 } //FrameworkApplicationImpl

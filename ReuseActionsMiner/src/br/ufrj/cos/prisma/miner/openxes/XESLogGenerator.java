@@ -142,7 +142,6 @@ public class XESLogGenerator {
 
 	public void getXESRepresentationFromProcess(FrameworkProcess fwProcess) {
 		try {
-			String traceName = null;
 			XTrace trace = null;
 			XEvent event = null;
 

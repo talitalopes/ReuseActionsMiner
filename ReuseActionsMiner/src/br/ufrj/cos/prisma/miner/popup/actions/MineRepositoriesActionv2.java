@@ -55,7 +55,6 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 						currentIndex + 1, commits.size()));
 
 				String currentCommitId = commits.get(currentIndex);
-				System.out.println("Commit: " + currentCommitId);
 				cloneCurrentCommit(gitHelper, currentCommitId);
 				currentCommit = createCommit(currentCommitId);
 				reuseActionsEvents = miningHelper
@@ -64,7 +63,6 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 				for (Event e : reuseActionsEvents) {
 					if (!this.discoveredEvents.contains(e.getId())) {
 						addEventToCommit(e, currentCommit);
-						System.out.println("Added: " + e.getId());
 						this.discoveredEvents.add(e.getId());
 					} else {
 						System.out.println("Event not added: " + e.getId());
