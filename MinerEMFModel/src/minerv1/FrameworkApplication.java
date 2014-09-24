@@ -121,6 +121,6 @@ public interface FrameworkApplication extends EObject {
 	 */
 	void setMine(boolean value);
 	
-	List<Event> getOrderedListOfEvents();
+	int getEventsCount();
 
 } // FrameworkApplication

@@ -2,13 +2,9 @@
  */
 package minerv1.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import minerv1.Commit;
-import minerv1.Event;
-import minerv1.EventDependency;
 import minerv1.FrameworkApplication;
 import minerv1.Minerv1Package;
 
@@ -326,51 +322,15 @@ public class FrameworkApplicationImpl extends MinimalEObjectImpl.Container imple
 		result.append(')');
 		return result.toString();
 	}
-
-	public void addEvent(Event e, List<Event> sortedEvents) {
-		if (sortedEvents.contains(e)) {
-			return;
+	
+	public int getEventsCount() {
+		int count = 0;
+		for (Commit commit: getCommits()) {
+			count += commit.getEvents().size();
 		}
 		
-		int position = -1;
-		for (int i = sortedEvents.size() - 1; i >= 0; i--) {
-			if (sortedEvents.get(i).getActivity() == null) {
-				continue;
-			}
-			
-			// Grouping equal activities
-			String existingActivity = sortedEvents.get(i).getActivity().getName();
-			if (e.getActivity().getName().equals(existingActivity)) {
-				position = i;
-				i = -1;
-			}
-		}
-		
-		// add event dependencies first
-		for (EventDependency dep: e.getDependencies()) {
-			addEvent(dep.getEvent(), sortedEvents);
-		}
-
-		// insert close to other activities with the same name
-		if (position == -1) {
-			sortedEvents.add(e);
-		} else {
-			sortedEvents.add(position, e);
-		}
-		
+		return count;
 	}
 	
-	public List<Event> getOrderedListOfEvents() {
-		List<Event> sortedEvents = new ArrayList<Event>();
-		
-		for (Commit commit: getCommits()) {
-			
-			for (Event e1: commit.getEvents()) {
-				addEvent(e1, sortedEvents);
-			}
-		}
-		
-		return sortedEvents;
-	}
 	
 } //FrameworkApplicationImpl

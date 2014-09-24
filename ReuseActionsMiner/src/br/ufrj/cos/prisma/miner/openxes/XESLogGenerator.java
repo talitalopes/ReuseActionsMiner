@@ -30,6 +30,7 @@ import org.deckfour.xes.xstream.XesXStreamPersistency;
 
 import br.ufrj.cos.prisma.helpers.LogHelper;
 import br.ufrj.cos.prisma.miner.util.Constants;
+import br.ufrj.cos.prisma.miner.util.TopologicalSort;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -141,7 +142,7 @@ public class XESLogGenerator {
 	}
 
 	public void getXESRepresentationFromProcess(FrameworkProcess fwProcess) {
-		try {
+//		try {
 			XTrace trace = null;
 			XEvent event = null;
 
@@ -152,7 +153,7 @@ public class XESLogGenerator {
 				}
 				
 				String appName = application.getName();
-				if (application.getOrderedListOfEvents().size() == 0) {
+				if (application.getEventsCount() == 0) {
 					System.out.println("Empty trace for application: " + appName);
 					continue;
 				}
@@ -164,7 +165,9 @@ public class XESLogGenerator {
 				}
 
 				int addedEvents = 0;
-				for (Event e : application.getOrderedListOfEvents()) {
+				
+				TopologicalSort tp = new TopologicalSort(application);
+				for (Event e : tp.getSortedEvents()) {
 					event = createEvent(e);
 					if (event != null) {
 						trace.add(event);
@@ -177,9 +180,9 @@ public class XESLogGenerator {
 					log.add(trace);
 				}
 			}
-		} catch (Exception e) {
-			LogHelper.log("Error genereting log", e.getMessage());
-		}
+//		} catch (Exception e) {
+//			LogHelper.log("Error genereting log", e.getMessage());
+//		}
 	}
 
 	public void serialize(String filename) {

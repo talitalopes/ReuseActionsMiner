@@ -72,11 +72,17 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 				app.getCommits().add(currentCommit);
 
 				gitHelper.deleteRepo();
-
+				
 				save();
 			}
 
+			// merge commits
+			Commit mergeCommit = createCommit("merge");
+			mergeCommit.getEvents().addAll(app.getOrderedListOfEvents());
+			app.getCommits().add(mergeCommit);
 			app.setMine(false);
+			save();
+			
 			gitHelper.deleteParentFolder();
 			LogHelper.log("Finishing FrameworkApplication " + app.getName());
 		}

@@ -2,9 +2,7 @@ package br.ufrj.cos.prisma.miner.popup.actions;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 
-import minerv1.Event;
 import minerv1.FrameworkApplication;
 import minerv1.FrameworkProcess;
 
@@ -20,8 +18,8 @@ public class GenerateXESLogAction extends BaseAction {
 		super.run(action);
 		
 		for (FrameworkApplication app: this.process.getApplications()) {
-			List<Event> events = app.getOrderedListOfEvents();
-			System.out.println("Events: " + events.size());
+//			List<Event> events = app.getOrderedListOfEvents();
+			System.out.println("Events: " + app.getEventsCount());
 		}
 		
 		XESLogGenerator xesGen = new XESLogGenerator(true);
