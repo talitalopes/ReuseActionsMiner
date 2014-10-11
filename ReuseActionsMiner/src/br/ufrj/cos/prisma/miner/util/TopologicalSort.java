@@ -10,25 +10,40 @@ import minerv1.FrameworkApplication;
 public class TopologicalSort {
 
 	FrameworkApplication app;
+	Commit commit;
 	List<Event> sortedEvents;
+	
+	public TopologicalSort(Commit c) {
+		this.commit = c;
+		this.sortedEvents = new ArrayList<Event>();
+	}
 	
 	public TopologicalSort(FrameworkApplication app) {
 		this.app = app;
 		this.sortedEvents = new ArrayList<Event>();
 	}
 
+	public void sortCommit() {
+		this.sortCommit(this.commit);
+	}
+	
+	public void sortCommit(Commit c) {
+		GraphTS g = new GraphTS(c);
+		g.topo();
+		
+		for (int i = 0; i < g.sortedArray.length; i++) {
+			if (g.sortedArray[i].event == null) {
+				System.out.println("null event");
+				continue;
+			}
+			System.out.println(g.sortedArray[i].event.getActivity().getId());
+			sortedEvents.add(g.sortedArray[i].event);
+		}
+	}
+	
 	public void sort() {
 		for (Commit c : this.app.getCommits()) {
-			GraphTS g = new GraphTS(c);
-			g.topo();
-			
-			for (int i = 0; i < g.sortedArray.length; i++) {
-				if (g.sortedArray[i].event == null) {
-					System.out.println("null event");
-					continue;
-				}
-				sortedEvents.add(g.sortedArray[i].event);
-			}
+			sortCommit(c);
 		}
 	}
 	
@@ -36,6 +51,12 @@ public class TopologicalSort {
 		this.sort();
 		return this.sortedEvents;
 	}
+	
+	public List<Event> getSortedEventsForCommit() {
+		this.sortCommit();
+		return this.sortedEvents;
+	}
+	
 
 	class Vertex {
 		public Event event;

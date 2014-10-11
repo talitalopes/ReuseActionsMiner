@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Date;
 
+import minerv1.Commit;
 import minerv1.Event;
 import minerv1.FrameworkApplication;
 import minerv1.FrameworkProcess;
@@ -39,7 +40,7 @@ public class XESLogGenerator {
 	private XFactoryBufferedImpl factory;
 	private XLog log;
 	private boolean classesOnly = false;
-	
+
 	public XESLogGenerator() {
 		init();
 	}
@@ -141,33 +142,28 @@ public class XESLogGenerator {
 		return event;
 	}
 
-	public void getXESRepresentationFromProcess(FrameworkProcess fwProcess) {
-//		try {
-			XTrace trace = null;
-			XEvent event = null;
+	public void getXESRepresentationForCommits(FrameworkProcess fwProcess) {
+		XTrace trace = null;
+		XEvent event = null;
 
-			for (FrameworkApplication application : fwProcess.getApplications()) {
-				if (application == null) {
-					System.out.println("Null application");
-					continue;
-				}
-				
-				String appName = application.getName();
-				if (application.getEventsCount() == 0) {
-					System.out.println("Empty trace for application: " + appName);
-					continue;
-				}
-				
-				trace = createNewTrace(appName);
+		for (FrameworkApplication application : fwProcess.getApplications()) {
+			if (!validApp(application)) {
+				continue;
+			}
+
+			for (Commit c : application.getCommits()) {
+				System.out.println("commit: " + c.getId());
+				trace = createNewTrace(c.getName());
+
 				if (trace == null) {
-					System.out.println("Error creating trace for application " + appName);	
+					System.out.println("Error creating trace for commit "
+							+ c.getName());
 					continue;
 				}
 
 				int addedEvents = 0;
-				
-				TopologicalSort tp = new TopologicalSort(application);
-				for (Event e : tp.getSortedEvents()) {
+				TopologicalSort tp = new TopologicalSort(c);
+				for (Event e : tp.getSortedEventsForCommit()) {
 					event = createEvent(e);
 					if (event != null) {
 						trace.add(event);
@@ -180,9 +176,64 @@ public class XESLogGenerator {
 					log.add(trace);
 				}
 			}
-//		} catch (Exception e) {
-//			LogHelper.log("Error genereting log", e.getMessage());
-//		}
+
+		}
+	}
+
+	public void getXESRepresentationFromProcess(FrameworkProcess fwProcess) {
+		XTrace trace = null;
+		XEvent event = null;
+
+		for (FrameworkApplication application : fwProcess.getApplications()) {
+			if (application == null) {
+				System.out.println("Null application");
+				continue;
+			}
+
+			String appName = application.getName();
+			if (application.getEventsCount() == 0) {
+				System.out.println("Empty trace for application: " + appName);
+				continue;
+			}
+
+			trace = createNewTrace(appName);
+			if (trace == null) {
+				System.out.println("Error creating trace for application "
+						+ appName);
+				continue;
+			}
+
+			int addedEvents = 0;
+
+			TopologicalSort tp = new TopologicalSort(application);
+			for (Event e : tp.getSortedEvents()) {
+				event = createEvent(e);
+				if (event != null) {
+					trace.add(event);
+					addedEvents++;
+				}
+			}
+
+			// Prevent adding empty traces
+			if (addedEvents > 0) {
+				log.add(trace);
+			}
+		}
+	}
+
+	public boolean validApp(FrameworkApplication application) {
+		if (application == null) {
+			System.out.println("Null application");
+			return false;
+		}
+
+		String appName = application.getName();
+		if (application.getEventsCount() == 0) {
+			System.out.println("Empty trace for application: " + appName);
+			return false;
+		}
+
+		return true;
 	}
 
 	public void serialize(String filename) {

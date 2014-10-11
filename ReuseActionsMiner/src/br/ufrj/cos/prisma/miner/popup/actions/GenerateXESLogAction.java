@@ -18,22 +18,16 @@ public class GenerateXESLogAction extends BaseAction {
 		super.run(action);
 		
 		for (FrameworkApplication app: this.process.getApplications()) {
-//			List<Event> events = app.getOrderedListOfEvents();
 			System.out.println("Events: " + app.getEventsCount());
 		}
 		
 		XESLogGenerator xesGen = new XESLogGenerator(true);
 		xesGen.getXESRepresentationFromProcess(process);
-		xesGen.serialize(generateFilename(process.getKeyword()));
-	}
-	
-	public static void generateLog(FrameworkProcess process, boolean classesOnly) {
-		LogHelper.log(String.format("Log will be generated: %s", generateFilename("test")));
 		
-		XESLogGenerator xesGen = new XESLogGenerator(classesOnly);
-		xesGen.getXESRepresentationFromProcess(process);
-		xesGen.serialize(generateFilename("test-graphiti"));
+//		Testing log separated by commits
+//		xesGen.getXESRepresentationForCommits(process);
 
+		xesGen.serialize(generateFilename(process.getKeyword()));
 	}
 	
 	private static String generateFilename(String prefix) {
