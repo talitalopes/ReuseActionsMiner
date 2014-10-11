@@ -55,8 +55,9 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 						currentIndex + 1, commits.size()));
 
 				String currentCommitId = commits.get(currentIndex);
-				cloneCurrentCommit(gitHelper, currentCommitId);
-				currentCommit = createCommit(currentCommitId);
+				gitHelper.cloneFromCommit(currentCommitId);
+				
+				currentCommit = Minerv1Factory.eINSTANCE.createCommit(currentCommitId);
 				reuseActionsEvents = miningHelper
 						.extractApplicationReuseActions();
 
@@ -76,29 +77,12 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 				save();
 			}
 
-			// merge commits
-			Commit mergeCommit = createCommit("merge");
-			mergeCommit.getEvents().addAll(app.getOrderedListOfEvents());
-			app.getCommits().add(mergeCommit);
-			app.setMine(false);
+			app.setMine(false);			
 			save();
 			
 			gitHelper.deleteParentFolder();
 			LogHelper.log("Finishing FrameworkApplication " + app.getName());
 		}
-	}
-
-	private void cloneCurrentCommit(GitRepositoryHelper gitHelper,
-			String commitId) {
-		LogHelper.log("Cloning commit: " + commitId);
-		gitHelper.cloneFromCommit(commitId);
-	}
-
-	private Commit createCommit(String id) {
-		Commit commit = Minerv1Factory.eINSTANCE.createCommit();
-		commit.setName(id);
-		commit.setId(id);
-		return commit;
 	}
 
 	private void addEventToCommit(Event currentEvent, Commit currentCommit) {

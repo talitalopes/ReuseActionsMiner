@@ -147,8 +147,8 @@ public class FrameworkMiningHelper {
 					
 					if (eventsMap.containsKey(dep.getId())) {
 						dep.setEvent(eventsMap.get(dep.getId()));
-					
 					} else {
+						System.out.println("remove dep: " + dep.getId());
 						dependenciesToRemove.add(dep);
 					}
 					
@@ -156,8 +156,6 @@ public class FrameworkMiningHelper {
 				
 				e.getDependencies().removeAll(dependenciesToRemove);
 			}
-			
-			
 			
 			return new ArrayList<Event>(this.eventsMap.values());
 		}
@@ -176,7 +174,7 @@ public class FrameworkMiningHelper {
 		public List<MethodDeclaration> getMethods() {
 			return this.methods;
 		}
-
+		
 		public void walk(String path, MiningType type) {
 			File root = new File(path);
 			File[] list = root.listFiles();
@@ -187,16 +185,17 @@ public class FrameworkMiningHelper {
 			for (File f : list) {
 				if (f.isDirectory()) {
 					walk(f.getAbsolutePath(), type);
-				} else {
-					try {
-						if (type.equals(MiningType.FRAMEWORK)) {
-							visitClassAndMethods(f.getAbsolutePath());
-						} else {
-							findReuseActions(f.getAbsolutePath());
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
+					continue;
+				}
+
+				try {
+					if (type.equals(MiningType.FRAMEWORK)) {
+						visitClassAndMethods(f.getAbsolutePath());
+					} else {
+						findReuseActions(f.getAbsolutePath());
 					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 			

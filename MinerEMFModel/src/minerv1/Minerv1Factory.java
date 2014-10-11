@@ -50,6 +50,8 @@ public interface Minerv1Factory extends EFactory {
 	 */
 	Commit createCommit();
 	
+	Commit createCommit(String id);
+	
 	Commit createCommitWithEvents(List<Event> events);
 	
 	/**

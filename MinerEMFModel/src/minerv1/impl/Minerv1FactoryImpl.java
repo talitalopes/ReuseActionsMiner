@@ -5,14 +5,6 @@ package minerv1.impl;
 import java.util.List;
 
 import minerv1.*;
-import minerv1.Activity;
-import minerv1.ActivityType;
-import minerv1.Commit;
-import minerv1.Event;
-import minerv1.FrameworkApplication;
-import minerv1.FrameworkProcess;
-import minerv1.Minerv1Factory;
-import minerv1.Minerv1Package;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -133,6 +125,14 @@ public class Minerv1FactoryImpl extends EFactoryImpl implements Minerv1Factory {
 	 */
 	public Commit createCommit() {
 		CommitImpl commit = new CommitImpl();
+		return commit;
+	}
+	
+	@Override
+	public Commit createCommit(String id) {
+		CommitImpl commit = new CommitImpl();
+		commit.setName(id);
+		commit.setId(id);
 		return commit;
 	}
 

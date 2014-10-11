@@ -154,8 +154,11 @@ public class GitRepositoryHelper {
 
 	public void cloneFromCommit(String commitId) {
 		if (commitId == null) {
+			LogHelper.log("Invalid commit. Null id");
 			return;
 		}
+		
+		LogHelper.log("Cloning commit: " + commitId);
 		cloneFromCommitId(commitId);
 	}
 
