@@ -2,8 +2,10 @@
  */
 package minerv1.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import minerv1.Activity;
@@ -173,6 +175,24 @@ public class FrameworkProcessImpl extends MinimalEObjectImpl.Container
 		}
 		return applications;
 	}
+	
+	/**
+	 * Return only applications that should be mined
+	 * @generated
+	 */
+	public List<FrameworkApplication> getApplicationsToMine() {
+		getApplications();
+
+		List<FrameworkApplication> filteredApps = new ArrayList<FrameworkApplication>();
+		for (FrameworkApplication app : applications) {
+			if (app.isMine()) {
+				filteredApps.add(app);
+			}
+		}
+		
+		return filteredApps;
+	}
+	
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->

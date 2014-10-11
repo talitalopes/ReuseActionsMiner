@@ -144,7 +144,7 @@ public class FrameworkMiningHelper {
 				
 				List<EventDependency> dependenciesToRemove = new ArrayList<EventDependency>();
 				for (EventDependency dep: e.getDependencies()) {
-					
+										
 					if (eventsMap.containsKey(dep.getId())) {
 						dep.setEvent(eventsMap.get(dep.getId()));
 					} else {
@@ -226,31 +226,38 @@ public class FrameworkMiningHelper {
 
 			for (ClassOrInterfaceType type : classExtensions) {
 
-				if (process.hasActivity(type.getName())) {
-					// Event id = class complete name (package + name)
-					String eventId = String.format("%s.%s",
-							classVisitor.getPackage(), classDeclaration.getName());
-					
-					Event e = Minerv1Factory.eINSTANCE.createEvent();
-					int index = process.getActivitiesMap()
-							.get(type.getName());
-					
-					e.setActivity(process.getActivities().get(index));
-					
-					for (ImportDeclaration imp: classVisitor.getImports()) {
-						String importName = imp.getName().toString();
-						System.out.println(importName);
-						
-						EventDependency dep = Minerv1Factory.eINSTANCE.createEventDependency();
-						dep.setId(importName);
-						e.getDependencies().add(dep);
-					}
-					
-					System.out.println("Event activity: " + process.getActivities().get(index));
-					e.setId(eventId);
-					events.add(e);
-					eventsMap.put(eventId, e);
+				if (!process.hasActivity(type.getName())) {
+					continue;
 				}
+				
+				
+				// Event id = class complete name (package + name)
+				String eventId = String.format("%s.%s",
+						classVisitor.getPackage(), classDeclaration.getName());
+				
+				Event e = Minerv1Factory.eINSTANCE.createEvent();
+				int index = process.getActivitiesMap()
+						.get(type.getName());
+				
+				e.setActivity(process.getActivities().get(index));
+				
+				for (ImportDeclaration imp: classVisitor.getImports()) {
+					String importName = imp.getName().toString();
+					System.out.println(importName);
+					
+					EventDependency dep = Minerv1Factory.eINSTANCE.createEventDependency();
+					dep.setId(importName);
+					e.getDependencies().add(dep);
+				}
+				
+				if (eventId.contains("GEFEditorPalette")) {
+					System.out.println("added");
+				}
+				
+				e.setId(eventId);
+				events.add(e);
+				eventsMap.put(eventId, e);
+				
 			}
 
 		}

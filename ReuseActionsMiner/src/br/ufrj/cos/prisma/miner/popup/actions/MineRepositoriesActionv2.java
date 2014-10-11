@@ -16,12 +16,11 @@ import br.ufrj.cos.prisma.helpers.GitRepositoryHelper;
 import br.ufrj.cos.prisma.helpers.LogHelper;
 
 public class MineRepositoriesActionv2 extends BaseExtractionAction {
-	boolean wait;
+	
 	Set<String> discoveredEvents;
 
 	public MineRepositoriesActionv2() {
 		super();
-		wait = true;
 		discoveredEvents = new HashSet<String>();
 	}
 
@@ -33,10 +32,8 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 
 	private void mineReuseActionsFromRepositories() {
 
-		for (FrameworkApplication app : process.getApplications()) {
-			if (!app.isMine()) {
-				continue;
-			}
+		for (FrameworkApplication app : process.getApplicationsToMine()) {
+			
 			final GitRepositoryHelper gitHelper = GitRepositoryHelper
 					.getInstanceForApplication(app);
 
@@ -50,6 +47,7 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 
 			List<Event> reuseActionsEvents = null;
 			Commit currentCommit = null;
+			
 			for (int currentIndex = 0; currentIndex < commits.size(); currentIndex++) {
 				LogHelper.log(String.format("Commit %d out of %d",
 						currentIndex + 1, commits.size()));
@@ -58,6 +56,7 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 				gitHelper.cloneFromCommit(currentCommitId);
 				
 				currentCommit = Minerv1Factory.eINSTANCE.createCommit(currentCommitId);
+				
 				reuseActionsEvents = miningHelper
 						.extractApplicationReuseActions();
 

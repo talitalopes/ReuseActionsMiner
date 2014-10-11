@@ -2,7 +2,9 @@
  */
 package minerv1;
 
+import java.util.List;
 import java.util.Map;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
@@ -69,6 +71,8 @@ public interface FrameworkProcess extends EObject {
 	 * @generated
 	 */
 	EList<FrameworkApplication> getApplications();
+	
+	List<FrameworkApplication> getApplicationsToMine();
 
 	/**
 	 * Returns the value of the '<em><b>Activities</b></em>' containment reference list.
