@@ -6,7 +6,7 @@ import minerv1.Activity;
 
 import org.eclipse.jface.action.IAction;
 
-import br.ufrj.cos.prisma.helpers.FrameworkMiningHelper;
+import br.ufrj.cos.prisma.miner.util.FrameworkFileWalker;
 
 public class ParseFrameworkAction extends BaseAction {
 
@@ -17,8 +17,9 @@ public class ParseFrameworkAction extends BaseAction {
 		String filePath = this.process.getDir();
 		System.out.println("File path: " + filePath);
 		
-		FrameworkMiningHelper miningHelper = new FrameworkMiningHelper(filePath);
-		List<Activity> activities = miningHelper.extractFrameworkReuseActions();
+		FrameworkFileWalker fileWalker = new FrameworkFileWalker();
+		fileWalker.walk(filePath);
+		List<Activity> activities = fileWalker.getReuseActions();
 		
 		int index = 0;
 		this.process.getActivities().clear();
