@@ -1,12 +1,17 @@
 package br.ufrj.cos.prisma.miner.popup.actions;
 
-import java.util.List;
-
 import minerv1.Activity;
+import minerv1.ActivityType;
+import minerv1.Minerv1Factory;
 
+import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.PackageDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.action.IAction;
 
-import br.ufrj.cos.prisma.miner.util.FrameworkFileWalker;
+import br.ufrj.cos.prisma.miner.util.BaseFileWalker;
 
 public class ParseFrameworkAction extends BaseAction {
 
@@ -15,27 +20,92 @@ public class ParseFrameworkAction extends BaseAction {
 		super.run(arg0);
 
 		String filePath = this.process.getDir();
-		System.out.println("File path: " + filePath);
+		System.out.println("Framework File path: " + filePath);
 		
 		FrameworkFileWalker fileWalker = new FrameworkFileWalker();
 		fileWalker.walk(filePath);
-		List<Activity> activities = fileWalker.getReuseActions();
-		
-		int index = 0;
-		this.process.getActivities().clear();
-		for (Activity a : activities) {
-			if (this.process.getActivitiesMap().containsKey(a.getName())) {
-				continue;
-			}
-			
-			this.process.getActivitiesMap().put(a.getName(), index);
-			index++;
-			this.process.getActivities().add(a);
-			System.out.println("Package Name: " + a.getPackageName());
+	}
+	
+	class FrameworkFileWalker extends BaseFileWalker {
+				
+		public FrameworkFileWalker() {
+			super();
 		}
 		
-		System.out.println("Activities count: " + this.process.getActivities().size());
-		save();
+		protected void getClassInfo(String fileContent) {
+			parser.setSource(fileContent.toCharArray());
+			parser.setKind(ASTParser.K_COMPILATION_UNIT);
+
+			final Activity classActivity = Minerv1Factory.eINSTANCE.createActivity();
+			
+			final CompilationUnit compilationUnit = (CompilationUnit) parser
+					.createAST(null);
+			compilationUnit.accept(new ASTVisitor() {
+								
+				public boolean visit(PackageDeclaration node) {
+					classActivity.setPackageName(node.getName().getFullyQualifiedName());
+					classActivity.setType(ActivityType.CLASS_EXTENSION);
+					return true;
+				}
+				
+				public boolean visit(TypeDeclaration node) {
+					classActivity.setName(node.getName().getIdentifier());
+					classActivity.setId(node.getName().getIdentifier());
+					
+					if (process.getActivitiesMap().get(classActivity.getName()) == null) {
+						int index = process.getActivities().size() == 0 ? 0 : process.getActivities().size() - 1;
+						process.getActivitiesMap().put(classActivity.getName(), index);
+						process.getActivities().add(classActivity);
+					}
+					
+					save();
+					return true;
+				}
+				
+//				Set<String> imports = new HashSet<String>();				
+//				public boolean visit(ImportDeclaration importDeclaration) {
+//					String importName = importDeclaration.getName().getFullyQualifiedName();
+//					imports.add(importName);
+//					return false;
+//				}
+//
+//				public boolean visit(MethodDeclaration node) {
+//					if (classActivity.getName().contains("GraphicalEditorWithFlyoutPalette")) {
+//						System.out.println("found");
+//					}
+//
+//					if (visited.contains(node.getName().getIdentifier())) {						
+//						return false;
+//					}
+//
+//					if (classActivity.getName().contains("GraphicalEditorWithFlyoutPalette")) {
+//						System.out.println("found later");
+//					}
+//
+//					if (node.getBody() != null) {
+//						Activity methodActivity = Minerv1Factory.eINSTANCE.createActivity();
+//						methodActivity.setName(node.getName().getFullyQualifiedName());
+//						methodActivity.setType(ActivityType.METHOD_EXTENSION);
+//						
+//						if (parseMethods) {
+////							frameworkReuseActions.add(methodActivity);
+//						}
+//					}
+//
+//					// Mark as visited
+//					visited.add(node.getName().getIdentifier());
+//
+//					return true;
+//				}
+
+			});
+			
+//			if (!this.framework.getActivitiesMap().containsKey(classActivity.getId())) {
+//				this.framework.getActivitiesMap().put(classActivity.getName(), index);
+//				this.framework.getActivities().add(classActivity);
+//				index++;
+//			}
+		}
 	}
 
 }

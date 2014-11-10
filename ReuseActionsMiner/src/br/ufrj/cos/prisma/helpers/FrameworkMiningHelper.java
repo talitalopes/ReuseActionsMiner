@@ -148,7 +148,7 @@ public class FrameworkMiningHelper {
 					if (eventsMap.containsKey(dep.getId())) {
 						dep.setEvent(eventsMap.get(dep.getId()));
 					} else {
-						System.out.println("remove dep: " + dep.getId());
+//						System.out.println("remove dep: " + dep.getId());
 						dependenciesToRemove.add(dep);
 					}
 					
@@ -243,15 +243,11 @@ public class FrameworkMiningHelper {
 				
 				for (ImportDeclaration imp: classVisitor.getImports()) {
 					String importName = imp.getName().toString();
-					System.out.println(importName);
+//					System.out.println(importName);
 					
 					EventDependency dep = Minerv1Factory.eINSTANCE.createEventDependency();
 					dep.setId(importName);
 					e.getDependencies().add(dep);
-				}
-				
-				if (eventId.contains("GEFEditorPalette")) {
-					System.out.println("added");
 				}
 				
 				e.setId(eventId);
@@ -273,10 +269,10 @@ public class FrameworkMiningHelper {
 			Activity activity = (Activity) Minerv1Factory.eINSTANCE
 					.createActivity();
 
-			activity.setId(classVisitor.getClassOrInterfaceName().getName());
-			activity.setType(ActivityType.CLASS_EXTENSION);
 			String activityName = classVisitor.getClassOrInterfaceName().getName();
+			activity.setId(activityName);
 			activity.setName(activityName);
+			activity.setType(ActivityType.CLASS_EXTENSION);			
 			activity.setPackageName(classVisitor.getPackage());
 			this.activities.add(activity);
 
