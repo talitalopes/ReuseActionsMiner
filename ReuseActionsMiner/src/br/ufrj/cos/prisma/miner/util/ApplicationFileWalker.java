@@ -23,8 +23,6 @@ import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
-import br.ufrj.cos.prisma.helpers.LogHelper;
-
 public class ApplicationFileWalker extends BaseFileWalker {
 
 	FrameworkProcess process;
@@ -41,14 +39,14 @@ public class ApplicationFileWalker extends BaseFileWalker {
 	}
 
 	public void walk(String path) {
-		if (this.process == null) {
-			LogHelper.log("No process found");
-			return;
-		}
-		if (this.process.getActivitiesMap() == null) {
-			LogHelper.log("Map is null");
-			return;
-		}
+//		if (this.process == null) {
+//			LogHelper.log("No process found");
+//			return;
+//		}
+//		if (this.process.getActivitiesMap() == null) {
+//			LogHelper.log("Map is null");
+//			return;
+//		}
 
 		super.walk(path);
 	}
@@ -88,7 +86,7 @@ public class ApplicationFileWalker extends BaseFileWalker {
 				for (String importName : imports) {
 
 					if (importName.contains(superclass.toString())) {
-						
+						System.out.println("Search superclass: " + superclass.toString());
 						if (process.getActivitiesMap().get(
 								superclass.toString()) != null) {
 							

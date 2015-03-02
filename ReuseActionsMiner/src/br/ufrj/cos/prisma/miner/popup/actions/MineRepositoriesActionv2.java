@@ -11,14 +11,15 @@ import minerv1.Minerv1Factory;
 
 import org.eclipse.jface.action.IAction;
 
-import br.ufrj.cos.prisma.helpers.FrameworkMiningHelper;
 import br.ufrj.cos.prisma.helpers.GitRepositoryHelper;
 import br.ufrj.cos.prisma.helpers.LogHelper;
+import br.ufrj.cos.prisma.miner.util.ApplicationFileWalker;
 
 public class MineRepositoriesActionv2 extends BaseExtractionAction {
 	
 	Set<String> discoveredEvents;
-
+	int maxCommit = 10;
+	
 	public MineRepositoriesActionv2() {
 		super();
 		discoveredEvents = new HashSet<String>();
@@ -31,7 +32,8 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 	}
 
 	private void mineReuseActionsFromRepositories() {
-
+		LogHelper.log("Number of processes to mine: " + process.getApplicationsToMine().size());
+		
 		for (FrameworkApplication app : process.getApplicationsToMine()) {
 			
 			final GitRepositoryHelper gitHelper = GitRepositoryHelper
@@ -39,40 +41,39 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 
 			List<String> commits = gitHelper.getCommitsHistoryFromMaster();
 
-			LogHelper.log(String.format("%d commits found for application %s",
-					commits.size(), app.getName()));
-
-			FrameworkMiningHelper miningHelper = new FrameworkMiningHelper(
-					gitHelper.getRepoFile().getAbsolutePath(), this.process);
-
-			List<Event> reuseActionsEvents = null;
-			Commit currentCommit = null;
+			LogHelper.log("--- Starting FrameworkApplication " + app.getName());
+			int limit = (commits.size() < maxCommit) ? commits.size() : maxCommit;
+			LogHelper.log(String.format("%d commits found for application %s. %d commits will be mined.",
+					commits.size(), app.getName(), limit));
 			
-			for (int currentIndex = 0; currentIndex < commits.size(); currentIndex++) {
+			for (int currentIndex = 0; currentIndex < limit; currentIndex++) {
 				LogHelper.log(String.format("Commit %d out of %d",
 						currentIndex + 1, commits.size()));
 
 				String currentCommitId = commits.get(currentIndex);
 				gitHelper.cloneFromCommit(currentCommitId);
 				
-				currentCommit = Minerv1Factory.eINSTANCE.createCommit(currentCommitId);
+				LogHelper.log("Current commit Id: " + currentCommitId);
+				Commit currentCommit = Minerv1Factory.eINSTANCE.createCommit(currentCommitId);
 				
-				reuseActionsEvents = miningHelper
-						.extractApplicationReuseActions();
-
+				ApplicationFileWalker walker = new ApplicationFileWalker(this.process);
+				walker.walk(gitHelper.getRepoFile().getAbsolutePath());
+				List<Event> reuseActionsEvents = walker.getReuseActions();
+				LogHelper.log("Events found: " + reuseActionsEvents.size());
+				
 				for (Event e : reuseActionsEvents) {
-					if (!this.discoveredEvents.contains(e.getId())) {
-						addEventToCommit(e, currentCommit);
-						this.discoveredEvents.add(e.getId());
-					} else {
-						System.out.println("Event not added: " + e.getId());
-					}
+//					if (!this.discoveredEvents.contains(e.getId())) {
+//						System.out.println("Add: " + e.getId());
+//						addEventToCommit(e, currentCommit);
+//						this.discoveredEvents.add(e.getId());
+//					} else {
+//						System.out.println("Event not added: " + e.getId());
+//					}
+					addEventToCommit(e, currentCommit);
 				}
 
 				app.getCommits().add(currentCommit);
-
 				gitHelper.deleteRepo();
-				
 				save();
 			}
 
@@ -80,7 +81,7 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 			save();
 			
 			gitHelper.deleteParentFolder();
-			LogHelper.log("Finishing FrameworkApplication " + app.getName());
+			LogHelper.log("--- Finishing FrameworkApplication " + app.getName());
 		}
 	}
 
@@ -88,6 +89,7 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 		int position = -1;
 
 		for (int i = 0; i < currentCommit.getEvents().size(); i++) {
+			// Group activities
 			Event e = currentCommit.getEvents().get(i);
 			if (e.getActivity().getName()
 					.equals(currentEvent.getActivity().getName())) {
@@ -97,7 +99,7 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 		}
 
 		if (position >= 0) {
-			currentCommit.getEvents().add(position, currentEvent);
+			currentCommit.getEvents().set(position, currentEvent);
 		} else {
 			currentCommit.getEvents().add(currentEvent);
 		}
