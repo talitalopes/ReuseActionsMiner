@@ -40,14 +40,17 @@ public class XESLogGenerator {
 	private XFactoryBufferedImpl factory;
 	private XLog log;
 	private boolean classesOnly = false;
+	private String exportPath;
 
-	public XESLogGenerator() {
+	public XESLogGenerator(String exportPath) {
 		init();
+		this.exportPath = exportPath;
 	}
 
-	public XESLogGenerator(boolean classesOnly) {
+	public XESLogGenerator(boolean classesOnly, String exportPath) {
 		init();
 		this.classesOnly = classesOnly;
+		this.exportPath = exportPath;
 	}
 
 	private void init() {
@@ -90,9 +93,14 @@ public class XESLogGenerator {
 		}
 
 		String type = appEvent.getActivity().getType().getName();
-		String eventName = String.format("%s.%s", appEvent.getActivity()
-				.getPackageName(), appEvent.getActivity().getName());
-
+		String packageName = appEvent.getActivity().getPackageName();
+		
+		String eventName = String.format("%s", appEvent.getActivity().getName());
+		if (packageName != null && packageName.length() > 0) {
+			eventName = String.format("%s.%s", appEvent.getActivity()
+					.getPackageName(), appEvent.getActivity().getName());
+		}
+				
 		// DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
 		return createEvent(type, eventName, cal.getTime());
@@ -233,6 +241,7 @@ public class XESLogGenerator {
 			return false;
 		}
 
+		System.out.println("Application: " + appName + " is valid.");
 		return true;
 	}
 
@@ -242,7 +251,8 @@ public class XESLogGenerator {
 		XesXmlSerializer serializer = new XesXmlSerializer();
 
 		try {
-			File dir = new File(Constants.LOG_LOCAL_DIR);
+			System.out.println("Current dir: " + this.exportPath);
+			File dir = new File(this.exportPath);
 			if (!dir.exists()) {
 				dir.mkdir();
 			}
@@ -250,7 +260,7 @@ public class XESLogGenerator {
 			File sFile = new File(dir, filename);
 
 			LogHelper.log("Serializing log with XStream at: "
-					+ Constants.LOG_LOCAL_DIR + " " + filename);
+					+ sFile.getAbsolutePath().toString());
 
 			OutputStream oStream = new BufferedOutputStream(
 					new FileOutputStream(sFile));

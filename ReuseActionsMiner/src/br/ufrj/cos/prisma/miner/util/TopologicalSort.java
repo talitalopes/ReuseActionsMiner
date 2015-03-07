@@ -36,7 +36,7 @@ public class TopologicalSort {
 				System.out.println("null event");
 				continue;
 			}
-			System.out.println(g.sortedArray[i].event.getActivity().getId());
+			System.out.println("Event id: " + g.sortedArray[i].event.getActivity().getId());
 			sortedEvents.add(g.sortedArray[i].event);
 		}
 	}

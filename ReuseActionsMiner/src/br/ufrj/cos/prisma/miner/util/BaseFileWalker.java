@@ -16,7 +16,7 @@ public abstract class BaseFileWalker {
 	protected boolean parseMethods = false;
 
 	public BaseFileWalker() {
-		parser = ASTParser.newParser(AST.JLS4);
+		parser = ASTParser.newParser(AST.JLS8);
 	}
 
 	public void walk(String path) {
