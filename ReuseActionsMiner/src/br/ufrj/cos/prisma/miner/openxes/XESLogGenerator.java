@@ -251,7 +251,6 @@ public class XESLogGenerator {
 		XesXmlSerializer serializer = new XesXmlSerializer();
 
 		try {
-			System.out.println("Current dir: " + this.exportPath);
 			File dir = new File(this.exportPath);
 			if (!dir.exists()) {
 				dir.mkdir();
