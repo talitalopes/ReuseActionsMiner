@@ -7,6 +7,7 @@ import minerv1.Minerv1Factory;
 
 import org.eclipse.jface.action.IAction;
 
+import br.ufrj.cos.prisma.helpers.LogHelper;
 import br.ufrj.cos.prisma.helpers.RepositoriesHelper;
 import br.ufrj.cos.prisma.miner.util.Constants;
 import br.ufrj.cos.prisma.model.GithubRepository;
@@ -24,22 +25,24 @@ public class ListRepositoriesAction extends BaseAction {
 
 	private List<GithubRepository> listRepositories() {
 		String searchKeywork = getSearchKeywork();
-		System.out.println("Search for repositories using keyword: "
+		LogHelper.log("Search for repositories using keyword: "
 				+ searchKeywork);
 
 		List<GithubRepository> repositories = RepositoriesHelper
 				.listRepositories(searchKeywork); // "JJTV5_gef"
 
 		// create applications for repositories
+		int index = 1;
 		for (GithubRepository repo : repositories) {
 			FrameworkApplication app = Minerv1Factory.eINSTANCE
 					.createFrameworkApplication();
 			app.setName(repo.getName());
 			app.setRepositoryUrl(repo.getCloneUrl());
 
-			System.out.println("Add application " + app.getName()
+			System.out.println(index + " - Add application " + app.getName()
 					+ " to process " + process.getName());
 			this.process.getApplications().add(app);
+			index++;
 		}
 		save();
 
