@@ -3,15 +3,15 @@
 <plugin>
 	<extension point="org.eclipse.emf.ecore.generated_package">
   		<package
-			uri="http://process/reuse/miner"
-			class="miner.MinerPackage"/>
+			uri="http://reuse/actions/miner"
+			class="minerv1.impl.Minerv1PackageImpl"/>
 	</extension>
 
    <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
       <!-- @generated miner -->
       <factory
-            uri="http://prisma.cos.ufrj.br/processreuseminer"
-            class="miner.provider.MinerItemProviderAdapterFactory"
+            uri="http://prisma.cos.ufrj.br/reuseactionsminer"
+            class="br.ufrj.cos.prisma.model.miner.provider.Minerv1ItemProviderAdapterFactory"
             supportedTypes=
               "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
                org.eclipse.emf.edit.provider.IStructuredItemContentProvider
@@ -29,33 +29,22 @@
             category="org.eclipse.emf.ecore.Wizard.category.ID"
             class="minerv1.presentation.Minerv1ModelWizard"
             icon="icons/full/obj16/Minerv1ModelFile.gif"
-            id="minerv1.presentation.Minerv1ModelWizardID"
+            id="br.ufrj.cos.prisma.model.miner.presentation.Minerv1ModelWizardID"
             name="Miner1 Model">
             <description>%_UI_MinerModelWizard_description</description>
          	<selection class="org.eclipse.core.resources.IResource"/>
       </wizard>
    </extension>
 
-   <extension point="org.eclipse.ui.editors">
-      <!-- @generated miner -->
-      <editor
-            id="model.miner.presentation.MinerEditorID"
-            name="%_UI_MinerEditor_label"
-            icon="icons/full/obj16/Minerv1ModelFile.gif"
-            extensions="miner"
-            class="miner.presentation.MinerEditor"
-            contributorClass="miner.presentation.MinerActionBarContributor">
-      </editor>
-   </extension>
 	<extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             objectClass="org.eclipse.core.resources.IFile"
-            id="ProcessReuseMiner.contribution1">
+            id="ReuseActionsMiner.contribution1">
          <menu
-               label="Process Miner"
+               label="Reuse Actions Miner"
                path="additions"
-               id="ProcessReuseMiner.menu1">
+               id="ReuseActionsMiner.menu1">
             <separator
                   name="group1">
             </separator>
@@ -69,35 +58,35 @@
          <action
                label="List repositories"
                class="br.ufrj.cos.prisma.miner.popup.actions.ListRepositoriesAction"
-               menubarPath="ProcessReuseMiner.menu1/group1"
+               menubarPath="ReuseActionsMiner.menu1/group1"
                enablesFor="1"
                id="Miner.popup.actions.ListRepositoriesForExtraction">
          </action>
          <action
                label="Parse Framework"
                class="br.ufrj.cos.prisma.miner.popup.actions.ParseFrameworkAction"
-               menubarPath="ProcessReuseMiner.menu1/group2"
+               menubarPath="ReuseActionsMiner.menu1/group2"
                enablesFor="1"
                id="Miner.popup.actions.NewParser">
          </action>
 		 <!--action
                label="Mine Workspace"
                class="br.ufrj.cos.prisma.miner.popup.actions.MineWorkspaceAction"
-               menubarPath="ProcessReuseMiner.menu1/group1"
+               menubarPath="ReuseActionsMiner.menu1/group1"
                enablesFor="1"
                id="Miner.popup.actions.MineWorkspaceAction">
          </action-->
          <action
                label="Mine Repositories from List"
                class="br.ufrj.cos.prisma.miner.popup.actions.MineRepositoriesActionv2"
-               menubarPath="ProcessReuseMiner.menu1/group2"
+               menubarPath="ReuseActionsMiner.menu1/group2"
                enablesFor="1"
                id="Miner.popup.actions.MineRepositoriesActionv2">
          </action>         
          <action
                label="Generate XES Log"
                class="br.ufrj.cos.prisma.miner.popup.actions.GenerateXESLogAction"
-               menubarPath="ProcessReuseMiner.menu1/group3"
+               menubarPath="ReuseActionsMiner.menu1/group3"
                enablesFor="1"
                id="Miner.popup.actions.GenerateXESLogAction">
          </action>
@@ -105,14 +94,18 @@
       </objectContribution>
    </extension>
  <extension
-       id="ReuseProcessMinerID"
+       id="ReuseActionsMinerID"
        point="org.eclipse.core.runtime.products">
     <product
           application="org.eclipse.ui.ide.workbench"
-          name="ReuseProcessMiner">
+          name="ReuseActionsMiner">
        <property
              name="appName"
-             value="ReuseProcessMiner">
+             value="ReuseActionsMiner">
+       </property>
+       <property
+             name="preferenceCustomization"
+             value="plugin_customization.ini">
        </property>
     </product>
  </extension>
@@ -121,10 +114,10 @@
        point="org.eclipse.core.runtime.products">
     <product
           application="org.eclipse.e4.ui.workbench.swt.E4Application"
-          name="ReuseProcessMiner">
+          name="ReuseActionsMiner">
        <property
              name="appName"
-             value="ReuseProcessMiner">
+             value="ReuseActionsMiner">
        </property>
     </product>
  </extension>

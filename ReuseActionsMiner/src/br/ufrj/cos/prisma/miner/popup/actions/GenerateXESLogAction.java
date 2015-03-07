@@ -48,7 +48,7 @@ public class GenerateXESLogAction extends BaseAction {
 		URI resourceURI = this.resource.getURI();
 		
 		if (resourceURI.segmentCount() > 0) {
-			Path exportPath = (Path) new Path(workspacePathString).append(resourceURI.segment(0)).append("output");
+			Path exportPath = (Path) new Path(workspacePathString).append(resourceURI.segment(0)).append("xes logs");
 			System.out.println("exportPath: " + exportPath);
 			return exportPath.toString();
 		}
