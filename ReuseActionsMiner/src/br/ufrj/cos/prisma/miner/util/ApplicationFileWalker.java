@@ -20,6 +20,7 @@ import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
+import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
@@ -27,11 +28,13 @@ public class ApplicationFileWalker extends BaseFileWalker {
 
 	FrameworkProcess process;
 	List<Event> applicationReuseActions;
-
+	Set<String> visited;
+	
 	public ApplicationFileWalker(FrameworkProcess process) {
 		super();
 		this.process = process;
 		this.applicationReuseActions = new ArrayList<Event>();
+		this.visited = new HashSet<String>();
 	}
 
 	public List<Event> getReuseActions() {
@@ -59,7 +62,6 @@ public class ApplicationFileWalker extends BaseFileWalker {
 		final CompilationUnit compilationUnit = (CompilationUnit) parser
 				.createAST(null);
 		compilationUnit.accept(new ASTVisitor() {
-			Set<String> visited = new HashSet<String>();
 			Event reuseClassEvent = Minerv1Factory.eINSTANCE.createEvent();
 			Set<String> imports = new HashSet<String>();
 
@@ -70,44 +72,66 @@ public class ApplicationFileWalker extends BaseFileWalker {
 				packageName = node.getName().getFullyQualifiedName();
 				return false;
 			}
-
+			
 			public boolean visit(TypeDeclaration node) {
 				appClassName = node.getName().getFullyQualifiedName();
 				String eventId = String.format("%s.%s", packageName,
 						appClassName);
 				
-				Type superclass = node.getSuperclassType();
-
+				Type superclass = node.getSuperclassType(); 
+				
 				if (superclass == null) {
+					// Check if node implements any interface
+					List<SimpleType> types = (List<SimpleType>) node.superInterfaceTypes();
+					
+			        for (int bIndex = 0; bIndex < types.size(); bIndex++) {
+			        	String interfaceName = types.get(bIndex).getName().toString();
+			        	int index = findSuperClassOrInterface(interfaceName);
+			        	if (index != -1) {
+			        		reuseClassEvent.setId(eventId);
+			        		reuseClassEvent.setActivity(process.getActivities()
+								.get(index));
+			        		applicationReuseActions.add(reuseClassEvent);
+			        	}
+			        }
+			        
 					visited.add(node.getName().getIdentifier());
 					return false;
+					
+				} else {
+					int index = findSuperClassOrInterface(superclass.toString());
+					if (index == -1) {
+						visited.add(node.getName().getIdentifier());
+						return false;
+					}
+					reuseClassEvent.setId(eventId);
+					reuseClassEvent.setActivity(process.getActivities()
+							.get(index));
+					applicationReuseActions.add(reuseClassEvent);
 				}
 				
-				for (String importName : imports) {
-
-					if (importName.contains(superclass.toString())) {
-						System.out.println("Search superclass: " + superclass.toString());
-						if (process.getActivitiesMap().get(
-								superclass.toString()) != null) {
-							
-							System.out.println("Found Superclass: " + superclass);
-							
-							int index = process.getActivitiesMap().get(
-									superclass.toString());
-							reuseClassEvent.setId(eventId);
-							reuseClassEvent.setActivity(process.getActivities()
-									.get(index));
-							applicationReuseActions.add(reuseClassEvent);
-							break;
-						}
-					}
-
-				}
-
 				// Mark as visited
 				visited.add(node.getName().getIdentifier());
 
 				return true;
+			}
+			
+			public int findSuperClassOrInterface(String typeName) {
+				for (String importName : imports) {
+					if (importName.contains(typeName)) {
+						System.out.println("Search superclass: " + typeName);
+						if (process.getActivitiesMap().get(
+								typeName) != null) {
+							
+							System.out.println("Found Superclass: " + typeName);
+							
+							int index = process.getActivitiesMap().get(
+									typeName);
+							return index;
+						}
+					}
+				}
+				return -1;
 			}
 
 			public boolean visit(ImportDeclaration importDeclaration) {

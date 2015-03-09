@@ -27,7 +27,8 @@ public class ParseFrameworkAction extends BaseAction {
 	}
 	
 	class FrameworkFileWalker extends BaseFileWalker {
-				
+		String packageName;
+		
 		public FrameworkFileWalker() {
 			super();
 		}
@@ -35,21 +36,21 @@ public class ParseFrameworkAction extends BaseAction {
 		protected void getClassInfo(String fileContent) {
 			parser.setSource(fileContent.toCharArray());
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
-
-			final Activity classActivity = Minerv1Factory.eINSTANCE.createActivity();
 			
 			final CompilationUnit compilationUnit = (CompilationUnit) parser
 					.createAST(null);
 			compilationUnit.accept(new ASTVisitor() {
 								
 				public boolean visit(PackageDeclaration node) {
-					classActivity.setPackageName(node.getName().getFullyQualifiedName());
-					classActivity.setType(ActivityType.CLASS_EXTENSION);
+					packageName = node.getName().getFullyQualifiedName();
 					return true;
 				}
 				
 				public boolean visit(TypeDeclaration node) {
+					Activity classActivity = Minerv1Factory.eINSTANCE.createActivity();
 					classActivity.setName(node.getName().getIdentifier());
+					classActivity.setPackageName(packageName);
+					classActivity.setType(ActivityType.CLASS_EXTENSION);				
 					classActivity.setId(node.getName().getIdentifier());
 					
 					if (process.getActivitiesMap().get(classActivity.getName()) == null) {
