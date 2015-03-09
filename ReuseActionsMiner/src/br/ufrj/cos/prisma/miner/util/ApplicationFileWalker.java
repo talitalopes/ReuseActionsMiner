@@ -1,8 +1,10 @@
 package br.ufrj.cos.prisma.miner.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import minerv1.Event;
@@ -15,10 +17,8 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
@@ -27,17 +27,38 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 public class ApplicationFileWalker extends BaseFileWalker {
 
 	FrameworkProcess process;
+	Map<String, Event> eventsMap;
 	List<Event> applicationReuseActions;
 	Set<String> visited;
 	
 	public ApplicationFileWalker(FrameworkProcess process) {
 		super();
 		this.process = process;
+		this.eventsMap = new HashMap<String, Event>();
 		this.applicationReuseActions = new ArrayList<Event>();
 		this.visited = new HashSet<String>();
 	}
 
 	public List<Event> getReuseActions() {
+		// update dependencies events
+		
+		for (int i = 0; i < this.applicationReuseActions.size(); i++) {
+			Event e = this.applicationReuseActions.get(i);
+			
+			List<EventDependency> eventsToRemove = new ArrayList<EventDependency>();
+			for (int j = 0; j < e.getDependencies().size(); j++) {
+				EventDependency d = e.getDependencies().get(j);
+				Event depEvent = this.eventsMap.get(d.getId());
+				if (depEvent == null) {
+					eventsToRemove.add(d);
+				} else {
+					d.setEvent(depEvent);
+					e.getDependencies().set(j, d);
+				}
+			}
+			e.getDependencies().removeAll(eventsToRemove);
+		}
+		
 		return this.applicationReuseActions;
 	}
 
@@ -73,6 +94,7 @@ public class ApplicationFileWalker extends BaseFileWalker {
 				return false;
 			}
 			
+			@SuppressWarnings("unchecked")
 			public boolean visit(TypeDeclaration node) {
 				appClassName = node.getName().getFullyQualifiedName();
 				String eventId = String.format("%s.%s", packageName,
@@ -91,6 +113,7 @@ public class ApplicationFileWalker extends BaseFileWalker {
 			        		reuseClassEvent.setId(eventId);
 			        		reuseClassEvent.setActivity(process.getActivities()
 								.get(index));
+			        		eventsMap.put(appClassName, reuseClassEvent);
 			        		applicationReuseActions.add(reuseClassEvent);
 			        	}
 			        }
@@ -108,6 +131,7 @@ public class ApplicationFileWalker extends BaseFileWalker {
 					reuseClassEvent.setActivity(process.getActivities()
 							.get(index));
 					applicationReuseActions.add(reuseClassEvent);
+					eventsMap.put(appClassName, reuseClassEvent);
 				}
 				
 				// Mark as visited
@@ -169,28 +193,28 @@ public class ApplicationFileWalker extends BaseFileWalker {
 							return true;
 						}
 
-						public boolean visit(MethodInvocation node) {
-
-							for (int i = 0; i < node.arguments().size(); i++) {
-								Expression expressionArg = (Expression) node
-										.arguments().get(i);
-								expressionArg.accept(new ASTVisitor() {
-
-									public boolean visit(
-											ClassInstanceCreation node) {
-										EventDependency dep = Minerv1Factory.eINSTANCE
-												.createEventDependency();
-										dep.setId(node.getType().toString());
-										reuseClassEvent.getDependencies().add(
-												dep);
-										return true;
-									}
-								});
-
-							}
-
-							return true;
-						}
+//						public boolean visit(MethodInvocation node) {
+//
+//							for (int i = 0; i < node.arguments().size(); i++) {
+//								Expression expressionArg = (Expression) node
+//										.arguments().get(i);
+//								expressionArg.accept(new ASTVisitor() {
+//
+//									public boolean visit(
+//											ClassInstanceCreation node) {
+//										EventDependency dep = Minerv1Factory.eINSTANCE
+//												.createEventDependency();
+//										dep.setId(node.getType().toString());
+//										reuseClassEvent.getDependencies().add(
+//												dep);
+//										return true;
+//									}
+//								});
+//
+//							}
+//
+//							return true;
+//						}
 					});
 				}
 
