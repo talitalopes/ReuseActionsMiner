@@ -73,13 +73,12 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 				}
 
 				app.getCommits().add(currentCommit);
-				gitHelper.deleteRepo();
 				save();
 			}
 
 			app.setMine(false);			
 			save();
-			
+			gitHelper.deleteRepo();
 			gitHelper.deleteParentFolder();
 			LogHelper.log("--- Finishing FrameworkApplication " + app.getName());
 		}
@@ -94,12 +93,13 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 			if (e.getActivity().getName()
 					.equals(currentEvent.getActivity().getName())) {
 				position = i;
-				i = currentCommit.getEvents().size();
+				break;
+//				i = currentCommit.getEvents().size();
 			}
 		}
 
 		if (position >= 0) {
-			currentCommit.getEvents().set(position, currentEvent);
+			currentCommit.getEvents().add(position, currentEvent);
 		} else {
 			currentCommit.getEvents().add(currentEvent);
 		}

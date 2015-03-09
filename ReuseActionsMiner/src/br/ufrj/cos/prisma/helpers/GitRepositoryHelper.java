@@ -55,6 +55,7 @@ public class GitRepositoryHelper {
 
 		} catch (IOException e) {
 			LogHelper.log("Error: IOException");
+			System.out.println(e);
 		} catch (InvalidRemoteException e) {
 			LogHelper.log("InvalidRemoteException", e.getMessage());
 		} catch (TransportException e) {
@@ -120,6 +121,7 @@ public class GitRepositoryHelper {
 			Runtime.getRuntime().exec("git checkout -- .", null, repoFile);
 		} catch (IOException e) {
 			LogHelper.log("Error: IOException");
+			System.out.println(e);
 		}
 	}
 
