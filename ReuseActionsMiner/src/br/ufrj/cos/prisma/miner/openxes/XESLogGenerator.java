@@ -158,7 +158,7 @@ public class XESLogGenerator {
 			if (!validApp(application)) {
 				continue;
 			}
-
+			
 			for (Commit c : application.getCommits()) {
 				System.out.println("commit: " + c.getId());
 				trace = createNewTrace(c.getName());

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import minerv1.Activity;
 import minerv1.Event;
 import minerv1.EventDependency;
 import minerv1.FrameworkProcess;
@@ -29,14 +30,12 @@ public class ApplicationFileWalker extends BaseFileWalker {
 	FrameworkProcess process;
 	Map<String, Event> eventsMap;
 	List<Event> applicationReuseActions;
-	Set<String> visited;
 	
 	public ApplicationFileWalker(FrameworkProcess process) {
 		super();
 		this.process = process;
 		this.eventsMap = new HashMap<String, Event>();
 		this.applicationReuseActions = new ArrayList<Event>();
-		this.visited = new HashSet<String>();
 	}
 
 	public List<Event> getReuseActions() {
@@ -82,116 +81,116 @@ public class ApplicationFileWalker extends BaseFileWalker {
 
 		final CompilationUnit compilationUnit = (CompilationUnit) parser
 				.createAST(null);
-		compilationUnit.accept(new ASTVisitor() {
-			Event reuseClassEvent = Minerv1Factory.eINSTANCE.createEvent();
-			Set<String> imports = new HashSet<String>();
+		compilationUnit.accept(new ReuseMinerASTVisitor());
+	}
+	
+	class ReuseMinerASTVisitor extends ASTVisitor {
+		String packageName;
+		String appClassName;
 
-			String packageName;
-			String appClassName;
+		Event reuseClassOrInterfaceEvent;
+		Set<String> imports;
+	
+		public ReuseMinerASTVisitor() {
+			this.reuseClassOrInterfaceEvent = Minerv1Factory.eINSTANCE.createEvent();
+			this.imports = new HashSet<String>();
+		}
+		
+		public String getPackage() {
+			return this.packageName;
+		}
 
-			public boolean visit(PackageDeclaration node) {
-				packageName = node.getName().getFullyQualifiedName();
-				return false;
+		public void updateReuseClassOrInterfaceEvent(String eventId, Activity activity) {
+			reuseClassOrInterfaceEvent.setId(eventId);
+    		reuseClassOrInterfaceEvent.setActivity(activity);
+    		eventsMap.put(appClassName, reuseClassOrInterfaceEvent);
+    		applicationReuseActions.add(reuseClassOrInterfaceEvent);	
+		}
+		
+		public boolean visit(PackageDeclaration node) {
+			this.packageName = node.getName().getFullyQualifiedName();
+			return true;
+		}
+		
+		@SuppressWarnings("unchecked")
+		public boolean checkInterfaceImplementations(String eventId, TypeDeclaration node) {
+			List<SimpleType> types = (List<SimpleType>) node.superInterfaceTypes();
+			
+	        for (int typesIndex = 0; typesIndex < types.size(); typesIndex++) {
+	        	String interfaceName = types.get(typesIndex).getName().toString();
+	        	
+	        	Activity activity = findSuperClassOrInterface(interfaceName);
+	        	if (activity != null) {
+	        		this.updateReuseClassOrInterfaceEvent(eventId, activity);
+	        	}
+	        }
+	        
+			return true;
+		}
+
+		public boolean visit(TypeDeclaration node) {
+			appClassName = node.getName().getFullyQualifiedName();
+			System.out.println("---------\nClass name: " + appClassName);
+			
+			String eventId = String.format("%s.%s", this.getPackage(),
+					appClassName);
+			
+			Type superclass = node.getSuperclassType(); 
+			if (superclass == null) {
+				// Check if node implements any interface
+				return this.checkInterfaceImplementations(eventId, node);
 			}
 			
-			@SuppressWarnings("unchecked")
-			public boolean visit(TypeDeclaration node) {
-				appClassName = node.getName().getFullyQualifiedName();
-				String eventId = String.format("%s.%s", packageName,
-						appClassName);
-				
-				Type superclass = node.getSuperclassType(); 
-				
-				if (superclass == null) {
-					// Check if node implements any interface
-					List<SimpleType> types = (List<SimpleType>) node.superInterfaceTypes();
-					
-			        for (int bIndex = 0; bIndex < types.size(); bIndex++) {
-			        	String interfaceName = types.get(bIndex).getName().toString();
-			        	int index = findSuperClassOrInterface(interfaceName);
-			        	if (index != -1) {
-			        		reuseClassEvent.setId(eventId);
-			        		reuseClassEvent.setActivity(process.getActivities()
-								.get(index));
-			        		eventsMap.put(appClassName, reuseClassEvent);
-			        		applicationReuseActions.add(reuseClassEvent);
-			        	}
-			        }
-			        
-					visited.add(node.getName().getIdentifier());
-					return false;
-					
-				} else {
-					int index = findSuperClassOrInterface(superclass.toString());
-					if (index == -1) {
-						visited.add(node.getName().getIdentifier());
-						return false;
-					}
-					reuseClassEvent.setId(eventId);
-					reuseClassEvent.setActivity(process.getActivities()
-							.get(index));
-					applicationReuseActions.add(reuseClassEvent);
-					eventsMap.put(appClassName, reuseClassEvent);
-				}
-				
-				// Mark as visited
-				visited.add(node.getName().getIdentifier());
-
+			Activity activity = findSuperClassOrInterface(superclass.toString());
+			if (activity == null) {
 				return true;
 			}
-			
-			public int findSuperClassOrInterface(String typeName) {
-				for (String importName : imports) {
-					if (importName.contains(typeName)) {
-						System.out.println("Search superclass: " + typeName);
-						if (process.getActivitiesMap().get(
-								typeName) != null) {
-							
-							System.out.println("Found Superclass: " + typeName);
-							
-							int index = process.getActivitiesMap().get(
-									typeName);
-							return index;
-						}
+			this.updateReuseClassOrInterfaceEvent(eventId, activity);
+			return true;
+		}
+		
+		public Activity findSuperClassOrInterface(String typeName) {
+			for (String importName : imports) {
+				if (importName.contains(typeName)) {
+					if (process.getActivitiesMap().get(
+							typeName) != null) {
+						int activityIndex = process.getActivitiesMap().get(
+								typeName);
+						return process.getActivities().get(activityIndex);
 					}
 				}
-				return -1;
 			}
+			return null;
+		}
 
-			public boolean visit(ImportDeclaration importDeclaration) {
-				String importName = importDeclaration.getName()
-						.getFullyQualifiedName();
-				imports.add(importName);
-				return false;
-			}
+		public boolean visit(ImportDeclaration importDeclaration) {
+			String importName = importDeclaration.getName()
+					.getFullyQualifiedName();
+			imports.add(importName);
+			return true;
+		}
 
-			public boolean visit(MethodDeclaration node) {
-				if (visited.contains(node.getName().getIdentifier())) {
-					return false;
+		public boolean visit(MethodDeclaration node) {
+			if (node.getBody() != null) {
+
+				if (parseMethods) {
+//						 Event reuseMethod =
+//						 Minerv1Factory.eINSTANCE.createEvent();
+//						 reuseMethod.setId(node.getName().getFullyQualifiedName());
+//						 appClass.addMethod(reuseMethod);
 				}
 
-				if (node.getBody() != null) {
-
-					if (parseMethods) {
-						// Event reuseMethod =
-						// Minerv1Factory.eINSTANCE.createEvent();
-						// method.setName(node.getName().getFullyQualifiedName());
-						// appClass.addMethod(method);
+				Block block = node.getBody();
+				block.accept(new ASTVisitor() {
+					
+					public boolean visit(ClassInstanceCreation node) {
+						System.out.println("Dependency: " + node.getType().toString());
+						EventDependency dep = Minerv1Factory.eINSTANCE
+								.createEventDependency();
+						dep.setId(node.getType().toString());
+						reuseClassOrInterfaceEvent.getDependencies().add(dep);
+						return true;
 					}
-
-					// Mark as visited
-					visited.add(node.getName().getIdentifier());
-
-					Block block = node.getBody();
-					block.accept(new ASTVisitor() {
-
-						public boolean visit(ClassInstanceCreation node) {
-							EventDependency dep = Minerv1Factory.eINSTANCE
-									.createEventDependency();
-							dep.setId(node.getType().toString());
-							reuseClassEvent.getDependencies().add(dep);
-							return true;
-						}
 
 //						public boolean visit(MethodInvocation node) {
 //
@@ -215,12 +214,10 @@ public class ApplicationFileWalker extends BaseFileWalker {
 //
 //							return true;
 //						}
-					});
-				}
-
-				return true;
+				});
 			}
 
-		});
+			return true;
+		}
 	}
 }

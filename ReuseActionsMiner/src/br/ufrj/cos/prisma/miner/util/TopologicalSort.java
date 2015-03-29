@@ -1,10 +1,13 @@
 package br.ufrj.cos.prisma.miner.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import minerv1.Commit;
 import minerv1.Event;
+import minerv1.EventDependency;
 import minerv1.FrameworkApplication;
 
 public class TopologicalSort {
@@ -12,6 +15,7 @@ public class TopologicalSort {
 	FrameworkApplication app;
 	Commit commit;
 	List<Event> sortedEvents;
+	Set<String> visited = new HashSet<String>();
 	
 	public TopologicalSort(Commit c) {
 		this.commit = c;
@@ -27,9 +31,51 @@ public class TopologicalSort {
 		this.sortCommit(this.commit);
 	}
 	
-	public void sortCommit(Commit c) {
+	public void sortApplicationEvents() {
+		for (Commit c: app.getCommits()) {
+			System.out.println("Commit: " + c.getId());
+			for (Event e: c.getEvents()) {
+				this.visitDependencies(e);
+			}
+			System.out.println("");
+		}
+//		for (Commit c: app.getCommits()) {
+//			List<Event> localSortedEvents = this.sortCommit(c);
+//			List<Event> eventsToDelete = new ArrayList<Event>();
+//			for (Event e: this.sortedEvents) {
+//				if (localSortedEvents.contains(e)) {
+//					eventsToDelete.add(e);
+//				}
+//			}
+//			
+//			this.sortedEvents.removeAll(eventsToDelete);
+//			this.sortedEvents.addAll(localSortedEvents);
+//		}
+	}
+	
+	public void visitDependencies(Event e) {
+		if (e.getDependencies() != null) {
+			for (EventDependency dep: e.getDependencies()) {
+				visitDependencies(dep.getEvent());
+			}
+		}
+		
+		visitEvent(e);
+	}
+	
+	public void visitEvent(Event e) {
+		if (!this.visited.contains(e.getId())) {
+			System.out.println("Event: " + e.getId());
+			this.visited.add(e.getId());
+			this.sortedEvents.add(e);
+		}
+	}
+	
+	public List<Event> sortCommit(Commit c) {
 		GraphTS g = new GraphTS(c);
 		g.topo();
+		
+		List<Event> sortedEvents = new ArrayList<Event>();
 		
 		for (int i = 0; i < g.sortedArray.length; i++) {
 			if (g.sortedArray[i].event == null) {
@@ -39,6 +85,8 @@ public class TopologicalSort {
 			System.out.println("Event id: " + g.sortedArray[i].event.getActivity().getId());
 			sortedEvents.add(g.sortedArray[i].event);
 		}
+		
+		return sortedEvents;
 	}
 	
 	public void sort() {
@@ -48,7 +96,8 @@ public class TopologicalSort {
 	}
 	
 	public List<Event> getSortedEvents() {
-		this.sort();
+//		this.sort();
+		this.sortApplicationEvents();
 		return this.sortedEvents;
 	}
 	
