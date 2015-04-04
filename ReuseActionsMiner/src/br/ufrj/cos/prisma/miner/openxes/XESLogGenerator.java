@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import minerv1.Commit;
 import minerv1.Event;
@@ -32,6 +33,9 @@ import org.deckfour.xes.xstream.XesXStreamPersistency;
 import br.ufrj.cos.prisma.helpers.LogHelper;
 import br.ufrj.cos.prisma.miner.util.Constants;
 import br.ufrj.cos.prisma.miner.util.TopologicalSort;
+import br.ufrj.cos.prisma.model.ReuseMinerApplicationTree;
+import br.ufrj.cos.prisma.model.ReuseMinerApplicationTree.CustomNode;
+import br.ufrj.cos.prisma.model.ReuseMinerApplicationTree.VisitorStrategy;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -188,6 +192,54 @@ public class XESLogGenerator {
 		}
 	}
 
+	public void getProcessTraces(FrameworkProcess fwProcess) {
+		XTrace trace = null;
+		XEvent event = null;
+
+		for (FrameworkApplication application: fwProcess.getApplications()) {
+			if (application == null) {
+				System.out.println("Null application");
+				continue;
+			}
+			String appName = application.getName();
+			
+			ReuseMinerApplicationTree tree = new ReuseMinerApplicationTree(application);
+			List<CustomNode> nodes = tree.getTrace(VisitorStrategy.rootNode);
+
+			if (nodes.size() == 0) {
+				System.out.println("Empty trace for application: " + appName);
+				continue;
+			}
+			System.out.println("Events: " + nodes.size());
+			
+			trace = createNewTrace(appName);
+			if (trace == null) {
+				System.out.println("Error creating trace for application "
+						+ appName);
+				continue;
+			}
+			
+			int addedEvents = 0;
+
+			for (CustomNode node : nodes) {
+				if (node.getEvent() == null) {
+					continue;
+				}
+				
+				event = createEvent(node.getEvent());
+				if (event != null) {
+					trace.add(event);
+					addedEvents++;
+				}
+			}
+
+			// Prevent adding empty traces
+			if (addedEvents > 0) {
+				log.add(trace);
+			}
+		}
+	}
+	
 	public void getXESRepresentationFromProcess(FrameworkProcess fwProcess) {
 		XTrace trace = null;
 		XEvent event = null;

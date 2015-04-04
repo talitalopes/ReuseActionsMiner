@@ -3,8 +3,6 @@ package br.ufrj.cos.prisma.miner.popup.actions;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import minerv1.FrameworkApplication;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -21,14 +19,10 @@ public class GenerateXESLogAction extends BaseAction {
 	@Override
 	public void run(IAction action) {
 		super.run(action);
-				
-		for (FrameworkApplication app: this.process.getApplications()) {
-			System.out.println("Events: " + app.getEventsCount());
-		}
 		
 		String exportPath = this.getExportPath();
 		XESLogGenerator xesGen = new XESLogGenerator(true, exportPath);
-		xesGen.getXESRepresentationFromProcess(process);
+		xesGen.getProcessTraces(process);
 		
 //		Testing log separated by commits
 //		xesGen.getXESRepresentationForCommits(process);

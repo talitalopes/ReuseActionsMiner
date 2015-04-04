@@ -19,6 +19,7 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 	
 	Set<String> discoveredEvents;
 	int maxCommit = 10;
+	boolean mineAllCommits = true;
 	
 	public MineRepositoriesActionv2() {
 		super();
@@ -42,7 +43,7 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 			List<String> commits = gitHelper.getCommitsHistoryFromMaster();
 
 			LogHelper.log("--- Starting FrameworkApplication " + app.getName());
-			int limit = (commits.size() < maxCommit) ? commits.size() : maxCommit;
+			int limit = (commits.size() < maxCommit || mineAllCommits) ? commits.size() : maxCommit;
 			LogHelper.log(String.format("%d commits found for application %s. %d commits will be mined.",
 					commits.size(), app.getName(), limit));
 			
@@ -99,7 +100,11 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 		}
 
 		if (position >= 0) {
-			currentCommit.getEvents().add(position, currentEvent);
+			if (!currentCommit.getEvents().contains(currentEvent)) {
+				currentCommit.getEvents().add(position, currentEvent);
+			} else {
+				System.out.println("Error:: Duplicated: " + currentEvent.getId() + ": " + currentCommit.getId());
+			}
 		} else {
 			currentCommit.getEvents().add(currentEvent);
 		}
