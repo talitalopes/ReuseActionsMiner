@@ -7,10 +7,8 @@ import minerv1.EventDependency;
 import minerv1.Minerv1Package;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -222,4 +220,13 @@ public class EventDependencyImpl extends MinimalEObjectImpl.Container implements
 		return result.toString();
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return this.getId().equals(((EventDependency)obj).getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return this.getId().hashCode();
+	}
 } //EventDependencyImpl

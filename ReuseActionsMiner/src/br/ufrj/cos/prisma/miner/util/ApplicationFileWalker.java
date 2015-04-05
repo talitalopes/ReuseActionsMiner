@@ -50,12 +50,21 @@ public class ApplicationFileWalker extends BaseFileWalker {
 				Event depEvent = this.eventsMap.get(d.getId());
 				if (depEvent == null) {
 					eventsToRemove.add(d);
+				} else if (depEvent.getId().equals(e.getId())) {
+					eventsToRemove.add(d);
 				} else {
 					d.setEvent(depEvent);
-					e.getDependencies().set(j, d);
+					if (!e.getDependencies().contains(d)) {
+						e.getDependencies().set(j, d);
+					}
 				}
 			}
+			
 			e.getDependencies().removeAll(eventsToRemove);
+			Set<EventDependency> removeDuplicates = new HashSet<EventDependency>();
+			removeDuplicates.addAll(e.getDependencies());
+			e.getDependencies().clear();
+			e.getDependencies().addAll(removeDuplicates);
 		}
 		
 		return this.applicationReuseActions;
@@ -82,6 +91,10 @@ public class ApplicationFileWalker extends BaseFileWalker {
 		final CompilationUnit compilationUnit = (CompilationUnit) parser
 				.createAST(null);
 		compilationUnit.accept(new ReuseMinerASTVisitor());
+	}
+	
+	class ReuseMinerMethodsVisitor extends ASTVisitor {
+		
 	}
 	
 	class ReuseMinerASTVisitor extends ASTVisitor {
@@ -135,7 +148,7 @@ public class ApplicationFileWalker extends BaseFileWalker {
 			String eventId = String.format("%s.%s", this.getPackage(),
 					appClassName);
 			
-			Type superclass = node.getSuperclassType(); 
+			Type superclass = node.getSuperclassType();
 			if (superclass == null) {
 				// Check if node implements any interface
 				return this.checkInterfaceImplementations(eventId, node);
@@ -184,11 +197,19 @@ public class ApplicationFileWalker extends BaseFileWalker {
 				block.accept(new ASTVisitor() {
 					
 					public boolean visit(ClassInstanceCreation node) {
-						System.out.println("Dependency: " + node.getType().toString());
 						EventDependency dep = Minerv1Factory.eINSTANCE
 								.createEventDependency();
 						dep.setId(node.getType().toString());
-						reuseClassOrInterfaceEvent.getDependencies().add(dep);
+											
+						if (dep.getId() == null || dep.getId().equals(appClassName)) {
+							System.out.println("Dep: " + dep.getId());
+							System.out.println("reuseClassOrInterfaceEvent" + appClassName);
+							return true;
+						}
+						
+						if (!reuseClassOrInterfaceEvent.getDependencies().contains(dep)) {
+							reuseClassOrInterfaceEvent.getDependencies().add(dep);
+						}
 						return true;
 					}
 

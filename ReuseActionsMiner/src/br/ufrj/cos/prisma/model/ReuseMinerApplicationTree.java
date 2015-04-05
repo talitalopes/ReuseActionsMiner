@@ -15,7 +15,7 @@ import minerv1.FrameworkApplication;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultEdge;	
 
 public class ReuseMinerApplicationTree {
 

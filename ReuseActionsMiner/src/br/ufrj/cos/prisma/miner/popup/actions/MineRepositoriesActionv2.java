@@ -63,13 +63,6 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 				LogHelper.log("Events found: " + reuseActionsEvents.size());
 				
 				for (Event e : reuseActionsEvents) {
-//					if (!this.discoveredEvents.contains(e.getId())) {
-//						System.out.println("Add: " + e.getId());
-//						addEventToCommit(e, currentCommit);
-//						this.discoveredEvents.add(e.getId());
-//					} else {
-//						System.out.println("Event not added: " + e.getId());
-//					}
 					addEventToCommit(e, currentCommit);
 				}
 
