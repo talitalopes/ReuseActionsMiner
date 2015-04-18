@@ -7,9 +7,7 @@ import minerv1.ActivityType;
 import minerv1.Minerv1Package;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -323,4 +321,14 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 		return result.toString();
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return this.getName().equals(((Activity)obj).getName());
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.getName().hashCode();
+	}
+	
 } //ActivityImpl
