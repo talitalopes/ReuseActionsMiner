@@ -18,8 +18,8 @@ import br.ufrj.cos.prisma.miner.util.ApplicationFileWalker;
 public class MineRepositoriesActionv2 extends BaseExtractionAction {
 	
 	Set<String> discoveredEvents;
-	int maxCommit = 10;
-	boolean mineAllCommits = true;
+	int maxCommit = 30;
+	boolean mineAllCommits = false;
 	
 	public MineRepositoriesActionv2() {
 		super();
