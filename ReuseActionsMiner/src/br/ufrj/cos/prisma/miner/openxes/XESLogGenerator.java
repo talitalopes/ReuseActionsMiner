@@ -6,10 +6,16 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import minerv1.Activity;
 import minerv1.Commit;
 import minerv1.Event;
 import minerv1.FrameworkApplication;
@@ -47,19 +53,17 @@ public class XESLogGenerator {
 	private String exportPath;
 
 	public XESLogGenerator(String exportPath) {
-		init();
+		this.factory = new XFactoryBufferedImpl();
 		this.exportPath = exportPath;
 	}
 
 	public XESLogGenerator(boolean classesOnly, String exportPath) {
-		init();
+		this.factory = new XFactoryBufferedImpl();
 		this.classesOnly = classesOnly;
 		this.exportPath = exportPath;
 	}
 
-	private void init() {
-		factory = new XFactoryBufferedImpl();
-
+	private void initEventLog() {
 		try {
 			XAttributeMap attributes = factory.createAttributeMap();
 			XAttribute nameAttr = factory.createAttributeLiteral(
@@ -103,6 +107,7 @@ public class XESLogGenerator {
 		if (packageName != null && packageName.length() > 0) {
 			eventName = String.format("%s.%s", appEvent.getActivity()
 					.getPackageName(), appEvent.getActivity().getName());
+//			System.out.println(eventName);
 		}
 				
 		// DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -164,7 +169,7 @@ public class XESLogGenerator {
 			}
 			
 			for (Commit c : application.getCommits()) {
-				System.out.println("commit: " + c.getId());
+//				System.out.println("commit: " + c.getId());
 				trace = createNewTrace(c.getName());
 
 				if (trace == null) {
@@ -191,8 +196,80 @@ public class XESLogGenerator {
 
 		}
 	}
+	
+	public void generateLogForCluster(String logNamePrefix, Collection<FrameworkApplication> applications, float threshold) {
+		initEventLog();
+		
+		XTrace trace = null;
+		XEvent event = null;
 
-	public void getProcessTraces(FrameworkProcess fwProcess) {
+		for (FrameworkApplication application: applications) {
+			if (application == null) {
+				System.out.println("Null application");
+				continue;
+			}
+			String appName = application.getName();
+			
+			ReuseMinerApplicationTree tree = new ReuseMinerApplicationTree(application);
+			List<CustomNode> traceNodes = tree.getTrace(VisitorStrategy.rootNode);
+			
+			if (traceNodes.size() == 0) {
+				System.out.println("Empty trace for application: " + appName);
+				continue;
+			}
+			
+			trace = createNewTrace(appName);
+			if (trace == null) {
+				System.out.println("Error creating trace for application "
+						+ appName);
+				continue;
+			}
+			
+			int addedEvents = 0;
+
+			System.out.println("App: " + application.getName());
+			for (CustomNode node : traceNodes) {
+				if (node.getEvent() == null) {
+					continue;
+				}
+				
+				event = createEvent(node.getEvent());
+				if (event != null) {
+					trace.add(event);
+					addedEvents++;
+				}
+				
+			}
+
+			// Prevent adding empty traces
+			if (addedEvents > 0) {
+				log.add(trace);
+			}
+		}
+		
+		this.serialize(generateFilename(logNamePrefix));
+	}
+	
+	private String generateFilename(String prefix) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd_HH:mm");
+		String date = dateFormat.format(Calendar.getInstance().getTime());
+		
+		return String.format("%s-%s.xes",
+				prefix,
+				date);
+	}
+	
+	public List<List<CustomNode>> getProcessTraces(FrameworkProcess fwProcess) {
+		initEventLog();
+		List<List<CustomNode>> traces = new ArrayList<List<CustomNode>>();
+		
+		int numericalId = 0;
+		Map<Activity, Integer> activityIds = new HashMap<Activity, Integer>();
+		for (Activity a: fwProcess.getActivities()) {
+			activityIds.put(a, numericalId);
+			numericalId++;
+		}
+		
 		XTrace trace = null;
 		XEvent event = null;
 
@@ -204,13 +281,14 @@ public class XESLogGenerator {
 			String appName = application.getName();
 			
 			ReuseMinerApplicationTree tree = new ReuseMinerApplicationTree(application);
-			List<CustomNode> nodes = tree.getTrace(VisitorStrategy.rootNode);
-
-			if (nodes.size() == 0) {
+			List<CustomNode> traceNodes = tree.getTrace(VisitorStrategy.rootNode);
+			
+			if (traceNodes.size() == 0) {
 				System.out.println("Empty trace for application: " + appName);
 				continue;
 			}
-			System.out.println("Events: " + nodes.size());
+			System.out.println("Events: " + traceNodes.size());
+			traces.add(traceNodes);
 			
 			trace = createNewTrace(appName);
 			if (trace == null) {
@@ -221,23 +299,32 @@ public class XESLogGenerator {
 			
 			int addedEvents = 0;
 
-			for (CustomNode node : nodes) {
+			System.out.println("App: " + application.getName());
+			String traceString = "";
+			for (CustomNode node : traceNodes) {
 				if (node.getEvent() == null) {
 					continue;
 				}
+				
+				traceString += String.format("%s ", activityIds.get(node.getEvent().getActivity()));
 				
 				event = createEvent(node.getEvent());
 				if (event != null) {
 					trace.add(event);
 					addedEvents++;
 				}
+				
 			}
+			
+			System.out.println("Trace " + traceString.trim());
 
 			// Prevent adding empty traces
 			if (addedEvents > 0) {
 				log.add(trace);
 			}
 		}
+		
+		return traces;
 	}
 	
 	public void getXESRepresentationFromProcess(FrameworkProcess fwProcess) {

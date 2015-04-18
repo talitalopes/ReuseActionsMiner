@@ -207,34 +207,51 @@ public class ClusteringHelper {
 		return cluster;
 	}
 
-	public void getClusters() {
+	public Map<Float, Set<Set<FrameworkApplication>>> getClusters() {
+		// All Applications
+		List<FrameworkApplication> apps = fwProcess.getApplications();
+		
 		// List traces for process
 		List<List<CustomNode>> traces = getProcessTraces();
-		
-		// Calculate similarity using the following metric : (|A| intersect |B|) / (|A| union |B|)
+
+		// Calculate similarity using the following metric : (|A| intersect |B|)
+		// / (|A| union |B|)
 		List<List<Float>> matrix = calculateSimilarityMatrix(traces);
 
 		// Define Thresholds for clustering
 		List<Float> thresholds = new ArrayList<Float>(Arrays.asList(1.0f, 0.9f,
 				0.8f, 0.7f, 0.6f, 0.5f, 0.4f, 0.3f, 0.2f, 0.1f));
-		
+
 		// Find clusters for each threshold in the list
 		Map<Float, Set<Set<Integer>>> clustersMap = findClusters(matrix,
 				thresholds);
+
+		Map<Float, Set<Set<FrameworkApplication>>> clustersAppMap = new HashMap<Float, Set<Set<FrameworkApplication>>>();
 
 		for (Float threshold : clustersMap.keySet()) {
 			System.out
 					.println("Clusters with similarity equal or greater than: "
 							+ threshold);
 			Set<Set<Integer>> clusters = clustersMap.get(threshold);
-
+			Set<Set<FrameworkApplication>> thresholdAppsClusters = new HashSet<Set<FrameworkApplication>>();
+			
 			for (Set<Integer> cluster : clusters) {
+				Set<FrameworkApplication> clusterApps = new HashSet<FrameworkApplication>();
+				
 				String clusterStr = "Cluster";
 				for (Integer i : cluster) {
-					clusterStr += String.format(" - %d", i);
+					clusterStr += String.format(" - %s", apps.get(i).getName());
+					clusterApps.add(apps.get(i));
 				}
+				
+				thresholdAppsClusters.add(clusterApps);
 				System.out.println(clusterStr);
 			}
+			
+			clustersAppMap.put(threshold, thresholdAppsClusters);
 		}
+		
+		return clustersAppMap;
 	}
+	
 }
