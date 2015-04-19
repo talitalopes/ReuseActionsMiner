@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +16,7 @@ import minerv1.FrameworkApplication;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;	
+import org.jgrapht.graph.DefaultEdge;
 
 public class ReuseMinerApplicationTree {
 
@@ -24,6 +25,57 @@ public class ReuseMinerApplicationTree {
 	String applicationName;
 	CustomNode rootNode;
 
+	public class Path {
+		String id;
+		List<CustomNode> nodes;
+		boolean repeats;
+		
+		public Path() {
+			this.id = "";
+			this.nodes = new ArrayList<CustomNode>();
+		}
+		
+		public Path(List<CustomNode> nodes) {
+			this.nodes = nodes;
+		}
+		
+		public void add(CustomNode node) {
+			this.nodes.add(node);
+			if (node.getEvent() != null) {
+				this.id += node.getEvent().getActivity().getId();
+			}
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			return this.id.equals(((Path)obj).id);
+		}
+		
+		@Override
+		public int hashCode() {
+			return this.id.hashCode();
+		}
+		
+		public void printPath() {
+//			String pathString = id + "(" + repeats + ") \t\t\t ";
+			String pathString = "";
+			for (CustomNode node: this.nodes) {
+				if (node.getEvent() == null) {
+					pathString += String.format("%s - ", node.id);
+					continue;
+				}
+				String activityKey = node.getEvent().getActivity().getId();
+				if (activityKey == null) {
+					activityKey = node.getEvent().getActivity().getName();
+				}
+				pathString += String.format("%s - ", node.commitIndex + activityKey);
+			}
+			pathString.trim();
+//			pathString = pathString.substring(0, pathString.lastIndexOf(" -"));
+			System.out.println(pathString);
+		}
+	}
+	
 	public class CustomNode implements Comparable<CustomNode> {
 		String id;
 		String parent;
@@ -71,8 +123,16 @@ public class ReuseMinerApplicationTree {
 			if (this.commitIndex == node.commitIndex) {
 				if (node.getEventId().length() > 0
 						&& this.getEventId().length() > 0) {
-					String superClass1 = this.getEvent().getActivity().getName();
-					String superClass2 = node.getEvent().getActivity().getName();
+					String superClass1 = this.getEventId();
+					if (this.getEvent() != null) {
+						superClass1 = this.getEvent().getActivity().getName();
+					}
+					
+					String superClass2 = node.getEventId();
+					if (node.getEvent() != null) {
+						superClass2 = node.getEvent().getActivity().getName();
+					}
+					
 					int compareSuperclasses = superClass1.compareTo(superClass2);
 					
 					if (compareSuperclasses == 0) {
@@ -91,10 +151,28 @@ public class ReuseMinerApplicationTree {
 			return 1;
 		}
 
+		public List<CustomNode> getSortedChildren(ReuseMinerApplicationTree tree) {
+			Set<DefaultEdge> edges = tree.applicationTree
+					.outgoingEdgesOf(this);
+			
+			List<CustomNode> childrenNodes = new ArrayList<CustomNode>();
+			for (DefaultEdge edge: edges) {
+				childrenNodes.add(tree.applicationTree.getEdgeTarget(edge));
+			}
+			
+			Collections.sort(childrenNodes, new Comparator<CustomNode>() {
+				@Override
+				public int compare(CustomNode node1, CustomNode node2) {
+					return node1.compareTo(node2);
+				}
+			});
+			
+			return childrenNodes;
+		}
 	}
 
 	public enum VisitorStrategy {
-		leaves, rootNode
+		leaves, rootNode, features
 	}
 
 	interface Visitor {
@@ -290,14 +368,14 @@ public class ReuseMinerApplicationTree {
 			
 			for (Event e : c.getEvents()) {
 				CustomNode node = new CustomNode(e, commitIndex);
-
+					
 				if (!treeNodesMap.containsKey(node.getEventId())) {
 					this.applicationTree.addVertex(node);
 					treeNodesMap.put(node.getEventId(), node);
 				} else {
 					node = treeNodesMap.get(node.getEventId());
 				}
-
+				
 				for (EventDependency dep : e.getDependencies()) {
 					CustomNode depNode = new CustomNode(dep.getEvent(),
 							commitIndex);
@@ -382,6 +460,9 @@ public class ReuseMinerApplicationTree {
 		if (strategy == VisitorStrategy.leaves) {
 			Visitor treeVisitor = new LeavesVisitor(this);
 			trace = treeVisitor.getTrace();
+		} else if (strategy == VisitorStrategy.features) {
+			Visitor treeVisitor = new FeatureVisitor(this);
+			trace = treeVisitor.getTrace();
 		} else {
 			Visitor treeVisitor = new RootVisitor(this);
 			trace = treeVisitor.getTrace();
@@ -392,11 +473,127 @@ public class ReuseMinerApplicationTree {
 			if (node == null || node.getEventId() == null) {
 				continue;
 			}
-			System.out.println(String.format("%d - %s", index, node.getEvent().getActivity().getName()));
+			String key = node.id;
+			if (node.getEvent() != null) {
+				key = node.getEvent().getActivity().getName();
+			}
+			System.out.println(String.format("%d - %s", index, key));
 			index++;
 		}
 		
 		return trace;
 	}
 
+	class FeatureVisitor implements Visitor {
+		ReuseMinerApplicationTree tree;
+		Set<Path> paths = new HashSet<Path>();
+		Map<String, Path> pathsMap = new HashMap<String, Path>();
+		
+		List<CustomNode> nodesToVisit;
+		
+		public FeatureVisitor(ReuseMinerApplicationTree tree) {
+			this.tree = tree;
+			this.nodesToVisit = new ArrayList<CustomNode>();
+			this.pathsMap = new HashMap<String, Path>();
+		}
+		
+		@Override
+		public void visit() {
+			if (this.tree == null) {
+				return;
+			}
+			
+			CustomNode root = this.tree.rootNode;
+			if (root == null) {
+				return;
+			}
+			
+			CustomNode rootNode = tree.rootNode;
+			nodesToVisit.add(rootNode);
+			
+			while (!nodesToVisit.isEmpty()) {
+				CustomNode nodeToVisit = nodesToVisit.remove(0);
+//				visitChildren(nodeToVisit);
+				visitNode(nodeToVisit);
+			}
+			
+			System.out.println("Paths: " + applicationName);
+			for (String feature: this.pathsMap.keySet()) {
+				System.out.print(feature + " --- ");
+				this.pathsMap.get(feature).printPath();
+			}
+//			for (Path p: this.pathsMap.values()) {
+//				p.printPath();
+//			}
+			System.out.println("\n");
+		}
+
+		@Override
+		public void visitChildren(CustomNode node) {
+			for (CustomNode child: node.getSortedChildren(this.tree)) {
+				nodesToVisit.add(0, child);
+				
+				Path path = new Path();
+				path.add(node);
+				path.add(child);
+				
+				if (this.paths.contains(path)) {
+					this.paths.remove(path);
+					path.repeats = true;
+					this.paths.add(path);
+					
+				} else {
+					this.paths.add(path);
+				}
+			}
+		}
+
+		@Override
+		public void visitNode(CustomNode node) {
+			if (tree.applicationTree.outDegreeOf(node) == 0) {
+				return;
+			}
+			
+			Path completePath = new Path();
+			if (node.getEvent() != null) {
+				completePath.add(node);
+			}
+			
+			for (CustomNode child: node.getSortedChildren(this.tree)) {
+				if (child.getEvent() == null) {
+					continue;
+				}
+				
+				if (tree.applicationTree.outDegreeOf(child) > 0) {
+					nodesToVisit.add(0, child);
+					String featureId = child.getEvent().getActivity().getId();
+					if (featureId == null) {
+						featureId = child.getEvent().getActivity().getName();
+					}
+					
+					CustomNode featureNode = new CustomNode("Feature-" + featureId);
+					completePath.add(featureNode);
+					
+				} else {
+					completePath.add(child);
+				}
+			}
+			
+			if (node.getEvent() == null) {
+				pathsMap.put("Root", completePath);	
+			} else {
+				pathsMap.put("Feature-"+node.getEvent().getActivity().getId(), completePath);
+			}
+		}
+
+		@Override
+		public List<CustomNode> getTrace() {
+			this.visit();
+			if (pathsMap.get("Root") != null) {
+				return pathsMap.get("Root").nodes;	
+			}
+			return new ArrayList<CustomNode>();
+		}
+		
+	}
 }

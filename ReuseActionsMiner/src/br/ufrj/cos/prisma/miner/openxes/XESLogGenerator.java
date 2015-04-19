@@ -95,6 +95,14 @@ public class XESLogGenerator {
 		return trace;
 	}
 
+	public XEvent createEvent(String eventId) {
+		String type = Constants.FEATURE;
+
+		// DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		return createEvent(type, eventId, cal.getTime());	
+	}
+	
 	public XEvent createEvent(Event appEvent) {
 		if (appEvent.getActivity() == null) {
 			return null;
@@ -117,11 +125,13 @@ public class XESLogGenerator {
 
 	public XEvent createEvent(String type, String name, Date timestamp) {
 		XEvent event = null;
-
-		type = (type.toLowerCase().equals("class_extension")) ? Constants.CLASS_EXTENSION
+		
+		if (!type.equals(Constants.FEATURE)) {
+			type = (type.toLowerCase().equals("class_extension")) ? Constants.CLASS_EXTENSION
 				: Constants.METHOD_EXTENSION;
-		if (classesOnly && type.equals(Constants.METHOD_EXTENSION)) {
-			return null;
+			if (classesOnly && type.equals(Constants.METHOD_EXTENSION)) {
+				return null;
+			}
 		}
 
 		String activityName = String.format("%s_%s", type, name);
@@ -213,7 +223,7 @@ public class XESLogGenerator {
 			ReuseMinerApplicationTree tree = new ReuseMinerApplicationTree(application);
 			List<CustomNode> traceNodes = tree.getTrace(VisitorStrategy.rootNode);
 			
-			if (traceNodes.size() == 0) {
+			if (traceNodes == null || traceNodes.size() == 0) {
 				System.out.println("Empty trace for application: " + appName);
 				continue;
 			}
@@ -302,13 +312,18 @@ public class XESLogGenerator {
 			System.out.println("App: " + application.getName());
 			String traceString = "";
 			for (CustomNode node : traceNodes) {
-				if (node.getEvent() == null) {
-					continue;
+//				if (node.getEvent() == null) {
+//					continue;
+//				}
+				
+				if (node.getEvent() != null) {
+					traceString += String.format("%s ", activityIds.get(node.getEvent().getActivity()));
+					event = createEvent(node.getEvent());
+				} else {
+					traceString += String.format("%s ", node.getEventId());
+					event = createEvent(node.getEventId());
 				}
 				
-				traceString += String.format("%s ", activityIds.get(node.getEvent().getActivity()));
-				
-				event = createEvent(node.getEvent());
 				if (event != null) {
 					trace.add(event);
 					addedEvents++;

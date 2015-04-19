@@ -153,7 +153,7 @@ public class ClusteringHelper {
 			for (int matrixLine = 0; matrixLine < matrix.size(); matrixLine++) {
 				Set<Integer> cluster = getTracesClusters(matrix, matrixLine,
 						currentThreshold);
-				if (cluster == null) {
+				if (cluster == null || cluster.size() <= 1) {
 					continue;
 				}
 
@@ -219,8 +219,8 @@ public class ClusteringHelper {
 		List<List<Float>> matrix = calculateSimilarityMatrix(traces);
 
 		// Define Thresholds for clustering
-		List<Float> thresholds = new ArrayList<Float>(Arrays.asList(1.0f, 0.9f,
-				0.8f, 0.7f, 0.6f, 0.5f, 0.4f, 0.3f, 0.2f, 0.1f));
+		List<Float> thresholds = new ArrayList<Float>(Arrays.asList(1.0f));
+//				, 0.9f,0.8f, 0.7f, 0.6f, 0.5f, 0.4f, 0.3f, 0.2f, 0.1f));
 
 		// Find clusters for each threshold in the list
 		Map<Float, Set<Set<Integer>>> clustersMap = findClusters(matrix,

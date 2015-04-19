@@ -29,6 +29,7 @@ public class Constants {
 	
 	public static final String CLASS_EXTENSION = "CLASS_EXTENSION";
 	public static final String METHOD_EXTENSION = "METHOD_EXTENSION";
+	public static final String FEATURE = "FEATURE";
 	
 	public static final String CONSOLE_NAME = "PROCESS_MINING_CONSOLE";
 }
