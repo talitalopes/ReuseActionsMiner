@@ -235,7 +235,34 @@ public class ReuseMinerApplicationTree {
 		@Override
 		public List<CustomNode> getTrace() {
 			this.visit();
-			return this.trace;
+			return this.groupedActivitiesTrace();
+		}
+		
+		private List<CustomNode> groupedActivitiesTrace() {
+			List<CustomNode> groupedArray = new ArrayList<CustomNode>();
+			for (int i = 0; i < this.trace.size(); i++) {
+				CustomNode n = this.trace.get(i);
+				
+				if (groupedArray.size() == 0) {
+					groupedArray.add(n);
+					continue;
+				}
+				
+				int size = groupedArray.size();
+				for (int j = 0; j < size; j++) {
+					if (groupedArray.get(j).getEvent().getActivity().equals(n.getEvent().getActivity())) {
+						groupedArray.add(j, n);
+						break;
+					}
+				}
+				
+				if (groupedArray.size() == size) {
+					groupedArray.add(n);
+				}
+				
+			}
+			
+			return groupedArray;
 		}
 		
 		public List<CustomNode> getSortedChildren(CustomNode node) {
