@@ -46,6 +46,8 @@ public class GenerateXESLogAction extends BaseAction {
 	
 	private void getTracesClusters() {
 		ClusteringHelper clusteringHelper = new ClusteringHelper(process);
+		clusteringHelper.mapActivities();
+		
 		Map<Float, Set<Set<FrameworkApplication>>> clustersAppMap = clusteringHelper.getClusters();
 		
 		String exportPath = this.getExportPath();
