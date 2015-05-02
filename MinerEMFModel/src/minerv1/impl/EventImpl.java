@@ -11,12 +11,10 @@ import minerv1.EventDependency;
 import minerv1.Minerv1Package;
 
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -439,6 +437,17 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 		result.append(writtenToLog);
 		result.append(')');
 		return result.toString();
+	}
+	
+	@Override
+	public String getCompleteName() {
+		String packageName = this.getActivity().getPackageName();
+		String eventName = String.format("%s", this.getActivity().getName());
+		if (packageName != null && packageName.length() > 0) {
+			eventName = String.format("%s.%s", this.getActivity()
+					.getPackageName(), this.getActivity().getName());
+		}
+		return eventName;
 	}
 
 } //EventImpl

@@ -2,6 +2,7 @@ package br.ufrj.cos.prisma.miner.popup.actions;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,11 +29,11 @@ public class GenerateXESLogAction extends BaseAction {
 		// Generate log considering all applications
 		String exportPath = this.getExportPath();
 		XESLogGenerator xesGen = new XESLogGenerator(true, exportPath);
-		xesGen.getProcessTraces(process);
+		xesGen.getProcessTraces(process.getApplications());
 		xesGen.serialize(generateFilename(process.getKeyword() + "-complete"));
 		
 		// Clustered logs
-		getTracesClusters();
+		getTracesClusters(false);
 		
 //		Testing log separated by commits
 //		xesGen.getXESRepresentationForCommits(process);
@@ -44,22 +45,30 @@ public class GenerateXESLogAction extends BaseAction {
 		}
 	}
 	
-	private void getTracesClusters() {
+	private void getTracesClusters(boolean writeLogs) {
 		ClusteringHelper clusteringHelper = new ClusteringHelper(process);
-		clusteringHelper.mapActivities();
-		
-		Map<Float, Set<Set<FrameworkApplication>>> clustersAppMap = clusteringHelper.getClusters();
 		
 		String exportPath = this.getExportPath();
 		XESLogGenerator xesGen = new XESLogGenerator(true, exportPath);
+		List<FrameworkApplication> frequentTraces = clusteringHelper.selectTracesByActivitiesFrequency();
+		String logPrefix = String.format("%s-frequency-filter", process.getKeyword());
+		xesGen.getProcessTraces2(process.getApplications());
+//		xesGen.serialize(generateFilename(logPrefix));
 		
+		if (!writeLogs) {
+			return;
+		}
+		
+		clusteringHelper.mapActivities();
+		
+		Map<Float, Set<Set<FrameworkApplication>>> clustersAppMap = clusteringHelper.getClusters();
 		for (Float threshold: clustersAppMap.keySet()) {
 			
 			Set<Set<FrameworkApplication>> clusters = clustersAppMap.get(threshold);
 			int clusterIndex = 1;
 			
 			for (Set<FrameworkApplication> cluster: clusters) {
-				String logPrefix = String.format("%s-Cluster%d-%.1fT", process.getKeyword(), clusterIndex, threshold);
+				logPrefix = String.format("%s-Cluster%d-%.1fT", process.getKeyword(), clusterIndex, threshold);
 				xesGen.generateLogForCluster(logPrefix, cluster, threshold);
 				clusterIndex++;
 			}

@@ -24,12 +24,87 @@ public class ClusteringHelper {
 
 	FrameworkProcess fwProcess;
 	List<String> applicationsNames;
-	
+	List<Integer> applicationsIndex;	
+	Map<Activity, Float> activityFrequency;
+	List<List<CustomNode>> traces;
+
 	public ClusteringHelper(FrameworkProcess fwProcess) {
 		this.fwProcess = fwProcess;
 		this.applicationsNames = new ArrayList<String>();
+		this.applicationsIndex = new ArrayList<Integer>();
+		this.activityFrequency = new HashMap<Activity, Float>();
+		this.traces = getProcessTraces();
 	}
 
+	public void countActivitiesUniqueUsages() {
+		for (List<CustomNode> trace: traces) {
+			Set<Activity> activities = new HashSet<Activity>();
+			for (CustomNode n : trace) {
+				if (n.getEvent() == null) {
+					continue;
+				}
+				activities.add(n.getEvent().getActivity());
+			}
+			
+			for (Activity activity : activities) {
+				
+				if (activityFrequency.containsKey(activity)) {
+					activityFrequency.put(activity, (float)activityFrequency.get(activity) + 1);
+					
+				} else {
+					activityFrequency.put(activity, 1f);
+				}
+			}
+		}
+		
+		int tracesCount = this.traces.size(); 
+		for (Activity a: activityFrequency.keySet()) {
+			float frequency = (float)activityFrequency.get(a)/(float)tracesCount;
+			activityFrequency.put(a, frequency);
+		}
+	
+	}
+	
+	public List<FrameworkApplication> selectTracesByActivitiesFrequency() {
+		this.countActivitiesUniqueUsages();
+		
+		float frequencyThreshold = 0.6f;
+		List<Integer> selectedTracesIndex = new ArrayList<Integer>();
+		
+		int appIndex = 0;
+		for (List<CustomNode> trace: traces) {
+			Set<Activity> activities = new HashSet<Activity>();
+			for (CustomNode n : trace) {
+				if (n.getEvent() == null) {
+					continue;
+				}
+				activities.add(n.getEvent().getActivity());
+			}
+			
+			int frequentActivitiesCount = 0;
+			for (Activity a: activities) {
+				if (activityFrequency.get(a) > frequencyThreshold) {
+					frequentActivitiesCount++;
+				}
+			}
+			
+			float x = (float)frequentActivitiesCount/(float)activities.size();
+			if (x > 0.6) {
+				selectedTracesIndex.add(appIndex);
+			}
+			
+			System.out.println(String.format("%s - %.2f", this.applicationsNames.get(appIndex), x));
+			appIndex++;
+		}
+		
+		List<FrameworkApplication> selectedTraces = new ArrayList<FrameworkApplication>(); 
+		for (int index : selectedTracesIndex) {
+			int cIndex = this.applicationsIndex.get(index);
+			selectedTraces.add(this.fwProcess.getApplications().get(cIndex));
+		}
+		return selectedTraces;
+	}
+	
 	public List<List<CustomNode>> getProcessTraces() {
 		List<List<CustomNode>> traces = new ArrayList<List<CustomNode>>();
 
@@ -40,9 +115,9 @@ public class ClusteringHelper {
 			numericalId++;
 		}
 
+		int appIndex = 0;
 		for (FrameworkApplication application : fwProcess.getApplications()) {
 			if (application == null) {
-				System.out.println("Null application");
 				continue;
 			}
 			String appName = application.getName();
@@ -53,13 +128,15 @@ public class ClusteringHelper {
 					.getTrace(VisitorStrategy.rootNode);
 
 			if (traceNodes.size() == 0) {
-				System.out.println("Empty trace for application: " + appName);
+				appIndex++;
 				continue;
 			}
 			System.out.println("Events: " + traceNodes.size());
 			applicationsNames.add(appName);
+			applicationsIndex.add(appIndex);
 			
 			traces.add(traceNodes);
+			appIndex++;
 		}
 
 		return traces;
@@ -204,9 +281,6 @@ public class ClusteringHelper {
 	public Map<Float, Set<Set<FrameworkApplication>>> getClusters() {
 		// All Applications
 		List<FrameworkApplication> apps = fwProcess.getApplications();
-
-		// List traces for process
-		List<List<CustomNode>> traces = getProcessTraces();
 
 		// Calculate similarity using the following metric : (|A| intersect |B|)
 		// / (|A| union |B|)

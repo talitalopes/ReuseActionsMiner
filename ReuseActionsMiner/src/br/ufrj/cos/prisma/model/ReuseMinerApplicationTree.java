@@ -20,7 +20,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 public class ReuseMinerApplicationTree {
 
-	List<CustomNode> treeNodes = new ArrayList<CustomNode>();
+//	List<CustomNode> treeNodes = new ArrayList<CustomNode>();
 	DirectedGraph<CustomNode, DefaultEdge> applicationTree;
 	String applicationName;
 	CustomNode rootNode;
@@ -95,6 +95,11 @@ public class ReuseMinerApplicationTree {
 
 		public Event getEvent() {
 			return this.event;
+		}
+		
+		public String getActivityName() {
+			if (this.event == null || this.event.getActivity() == null) return null;
+			return this.event.getCompleteName();
 		}
 
 		public String getEventId() {
@@ -235,7 +240,7 @@ public class ReuseMinerApplicationTree {
 		@Override
 		public List<CustomNode> getTrace() {
 			this.visit();
-			return this.groupedActivitiesTrace();
+			return this.trace; //this.groupedActivitiesTrace();
 		}
 		
 		private List<CustomNode> groupedActivitiesTrace() {
@@ -402,6 +407,7 @@ public class ReuseMinerApplicationTree {
 				} else {
 					node = treeNodesMap.get(node.getEventId());
 				}
+				System.out.println(e.getId() + " Node: " + e.getCompleteName() + "commit Index: " + node.commitIndex);
 				
 				for (EventDependency dep : e.getDependencies()) {
 					CustomNode depNode = new CustomNode(dep.getEvent(),
@@ -426,6 +432,7 @@ public class ReuseMinerApplicationTree {
 					}
 
 					this.applicationTree.addEdge(node, depNode);
+					System.out.println("Dep: " + node.getEvent().getId() + " - " + depNode.getEvent().getId());
 				}
 			}
 			commitIndex++;
@@ -436,13 +443,10 @@ public class ReuseMinerApplicationTree {
 			System.out.println("Error: No root node found");
 			return;
 		}
-		System.out.println("Root node: " + this.rootNode.id);
 	}
 
 	private CustomNode addRootNode() {
 		List<CustomNode> nodesWithoutIncomingEdges = getNodesWithoutIncomingEdges();
-		System.out.println("nodesWithoutIncomingEdges - "
-				+ nodesWithoutIncomingEdges.size());
 
 		if (nodesWithoutIncomingEdges.size() > 1) {
 			CustomNode rootNode = new CustomNode("rootNode");
@@ -504,13 +508,16 @@ public class ReuseMinerApplicationTree {
 			if (node.getEvent() != null) {
 				key = node.getEvent().getActivity().getName();
 			}
-			System.out.println(String.format("%d - %s", index, key));
 			index++;
 		}
 		
 		return trace;
 	}
 
+	public CustomNode getRootNode() {
+		return this.rootNode;
+	}
+	
 	class FeatureVisitor implements Visitor {
 		ReuseMinerApplicationTree tree;
 		Set<Path> paths = new HashSet<Path>();

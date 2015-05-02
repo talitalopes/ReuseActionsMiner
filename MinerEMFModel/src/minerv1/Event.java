@@ -175,4 +175,6 @@ public interface Event extends EObject {
 	 */
 	void setWrittenToLog(boolean value);
 
+	String getCompleteName();
+	
 } // Event

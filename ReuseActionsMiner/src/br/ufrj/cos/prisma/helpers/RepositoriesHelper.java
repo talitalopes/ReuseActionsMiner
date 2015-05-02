@@ -81,10 +81,13 @@ public class RepositoriesHelper {
 			}
 			
 			String nextUrl = urls.get(0);
-			String lastUrl = urls.get(1);
+			int lastPage = 0;
+			if (urls.size() > 1) {
+				String lastUrl = urls.get(1);
+				lastPage = Integer.parseInt(lastUrl.split("page=")[1]);
+			}
 			
 			int nextPage = Integer.parseInt(nextUrl.split("page=")[1]);
-			int lastPage = Integer.parseInt(lastUrl.split("page=")[1]);
 			
 			for (int page = nextPage; page <= lastPage; page++) {
 				String pageUrlString = String.format(REPO_SEARCH_PAGE_URL_FORMAT, searchKey, page);
