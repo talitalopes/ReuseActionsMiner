@@ -13,6 +13,7 @@ import minerv1.EventDependency;
 import minerv1.FrameworkProcess;
 import minerv1.Minerv1Factory;
 
+import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.Block;
@@ -30,16 +31,33 @@ public class ApplicationFileWalker extends BaseFileWalker {
 	FrameworkProcess process;
 	Map<String, Event> eventsMap;
 	List<Event> applicationReuseActions;
+	List<Event> applicationEvents;
+	Map<String, Event> superclassesMap;
 	
 	public ApplicationFileWalker(FrameworkProcess process) {
 		super();
 		this.process = process;
 		this.eventsMap = new HashMap<String, Event>();
 		this.applicationReuseActions = new ArrayList<Event>();
+		this.applicationEvents = new ArrayList<Event>();
 	}
 
 	public List<Event> getReuseActions() {
 		// update dependencies events
+		
+		for (Event e: this.applicationEvents) {
+			String[] idParts = e.getId().split("\\+");
+			if (idParts.length <= 1) {
+				continue;
+			}
+			
+			if (this.eventsMap.get(idParts[1]) != null) {
+				e.setId(idParts[0]);
+				e.setActivity(this.eventsMap.get(idParts[1]).getActivity());
+				this.eventsMap.put(idParts[2], e);
+				this.applicationReuseActions.add(e);
+			}
+		}
 		
 		for (int i = 0; i < this.applicationReuseActions.size(); i++) {
 			Event e = this.applicationReuseActions.get(i);
@@ -91,9 +109,10 @@ public class ApplicationFileWalker extends BaseFileWalker {
 		final CompilationUnit compilationUnit = (CompilationUnit) parser
 				.createAST(null);
 		compilationUnit.accept(new ReuseMinerASTVisitor());
+		replaceSuperclasses();
 	}
 	
-	class ReuseMinerMethodsVisitor extends ASTVisitor {
+	private void replaceSuperclasses() {
 		
 	}
 	
@@ -113,13 +132,6 @@ public class ApplicationFileWalker extends BaseFileWalker {
 			return this.packageName;
 		}
 
-		public void updateReuseClassOrInterfaceEvent(String eventId, Activity activity) {
-			reuseClassOrInterfaceEvent.setId(eventId);
-    		reuseClassOrInterfaceEvent.setActivity(activity);
-    		eventsMap.put(appClassName, reuseClassOrInterfaceEvent);
-    		applicationReuseActions.add(reuseClassOrInterfaceEvent);	
-		}
-		
 		public boolean visit(PackageDeclaration node) {
 			this.packageName = node.getName().getFullyQualifiedName();
 			return true;
@@ -134,21 +146,24 @@ public class ApplicationFileWalker extends BaseFileWalker {
 	        	
 	        	Activity activity = findSuperClassOrInterface(interfaceName);
 	        	if (activity != null) {
-	        		this.updateReuseClassOrInterfaceEvent(eventId, activity);
+	        		boolean isAbstract = Flags.isAbstract(node.getModifiers());
+	        		this.updateReuseClassOrInterfaceEvent(eventId, activity, isAbstract);
 	        	}
 	        }
 	        
 			return true;
 		}
-
+		
 		public boolean visit(TypeDeclaration node) {
 			appClassName = node.getName().getFullyQualifiedName();
+			
 			System.out.println("---------\nClass name: " + appClassName);
 			
 			String eventId = String.format("%s.%s", this.getPackage(),
 					appClassName);
 			
 			Type superclass = node.getSuperclassType();
+			
 			if (superclass == null) {
 				// Check if node implements any interface
 				return this.checkInterfaceImplementations(eventId, node);
@@ -156,10 +171,27 @@ public class ApplicationFileWalker extends BaseFileWalker {
 			
 			Activity activity = findSuperClassOrInterface(superclass.toString());
 			if (activity == null) {
+				// did not find framework reuse action
+				reuseClassOrInterfaceEvent.setId(eventId+"+" + 
+						superclass.toString() + "+" + 
+						appClassName);
+				
+	    		applicationEvents.add(reuseClassOrInterfaceEvent);
 				return true;
 			}
-			this.updateReuseClassOrInterfaceEvent(eventId, activity);
+			boolean isAbstract = Flags.isAbstract(node.getModifiers());
+			this.updateReuseClassOrInterfaceEvent(eventId, activity, isAbstract);
 			return true;
+		}
+		
+		public void updateReuseClassOrInterfaceEvent(String eventId, Activity activity, boolean isAbstract) {
+			reuseClassOrInterfaceEvent.setId(eventId);
+    		reuseClassOrInterfaceEvent.setActivity(activity);
+    		eventsMap.put(appClassName, reuseClassOrInterfaceEvent);
+    		
+    		if (!isAbstract) {
+    			applicationReuseActions.add(reuseClassOrInterfaceEvent);
+    		}
 		}
 		
 		public Activity findSuperClassOrInterface(String typeName) {
@@ -196,7 +228,7 @@ public class ApplicationFileWalker extends BaseFileWalker {
 				Block block = node.getBody();
 				block.accept(new ASTVisitor() {
 					
-					public boolean visit(ClassInstanceCreation node) {
+					public boolean visit(ClassInstanceCreation node) {						
 						EventDependency dep = Minerv1Factory.eINSTANCE
 								.createEventDependency();
 						dep.setId(node.getType().toString());

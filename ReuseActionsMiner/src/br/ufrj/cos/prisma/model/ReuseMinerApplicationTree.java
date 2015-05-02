@@ -402,6 +402,10 @@ public class ReuseMinerApplicationTree {
 				CustomNode node = new CustomNode(e, commitIndex);
 					
 				if (!treeNodesMap.containsKey(node.getEventId())) {
+					if (e == null) {
+						continue;
+					}
+					
 					this.applicationTree.addVertex(node);
 					treeNodesMap.put(node.getEventId(), node);
 				} else {
@@ -410,6 +414,9 @@ public class ReuseMinerApplicationTree {
 				System.out.println(e.getId() + " Node: " + e.getCompleteName() + "commit Index: " + node.commitIndex);
 				
 				for (EventDependency dep : e.getDependencies()) {
+					if (dep.getEvent() == null) {
+						continue;
+					}
 					CustomNode depNode = new CustomNode(dep.getEvent(),
 							commitIndex);
 
