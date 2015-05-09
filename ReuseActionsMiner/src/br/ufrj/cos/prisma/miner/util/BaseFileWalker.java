@@ -19,6 +19,18 @@ public abstract class BaseFileWalker {
 		parser = ASTParser.newParser(AST.JLS8);
 	}
 
+	public boolean isValidDirectory(File f) {
+		if (!f.isDirectory()) {
+			return false;
+		}
+		
+		if (f.getName().equals(".git")) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public void walk(String path) {
 		File root = new File(path);
 		File[] list = root.listFiles();
@@ -28,7 +40,10 @@ public abstract class BaseFileWalker {
 
 		for (File f : list) {
 			if (f.isDirectory()) {
-				walk(f.getAbsolutePath());
+				
+				if (this.isValidDirectory(f)) {
+					walk(f.getAbsolutePath());
+				}
 				continue;
 			}
 
@@ -36,7 +51,8 @@ public abstract class BaseFileWalker {
 				if (!f.getAbsolutePath().contains(".java")) {
 					continue;
 				}
-
+				
+				System.out.println(path + "/" + f.getName());
 				String content = readFile(f.getAbsolutePath(),
 						StandardCharsets.UTF_8);
 				getClassInfo(content);

@@ -124,7 +124,6 @@ public class ApplicationFileWalker extends BaseFileWalker {
 		Set<String> imports;
 	
 		public ReuseMinerASTVisitor() {
-			this.reuseClassOrInterfaceEvent = Minerv1Factory.eINSTANCE.createEvent();
 			this.imports = new HashSet<String>();
 		}
 		
@@ -155,7 +154,8 @@ public class ApplicationFileWalker extends BaseFileWalker {
 		}
 		
 		public boolean visit(TypeDeclaration node) {
-			appClassName = node.getName().getFullyQualifiedName();
+			this.appClassName = node.getName().getFullyQualifiedName();
+			this.reuseClassOrInterfaceEvent = Minerv1Factory.eINSTANCE.createEvent();
 			
 			System.out.println("---------\nClass name: " + appClassName);
 			
@@ -171,7 +171,8 @@ public class ApplicationFileWalker extends BaseFileWalker {
 			
 			Activity activity = findSuperClassOrInterface(superclass.toString());
 			if (activity == null) {
-				// did not find framework reuse action
+				// did not find framework reuse action. It can be a subclass of a 
+				// framework application that extends a framework class
 				reuseClassOrInterfaceEvent.setId(eventId+"+" + 
 						superclass.toString() + "+" + 
 						appClassName);
