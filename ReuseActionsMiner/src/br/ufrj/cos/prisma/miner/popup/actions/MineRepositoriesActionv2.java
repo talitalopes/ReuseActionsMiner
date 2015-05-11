@@ -29,6 +29,9 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 	@Override
 	public void run(IAction action) {
 		super.run(action);
+		
+//		ApplicationFileWalker walker = new ApplicationFileWalker(this.process);
+//		walker.walk("/Users/talitalopes/Documents/Mestrado/frameworks/ParserTest");
 		mineReuseActionsFromRepositories();
 	}
 
@@ -47,6 +50,7 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 			LogHelper.log(String.format("%d commits found for application %s. %d commits will be mined.",
 					commits.size(), app.getName(), limit));
 			
+			
 			for (int currentIndex = 0; currentIndex < limit; currentIndex++) {
 				LogHelper.log(String.format("Commit %d out of %d",
 						currentIndex + 1, commits.size()));
@@ -56,9 +60,11 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 				
 				LogHelper.log("Current commit Id: " + currentCommitId);
 				Commit currentCommit = Minerv1Factory.eINSTANCE.createCommit(currentCommitId);
-				
+
 				ApplicationFileWalker walker = new ApplicationFileWalker(this.process);
 				walker.walk(gitHelper.getRepoFile().getAbsolutePath());
+//				walker.printDependencies(this.process);
+				
 				List<Event> reuseActionsEvents = walker.getReuseActions();
 				LogHelper.log("Events found: " + reuseActionsEvents.size());
 				

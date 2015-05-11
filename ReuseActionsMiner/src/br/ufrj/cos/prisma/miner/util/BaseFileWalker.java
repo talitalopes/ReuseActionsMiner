@@ -52,17 +52,18 @@ public abstract class BaseFileWalker {
 					continue;
 				}
 				
+				String className = f.getName().replace(".java", "");
 				System.out.println(path + "/" + f.getName());
 				String content = readFile(f.getAbsolutePath(),
 						StandardCharsets.UTF_8);
-				getClassInfo(content);
+				getClassInfo(className, content);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 	
-	protected abstract void getClassInfo(String content);
+	protected abstract void getClassInfo(String filename, String content);
 	
 	String readFile(String path, Charset encoding) throws IOException {
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
