@@ -72,7 +72,7 @@ public class ReuseMinerApplicationTree {
 			}
 			pathString.trim();
 //			pathString = pathString.substring(0, pathString.lastIndexOf(" -"));
-			System.out.println(pathString);
+//			System.out.println(pathString);
 		}
 	}
 	
@@ -329,8 +329,8 @@ public class ReuseMinerApplicationTree {
 
 		@Override
 		public void visit() {
-			System.out.println("Nodes count: "
-					+ applicationTree.vertexSet().size());
+//			System.out.println("Nodes count: "
+//					+ applicationTree.vertexSet().size());
 			for (DefaultEdge n : applicationTree.edgeSet()) {
 				System.out
 						.println(applicationTree.getEdgeSource(n).commitIndex
@@ -352,7 +352,7 @@ public class ReuseMinerApplicationTree {
 				}
 
 				visitNode(currentNode);
-				System.out.println("leaves to go: " + leaves.size());
+//				System.out.println("leaves to go: " + leaves.size());
 			}
 		}
 
@@ -439,7 +439,7 @@ public class ReuseMinerApplicationTree {
 					}
 
 					this.applicationTree.addEdge(node, depNode);
-					System.out.println("Dep: " + node.getEvent().getId() + " - " + depNode.getEvent().getId());
+//					System.out.println("Dep: " + node.getEvent().getId() + " - " + depNode.getEvent().getId());
 				}
 			}
 			commitIndex++;
@@ -558,15 +558,15 @@ public class ReuseMinerApplicationTree {
 				visitNode(nodeToVisit);
 			}
 			
-			System.out.println("Paths: " + applicationName);
+//			System.out.println("Paths: " + applicationName);
 			for (String feature: this.pathsMap.keySet()) {
-				System.out.print(feature + " --- ");
+//				System.out.print(feature + " --- ");
 				this.pathsMap.get(feature).printPath();
 			}
 //			for (Path p: this.pathsMap.values()) {
 //				p.printPath();
 //			}
-			System.out.println("\n");
+//			System.out.println("\n");
 		}
 
 		@Override

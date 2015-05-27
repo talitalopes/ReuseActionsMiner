@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import minerv1.Commit;
 import minerv1.Event;
@@ -273,6 +276,7 @@ public class XESLogGenerator {
 				System.out.println("Null application");
 				continue;
 			}
+
 			String appName = application.getName();
 			System.out.println("Mapping classes of application " + appName);
 
@@ -281,79 +285,71 @@ public class XESLogGenerator {
 			processMap.Visit(tree.getRootNode(), tree);
 		}
 
+		Map<String, Set<String>> featureMatrix = new HashMap<String, Set<String>>();
 		for (ClassProcess p : processMap.getMap().values()) {
-			System.out.println(p.getName() + ": " + p.getOccurrences().size());
-			generateLogForClassProcess(p);
-
-			// System.out.println("Occurrences: ");
-			// for (ClassProcessOccurrence occurrence: p.getOccurrences()) {
-			// String list = occurrence.getListOfChildren();
-			// if (list != null) {
-			// System.out.println(occurrence.getListOfChildren());
-			// }
-			// }
+			boolean serialized = generateLogForClassProcess(p, applications);
+			if (serialized) {
+				featureMatrix.put(p.getName(), p.getApplicationsList());
+			}
 		}
+
+		Set<String> classProcessSet = featureMatrix.keySet();
+		
+		String title = "\t";
+		String lines = "";
+		boolean classProcessesInTitle = false;
+		if (classProcessesInTitle) {
+			for (FrameworkApplication application : applications) {
+				title += String.format("%s\t", application.getName());
+			}
+			
+			for (String classProcess : classProcessSet) {
+				lines += classProcess + "\t";
+				
+				for (FrameworkApplication application : applications) {
+					if (featureMatrix.get(classProcess).contains(application.getName())) {
+						lines += "X\t";
+					} else {
+						lines += "0\t";
+					}
+				}
+				
+				lines += "\n";
+			}
+			
+		} else {
+			for (String classProcess : classProcessSet) {
+				title += String.format("%s\t", classProcess);
+			}
+			
+			for (FrameworkApplication application : applications) {
+				lines += application.getName() + "\t";
+				
+				for (String classProcess: classProcessSet) {
+					if (featureMatrix.get(classProcess).contains(application.getName())) {
+						lines += "X\t";
+					} else {
+						lines += "0\t";
+					}
+				}
+				
+				lines += "\n";
+			}
+		}
+		
+		System.out.println(title); 
+		System.out.println(lines);
 
 		return traces;
 	}
 
-	public void generateLogForClassProcess(ClassProcess p) {
+	public boolean generateLogForClassProcess(ClassProcess p, Collection<FrameworkApplication> applications) {
 		XLog log = initEventLog();
-
 		int eventsCount = 0;
 
-//		Map<String, List<ClassProcessOccurrence>> mapOccurrencesByApplication = new HashMap<String, List<ClassProcessOccurrence>>();
-//		for (ClassProcessOccurrence occurrence : p.getOccurrences()) {
-//			List<ClassProcessOccurrence> occurrences = mapOccurrencesByApplication
-//					.get(occurrence.getApplicationName());
-//			if (occurrences == null) {
-//				occurrences = new ArrayList<ClassProcessOccurrence>();
-//			}
-//			occurrences.add(occurrence);
-//			mapOccurrencesByApplication.put(occurrence.getApplicationName(), occurrences);
-//		}
-//
-//		List<String> applicationNames = new ArrayList<String>();
-//		applicationNames.addAll(mapOccurrencesByApplication.keySet());
-//		
-//		Collections.sort(applicationNames, new Comparator<String>() {
-//			@Override
-//			public int compare(String o1, String o2) {
-//				return o1.toLowerCase().compareTo(o2.toLowerCase());
-//			}
-//		});
-//		
-//		
-//		for (String appName: applicationNames) {
-//			List<ClassProcessOccurrence> occurrences =  mapOccurrencesByApplication.get(appName);
-//			List<String> allEvents = new ArrayList<String>();
-//			
-//			for (ClassProcessOccurrence occurrence: occurrences) {
-//				List<String> occurrenceEvents = occurrence.getListOfChildren();
-//				if (occurrenceEvents == null) continue;
-//				
-//				// Class Process is the last event in the trace
-//				occurrenceEvents.add(p.getName());
-//				eventsCount += occurrenceEvents.size();
-//
-//				allEvents.addAll(occurrenceEvents);
-//			}
-//			
-//			if (allEvents.isEmpty()) continue;
-//			
-//			String traceName = String.format("%s-%s",
-//					appName, p.getName());
-//			XTrace trace = createLogTrace(traceName, p, allEvents);
-//			
-//			if (trace == null)
-//				continue;
-//
-//			// Prevent adding empty traces
-//			if (!trace.isEmpty()) {
-//				log.add(trace);
-//			}
-//
-//		}
+		if (p.getApplicationsList().size() < applications.size()/2) {
+			return false;
+		}
 		
 		for (ClassProcessOccurrence occurrence : p.getOccurrences()) {
 			List<String> occurrenceEvents = occurrence.getListOfChildren();
@@ -379,7 +375,10 @@ public class XESLogGenerator {
 
 		if (eventsCount != p.getOccurrences().size()) {
 			serialize(generateFilename(p.getName()), log);
+			return true;
 		}
+		
+		return false;
 	}
 
 	public XTrace createLogTrace(String traceName, ClassProcess p,

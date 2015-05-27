@@ -323,6 +323,9 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 
 	@Override
 	public boolean equals(Object obj) {
+		if (!(obj instanceof Activity)) {
+			return false;
+		}
 		return this.getName().equals(((Activity)obj).getName());
 	}
 	

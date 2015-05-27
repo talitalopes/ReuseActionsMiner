@@ -33,7 +33,7 @@ public class ParseFrameworkAction extends BaseAction {
 			super();
 		}
 		
-		protected void getClassInfo(String fileContent) {
+		protected void getClassInfo(String className, String fileContent) {
 			parser.setSource(fileContent.toCharArray());
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
 			

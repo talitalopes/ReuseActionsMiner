@@ -3,7 +3,9 @@ package br.ufrj.cos.prisma.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ClassProcess {
 	public class ClassProcessOccurrence {
@@ -84,5 +86,13 @@ public class ClassProcess {
 	
 	public void addOccurrence(ClassProcessOccurrence occurrence) {
 		this.occurrences.add(occurrence);
+	}
+	
+	public Set<String> getApplicationsList() {
+		Set<String> applications = new HashSet<String>();
+		for (ClassProcessOccurrence occurrence : this.occurrences) {
+			applications.add(occurrence.applicationName);
+		}
+		return applications;
 	}
 }

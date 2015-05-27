@@ -170,22 +170,21 @@ public class ApplicationFileWalker extends BaseFileWalker {
 					System.out.println(String.format("NF:: %s extends %s",
 							appClass.appClassName, baseClass));
 				}
-				// Activity fwActivity = this.getFrameworkActivity(baseClass);
-				// if (fwActivity != null) {
-				// Event reuseActionEvent =
-				// Minerv1Factory.eINSTANCE.createEvent();
-				// reuseActionEvent.setId(appClass.getCompleteAppName());
-				// reuseActionEvent.setActivity(fwActivity);
-				// System.out.println(String.format("%s extends %s",
-				// appClass.appClassName, baseClass));
-				//
-				//
-				// this.eventsMap.put(appClass.appClassName, reuseActionEvent);
-				//
-				// } else {
-				// System.out.println(String.format("NF:: %s extends %s",
-				// appClass.appClassName, baseClass));
-				// }
+				
+			} else {
+				if (appClass.interfacesDependencies.size() == 1) {
+					String interfaceName = appClass.interfacesDependencies.iterator().next();
+					Event reuseActionEvent = this.getEventForClass(interfaceName,
+							appClass);
+					if (reuseActionEvent != null) {
+						this.applicationReuseActions.add(reuseActionEvent);
+					} else {
+						System.out.println(String.format("NF:: %s extends %s",
+								appClass.appClassName, interfaceName));
+					}
+				} else {
+					// TODO: deal with multiple interfaces
+				}
 			}
 		}
 	}
@@ -224,26 +223,26 @@ public class ApplicationFileWalker extends BaseFileWalker {
 					Event dependencyEvent = this.getEventForClass(
 							dependencyClass, depClass);
 
-					if (dependencyEvent == null) {
-						if (process.getActivitiesMap().get(dependencyClass) != null) {
-							int classIndex = process.getActivitiesMap().get(dependencyClass);
-							Activity fwActivity = process.getActivities().get(classIndex);
-							
-							dependencyEvent = Minerv1Factory.eINSTANCE.createEvent();
-							dependencyEvent.setId(fwActivity.getId());
-							dependencyEvent.setActivity(fwActivity);
-							
-							this.applicationReuseActions.add(dependencyEvent);
-							
-							System.out.println("Can't find but fw class: " + appClass + " : " + dependencyClass);
-						} else {
-							System.out.println("Cant find class: "
-								+ dependencyClass);
-							continue;
-						}
-						
-						// this.applicationClasses.get(dependencyClass).getCompleteAppName();
-					}
+//					if (dependencyEvent == null) {
+//						if (process.getActivitiesMap().get(dependencyClass) != null) {
+//							int classIndex = process.getActivitiesMap().get(dependencyClass);
+//							Activity fwActivity = process.getActivities().get(classIndex);
+//							
+//							dependencyEvent = Minerv1Factory.eINSTANCE.createEvent();
+//							dependencyEvent.setId(fwActivity.getId());
+//							dependencyEvent.setActivity(fwActivity);
+//							
+//							this.applicationReuseActions.add(dependencyEvent);
+//							
+//							System.out.println("Can't find but fw class: " + appClass.getCompleteAppName() + " : " + dependencyClass);
+//						} else {
+//							System.out.println("Cant find class: "
+//								+ dependencyClass);
+//							continue;
+//						}
+//						
+//						// this.applicationClasses.get(dependencyClass).getCompleteAppName();
+//					}
 
 					EventDependency dep = Minerv1Factory.eINSTANCE
 							.createEventDependency();
