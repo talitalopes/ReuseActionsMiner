@@ -52,64 +52,10 @@ public class ApplicationFileWalker extends BaseFileWalker {
 	public List<Event> getReuseActions() {
 		this.createMainEvents();
 		this.createDependencies();
-		 
-		// update dependencies events
-
-		// for (Event e: this.applicationEvents) {
-		// String[] idParts = e.getId().split("\\+");
-		// if (idParts.length <= 1) {
-		// continue;
-		// }
-		//
-		// if (this.eventsMap.get(idParts[1]) != null) {
-		// e.setId(idParts[0]);
-		// e.setActivity(this.eventsMap.get(idParts[1]).getActivity());
-		// this.eventsMap.put(idParts[2], e);
-		// this.applicationReuseActions.add(e);
-		// }
-		// }
-		//
-		// for (int i = 0; i < this.applicationReuseActions.size(); i++) {
-		// Event e = this.applicationReuseActions.get(i);
-		//
-		// List<EventDependency> eventsToRemove = new
-		// ArrayList<EventDependency>();
-		// for (int j = 0; j < e.getDependencies().size(); j++) {
-		// EventDependency d = e.getDependencies().get(j);
-		// Event depEvent = this.eventsMap.get(d.getId());
-		// if (depEvent == null) {
-		// eventsToRemove.add(d);
-		// } else if (depEvent.getId().equals(e.getId())) {
-		// eventsToRemove.add(d);
-		// } else {
-		// d.setEvent(depEvent);
-		// if (!e.getDependencies().contains(d)) {
-		// e.getDependencies().set(j, d);
-		// }
-		// }
-		// }
-		//
-		// e.getDependencies().removeAll(eventsToRemove);
-		// Set<EventDependency> removeDuplicates = new
-		// HashSet<EventDependency>();
-		// removeDuplicates.addAll(e.getDependencies());
-		// e.getDependencies().clear();
-		// e.getDependencies().addAll(removeDuplicates);
-		// }
-
 		return this.applicationReuseActions;
 	}
 
 	public void walk(String path) {
-		// if (this.process == null) {
-		// LogHelper.log("No process found");
-		// return;
-		// }
-		// if (this.process.getActivitiesMap() == null) {
-		// LogHelper.log("Map is null");
-		// return;
-		// }
-
 		super.walk(path);
 	}
 
@@ -156,31 +102,27 @@ public class ApplicationFileWalker extends BaseFileWalker {
 	public void createMainEvents() {
 		for (ApplicationClass appClass : this.applicationClasses.values()) {
 
-			// if (appClass.classDependencies.size() == 0) {
-			// continue;
-			// }
-
 			if (appClass.superClassName != null) {
 				String baseClass = this.getBaseClass(appClass);
 				Event reuseActionEvent = this.getEventForClass(baseClass,
 						appClass);
-				if (reuseActionEvent != null) {
+				if (reuseActionEvent != null && !appClass.isAbstract) {
 					this.applicationReuseActions.add(reuseActionEvent);
 				} else {
-					System.out.println(String.format("NF:: %s extends %s",
+					System.out.println(String.format("NF Event for superclass:: %s extends %s",
 							appClass.appClassName, baseClass));
 				}
-				
+								
 			} else {
 				if (appClass.interfacesDependencies.size() == 1) {
 					String interfaceName = appClass.interfacesDependencies.iterator().next();
 					Event reuseActionEvent = this.getEventForClass(interfaceName,
 							appClass);
-					if (reuseActionEvent != null) {
+					if (reuseActionEvent != null && !appClass.isAbstract) {
 						this.applicationReuseActions.add(reuseActionEvent);
 					} else {
-						System.out.println(String.format("NF:: %s extends %s",
-								appClass.appClassName, interfaceName));
+//						System.out.println(String.format("NF:: %s extends %s",
+//								appClass.appClassName, interfaceName));
 					}
 				} else {
 					// TODO: deal with multiple interfaces
@@ -212,8 +154,12 @@ public class ApplicationFileWalker extends BaseFileWalker {
 
 	private void createDependencies() {
 		for (ApplicationClass appClass : this.applicationClasses.values()) {
-
-			for (String dependencyClass : appClass.classDependencies) {
+			
+			List<String> dependencies = new ArrayList<String>();
+			dependencies.addAll(appClass.classDependencies);
+			dependencies.addAll(appClass.interfacesDependencies);
+			
+			for (String dependencyClass : dependencies) {
 				// if (process.getActivitiesMap().containsKey(dependencyClass))
 				// {
 				if (this.eventsMap.containsKey(appClass.appClassName)) {
@@ -259,8 +205,6 @@ public class ApplicationFileWalker extends BaseFileWalker {
 					System.out.println(String.format("DEP: " + eventName
 							+ " : " + dependencyClass));
 
-				} else {
-					System.out.println("\t NF FW: " + dependencyClass);
 				}
 				continue;
 			}
