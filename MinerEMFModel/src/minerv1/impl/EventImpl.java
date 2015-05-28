@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import minerv1.Activity;
+import minerv1.ActivityType;
 import minerv1.Event;
 import minerv1.EventDependency;
 import minerv1.Minerv1Package;
@@ -441,10 +442,15 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 	
 	@Override
 	public String getCompleteName() {
+		String activityType = "CLASS_EXTENSION";
+		if (this.getActivity().getType() == ActivityType.INTERFACE_REALIZATION) {
+			activityType = "INTERFACE_REALIZATION";
+		}
+		
 		String packageName = this.getActivity().getPackageName();
 		String eventName = String.format("%s", this.getActivity().getName());
 		if (packageName != null && packageName.length() > 0) {
-			eventName = String.format("%s.%s", this.getActivity()
+			eventName = String.format("%s_%s.%s", activityType, this.getActivity()
 					.getPackageName(), this.getActivity().getName());
 		}
 		return eventName;

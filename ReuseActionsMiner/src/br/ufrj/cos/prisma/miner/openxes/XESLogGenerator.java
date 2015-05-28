@@ -37,7 +37,6 @@ import org.deckfour.xes.out.XesXmlSerializer;
 import org.deckfour.xes.xstream.XesXStreamPersistency;
 
 import br.ufrj.cos.prisma.helpers.LogHelper;
-import br.ufrj.cos.prisma.miner.util.Constants;
 import br.ufrj.cos.prisma.miner.util.TopologicalSort;
 import br.ufrj.cos.prisma.model.ClassProcess;
 import br.ufrj.cos.prisma.model.ClassProcess.ClassProcessOccurrence;
@@ -100,10 +99,10 @@ public class XESLogGenerator {
 		return trace;
 	}
 
-	public XEvent createEvent(String type, String eventId) {
+	public XEvent createEvent(String eventId) {
 		// DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
-		return createEvent(type, eventId, cal.getTime());
+		return createEvent(eventId, cal.getTime());
 	}
 
 	public XEvent createEvent(Event appEvent) {
@@ -116,21 +115,21 @@ public class XESLogGenerator {
 
 		// DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
-		return createEvent(type, eventName, cal.getTime());
+		return createEvent(eventName, cal.getTime());
 	}
 
-	public XEvent createEvent(String type, String name, Date timestamp) {
+	public XEvent createEvent(String name, Date timestamp) {
 		XEvent event = null;
 
-		if (!type.equals(Constants.FEATURE)) {
-			type = (type.toLowerCase().equals("class_extension")) ? Constants.CLASS_EXTENSION
-					: Constants.METHOD_EXTENSION;
-			if (classesOnly && type.equals(Constants.METHOD_EXTENSION)) {
-				return null;
-			}
-		}
+//		if (!type.equals(Constants.FEATURE)) {
+//			type = (type.toLowerCase().equals("class_extension")) ? Constants.CLASS_EXTENSION
+//					: Constants.METHOD_EXTENSION;
+//			if (classesOnly && type.equals(Constants.METHOD_EXTENSION)) {
+//				return null;
+//			}
+//		}
 
-		String activityName = String.format("%s_%s", type, name);
+		String activityName = String.format("%s", name);
 		try {
 			XAttributeMap attributes = factory.createAttributeMap();
 			XID eventId = XIDFactory.instance().createId();
@@ -388,7 +387,7 @@ public class XESLogGenerator {
 			return null;
 
 		for (String eventName : events) {
-			XEvent event = createEvent(Constants.CLASS_EXTENSION, eventName);
+			XEvent event = createEvent(eventName);
 			if (event != null) {
 				trace.add(event);
 			}
@@ -437,7 +436,7 @@ public class XESLogGenerator {
 				if (node.getEvent() != null) {
 					event = createEvent(node.getEvent());
 				} else {
-					event = createEvent(Constants.FEATURE, node.getEventId());
+					event = createEvent(node.getEventId());
 				}
 
 				if (event != null) {

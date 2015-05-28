@@ -50,7 +50,13 @@ public class ParseFrameworkAction extends BaseAction {
 					Activity classActivity = Minerv1Factory.eINSTANCE.createActivity();
 					classActivity.setName(node.getName().getIdentifier());
 					classActivity.setPackageName(packageName);
-					classActivity.setType(ActivityType.CLASS_EXTENSION);				
+					
+					if (node.isInterface()) {
+						System.out.println("Interface: " + node.isInterface());
+						classActivity.setType(ActivityType.INTERFACE_REALIZATION);
+					} else {
+						classActivity.setType(ActivityType.CLASS_EXTENSION);
+					}
 					classActivity.setId(node.getName().getIdentifier());
 					
 					if (process.getActivitiesMap().get(classActivity.getName()) == null) {

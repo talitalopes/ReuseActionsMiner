@@ -5,7 +5,6 @@
 package minerv1.validation;
 
 import java.util.Date;
-
 import java.util.Map;
 import minerv1.Activity;
 import org.eclipse.emf.common.util.EList;

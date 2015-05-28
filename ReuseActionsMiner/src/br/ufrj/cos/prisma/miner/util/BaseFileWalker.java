@@ -53,7 +53,7 @@ public abstract class BaseFileWalker {
 				}
 				
 				String className = f.getName().replace(".java", "");
-				System.out.println(path + "/" + f.getName());
+//				System.out.println(path + "/" + f.getName());
 				String content = readFile(f.getAbsolutePath(),
 						StandardCharsets.UTF_8);
 				getClassInfo(className, content);

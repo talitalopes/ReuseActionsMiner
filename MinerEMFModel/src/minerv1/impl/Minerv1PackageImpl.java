@@ -572,6 +572,7 @@ public class Minerv1PackageImpl extends EPackageImpl implements Minerv1Package {
 		addEEnumLiteral(activityTypeEEnum, ActivityType.METHOD_EXTENSION);
 		addEEnumLiteral(activityTypeEEnum, ActivityType.CLASS_EXTENSION);
 		addEEnumLiteral(activityTypeEEnum, ActivityType.OVERRIDES_METHOD);
+		addEEnumLiteral(activityTypeEEnum, ActivityType.INTERFACE_REALIZATION);
 
 		// Create resource
 		createResource(eNS_URI);

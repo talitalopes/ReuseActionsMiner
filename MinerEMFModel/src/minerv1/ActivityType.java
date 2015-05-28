@@ -46,7 +46,15 @@ public enum ActivityType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	OVERRIDES_METHOD(2, "OVERRIDES_METHOD", "OVERRIDES_METHOD");
+	OVERRIDES_METHOD(2, "OVERRIDES_METHOD", "OVERRIDES_METHOD"), /**
+	 * The '<em><b>INTERFACE REALIZATION</b></em>' literal object.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #INTERFACE_REALIZATION_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	INTERFACE_REALIZATION(3, "INTERFACE_REALIZATION", "INTERFACE_REALIZATION");
 
 	/**
 	 * The '<em><b>METHOD EXTENSION</b></em>' literal value.
@@ -94,6 +102,21 @@ public enum ActivityType implements Enumerator {
 	public static final int OVERRIDES_METHOD_VALUE = 2;
 
 	/**
+	 * The '<em><b>INTERFACE REALIZATION</b></em>' literal value.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>INTERFACE REALIZATION</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @see #INTERFACE_REALIZATION
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int INTERFACE_REALIZATION_VALUE = 3;
+
+	/**
 	 * An array of all the '<em><b>Activity Type</b></em>' enumerators.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -104,6 +127,7 @@ public enum ActivityType implements Enumerator {
 			METHOD_EXTENSION,
 			CLASS_EXTENSION,
 			OVERRIDES_METHOD,
+			INTERFACE_REALIZATION,
 		};
 
 	/**
@@ -157,6 +181,7 @@ public enum ActivityType implements Enumerator {
 			case METHOD_EXTENSION_VALUE: return METHOD_EXTENSION;
 			case CLASS_EXTENSION_VALUE: return CLASS_EXTENSION;
 			case OVERRIDES_METHOD_VALUE: return OVERRIDES_METHOD;
+			case INTERFACE_REALIZATION_VALUE: return INTERFACE_REALIZATION;
 		}
 		return null;
 	}

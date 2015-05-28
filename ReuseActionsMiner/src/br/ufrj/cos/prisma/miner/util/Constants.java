@@ -28,6 +28,7 @@ public class Constants {
 	public static final int ID_GENERATE_LOG_CLASSES_ONLY = 1003;
 	
 	public static final String CLASS_EXTENSION = "CLASS_EXTENSION";
+	public static final String INTERFACE_REALIZATION = "INTERFACE_REALIZATION";	
 	public static final String METHOD_EXTENSION = "METHOD_EXTENSION";
 	public static final String FEATURE = "FEATURE";
 	

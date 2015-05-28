@@ -48,3 +48,4 @@ Package minerv1 <http://prisma.cos.ufrj.br/processreuseminerv1>
     Literal METHOD_EXTENSION = 0
     Literal CLASS_EXTENSION = 1
     Literal OVERRIDES_METHOD = 2
+    Literal INTERFACE_REALIZATION = 3
