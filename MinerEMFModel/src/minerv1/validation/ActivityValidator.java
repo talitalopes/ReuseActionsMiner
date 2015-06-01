@@ -22,5 +22,7 @@ public interface ActivityValidator {
 
 	boolean validatePackageName(String value);
 
+	boolean validateParent(String value);
+
 	boolean validateParent(Activity value);
 }

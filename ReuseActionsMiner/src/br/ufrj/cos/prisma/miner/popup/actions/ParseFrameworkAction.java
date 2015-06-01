@@ -4,10 +4,13 @@ import minerv1.Activity;
 import minerv1.ActivityType;
 import minerv1.Minerv1Factory;
 
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
+import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.action.IAction;
 
@@ -55,6 +58,11 @@ public class ParseFrameworkAction extends BaseAction {
 						System.out.println("Interface: " + node.isInterface());
 						classActivity.setType(ActivityType.INTERFACE_REALIZATION);
 					} else {
+						Type superclass = node.getSuperclassType();
+						if (superclass != null) {
+							classActivity.setParent(superclass.toString());
+						}
+						
 						classActivity.setType(ActivityType.CLASS_EXTENSION);
 					}
 					classActivity.setId(node.getName().getIdentifier());
@@ -66,6 +74,30 @@ public class ParseFrameworkAction extends BaseAction {
 					}
 					
 					save();
+					return true;
+				}
+				
+				public boolean visit(MethodDeclaration node) {
+					int type = node.getParent().getNodeType();
+					ASTNode parentClass = node.getParent();
+					while (type != ASTNode.TYPE_DECLARATION) {
+						parentClass = parentClass.getParent();
+						type = parentClass.getNodeType();
+					}
+
+					TypeDeclaration t = (TypeDeclaration) parentClass;
+					if (t.getName().toString().equals(node.getName().toString())) {
+						return true;
+					}
+					
+					Activity methodActivity = Minerv1Factory.eINSTANCE.createActivity();
+					methodActivity.setName(node.getName().getIdentifier());
+					methodActivity.setPackageName(packageName);
+					methodActivity.setType(ActivityType.METHOD_EXTENSION);
+					methodActivity.setParent(t.getName().toString());
+					
+					process.getActivities().add(methodActivity);
+					
 					return true;
 				}
 				

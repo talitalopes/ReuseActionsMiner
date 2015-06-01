@@ -307,7 +307,7 @@ public interface Minerv1Package extends EPackage {
 	int ACTIVITY__PACKAGE_NAME = 3;
 
 	/**
-	 * The feature id for the '<em><b>Parent</b></em>' reference.
+	 * The feature id for the '<em><b>Parent</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -700,15 +700,15 @@ public interface Minerv1Package extends EPackage {
 	EAttribute getActivity_PackageName();
 
 	/**
-	 * Returns the meta object for the reference '{@link minerv1.Activity#getParent <em>Parent</em>}'.
+	 * Returns the meta object for the attribute '{@link minerv1.Activity#getParent <em>Parent</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Parent</em>'.
+	 * @return the meta object for the attribute '<em>Parent</em>'.
 	 * @see minerv1.Activity#getParent()
 	 * @see #getActivity()
 	 * @generated
 	 */
-	EReference getActivity_Parent();
+	EAttribute getActivity_Parent();
 
 	/**
 	 * Returns the meta object for class '{@link minerv1.Event <em>Event</em>}'.
@@ -1028,12 +1028,12 @@ public interface Minerv1Package extends EPackage {
 		EAttribute ACTIVITY__PACKAGE_NAME = eINSTANCE.getActivity_PackageName();
 
 		/**
-		 * The meta object literal for the '<em><b>Parent</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Parent</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ACTIVITY__PARENT = eINSTANCE.getActivity_Parent();
+		EAttribute ACTIVITY__PARENT = eINSTANCE.getActivity_Parent();
 
 		/**
 		 * The meta object literal for the '{@link minerv1.impl.EventImpl <em>Event</em>}' class.

@@ -173,8 +173,8 @@ public class ActivityItemProvider
 				 Minerv1Package.Literals.ACTIVITY__PARENT,
 				 true,
 				 false,
-				 true,
-				 null,
+				 false,
+				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -220,6 +220,7 @@ public class ActivityItemProvider
 			case Minerv1Package.ACTIVITY__NAME:
 			case Minerv1Package.ACTIVITY__TYPE:
 			case Minerv1Package.ACTIVITY__PACKAGE_NAME:
+			case Minerv1Package.ACTIVITY__PARENT:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 		}
