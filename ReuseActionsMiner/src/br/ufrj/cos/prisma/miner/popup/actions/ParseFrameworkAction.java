@@ -90,8 +90,10 @@ public class ParseFrameworkAction extends BaseAction {
 						return true;
 					}
 					
+					String methodId = String.format("%s.%s", t.getName().toString(), node.getName().getIdentifier());
 					Activity methodActivity = Minerv1Factory.eINSTANCE.createActivity();
-					methodActivity.setName(node.getName().getIdentifier());
+					methodActivity.setId(methodId);
+					methodActivity.setName(methodId);
 					methodActivity.setPackageName(packageName);
 					methodActivity.setType(ActivityType.METHOD_EXTENSION);
 					methodActivity.setParent(t.getName().toString());

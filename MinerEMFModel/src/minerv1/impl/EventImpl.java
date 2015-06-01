@@ -445,11 +445,17 @@ public class EventImpl extends MinimalEObjectImpl.Container implements Event {
 		String activityType = "CLASS_EXTENSION";
 		if (this.getActivity().getType() == ActivityType.INTERFACE_REALIZATION) {
 			activityType = "INTERFACE_REALIZATION";
+		} else if (this.getActivity().getType() == ActivityType.METHOD_EXTENSION) {
+			activityType = "METHOD_EXTENSION";
 		}
 		
 		String packageName = this.getActivity().getPackageName();
 		String eventName = String.format("%s", this.getActivity().getName());
-		if (packageName != null && packageName.length() > 0) {
+		
+		if (this.getActivity().getType() == ActivityType.METHOD_EXTENSION) {
+			return String.format("%s_%s", activityType, this.getActivity().getName());
+			
+		} else if (packageName != null && packageName.length() > 0) {
 			eventName = String.format("%s_%s.%s", activityType, this.getActivity()
 					.getPackageName(), this.getActivity().getName());
 		}

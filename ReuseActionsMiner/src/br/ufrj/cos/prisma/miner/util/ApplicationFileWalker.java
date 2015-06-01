@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import minerv1.Activity;
+import minerv1.Commit;
 import minerv1.Event;
 import minerv1.EventDependency;
 import minerv1.FrameworkProcess;
@@ -37,8 +38,9 @@ public class ApplicationFileWalker extends BaseFileWalker {
 	Map<String, String> superclassesMap;
 
 	Map<String, ApplicationClass> applicationClasses;
+	Commit currentCommit;
 
-	public ApplicationFileWalker(FrameworkProcess process) {
+	public ApplicationFileWalker(FrameworkProcess process, Commit commit) {
 		super();
 		this.process = process;
 		this.eventsMap = new HashMap<String, Event>();
@@ -47,6 +49,7 @@ public class ApplicationFileWalker extends BaseFileWalker {
 		this.superclassesMap = new HashMap<String, String>();
 
 		this.applicationClasses = new HashMap<String, ApplicationClass>();
+		this.currentCommit = commit;
 	}
 
 	public List<Event> getReuseActions() {
@@ -128,6 +131,20 @@ public class ApplicationFileWalker extends BaseFileWalker {
 					// TODO: deal with multiple interfaces
 				}
 			}
+			
+			for (String methodId: appClass.methodsDependencies) {
+				Activity fwActivity = this.getFrameworkActivity(methodId);
+				if (fwActivity == null) {
+					continue;
+				}
+				
+				System.out.println("Found activity for method");
+				Event reuseActionEvent = Minerv1Factory.eINSTANCE.createEvent();
+				reuseActionEvent.setId(methodId);
+				reuseActionEvent.setActivity(fwActivity);
+				this.currentCommit.getEvents().add(reuseActionEvent);	
+				this.eventsMap.put(methodId, reuseActionEvent);
+			}
 		}
 	}
 
@@ -156,39 +173,81 @@ public class ApplicationFileWalker extends BaseFileWalker {
 		for (ApplicationClass appClass : this.applicationClasses.values()) {
 			
 			List<String> dependencies = new ArrayList<String>();
-			dependencies.addAll(appClass.classDependencies);
-			dependencies.addAll(appClass.interfacesDependencies);
+			dependencies.addAll(appClass.classDependencies);	
+			
+			if (!this.eventsMap.containsKey(appClass.appClassName)) {
+				continue;
+			}
+			
+			Event appClassEvent = this.eventsMap.get(appClass.appClassName);
+			Set<String> superClassAndInterfaces = new HashSet<String>();
+			superClassAndInterfaces.add(appClass.appClassName);
+			superClassAndInterfaces.addAll(appClass.interfacesDependencies);
+			
+			for (String methodDependencyId : appClass.methodsDependencies) {
+		
+				if (process.getActivitiesMap().containsKey(methodDependencyId)) {
+					
+					 Event e = this.eventsMap.get(methodDependencyId);
+					 if (e != null) {
+						 
+						 if (!e.getActivity().getParent().equals(appClass.superClassName)) {
+							 System.out.println("Method Difference: " + e.getActivity().getParent() + " != " + appClass.superClassName);
+							 continue;
+						 } else {
+							 System.out.println("Method found: " + e.getCompleteName());
+						 }
+						 
+						 EventDependency dep = Minerv1Factory.eINSTANCE
+									.createEventDependency();
+						dep.setEvent(e);
+						dep.setId(methodDependencyId);
+	
+						String eventName = e.getId();
+						if (!eventName.equals(appClass.appClassName)) {
+							appClassEvent.getDependencies().add(dep);
+							System.out.println("Event found: " + e.getCompleteName());
+						}
+					 } else {
+						 System.out.println("Method not found: " + methodDependencyId);
+					 }
+				 }
+			}
+			
+			for (String interfaceDependency : appClass.interfacesDependencies) {
+				if (process.getActivitiesMap().containsKey(interfaceDependency)) {
+					 Event e = this.eventsMap.get(interfaceDependency);
+					 if (e != null) {
+						 
+						 if (!e.getActivity().getParent().equals(appClass.superClassName)) {
+							 System.out.println("Interface Difference: " + e.getActivity().getParent() + " != " + appClass.superClassName);
+							 continue;
+						 } else {
+							 System.out.println("Interface found: " + e.getCompleteName());
+						 }
+						 
+						 
+						 EventDependency dep = Minerv1Factory.eINSTANCE
+									.createEventDependency();
+						dep.setEvent(e);
+						dep.setId(interfaceDependency);
+	
+						String eventName = e.getId();
+						if (!eventName.equals(appClass.appClassName)) {
+							appClassEvent.getDependencies().add(dep);
+							System.out.println("Event found: " + e.getCompleteName());
+						}
+					 }
+				 }
+			}
 			
 			for (String dependencyClass : dependencies) {
-				// if (process.getActivitiesMap().containsKey(dependencyClass))
-				// {
-				if (this.eventsMap.containsKey(appClass.appClassName)) {
+				
 					Event e = this.eventsMap.get(appClass.appClassName);
 					ApplicationClass depClass = this.applicationClasses
 							.get(dependencyClass);
 					Event dependencyEvent = this.getEventForClass(
 							dependencyClass, depClass);
-
-//					if (dependencyEvent == null) {
-//						if (process.getActivitiesMap().get(dependencyClass) != null) {
-//							int classIndex = process.getActivitiesMap().get(dependencyClass);
-//							Activity fwActivity = process.getActivities().get(classIndex);
-//							
-//							dependencyEvent = Minerv1Factory.eINSTANCE.createEvent();
-//							dependencyEvent.setId(fwActivity.getId());
-//							dependencyEvent.setActivity(fwActivity);
-//							
-//							this.applicationReuseActions.add(dependencyEvent);
-//							
-//							System.out.println("Can't find but fw class: " + appClass.getCompleteAppName() + " : " + dependencyClass);
-//						} else {
-//							System.out.println("Cant find class: "
-//								+ dependencyClass);
-//							continue;
-//						}
-//						
-//						// this.applicationClasses.get(dependencyClass).getCompleteAppName();
-//					}
 
 					EventDependency dep = Minerv1Factory.eINSTANCE
 							.createEventDependency();
@@ -202,13 +261,9 @@ public class ApplicationFileWalker extends BaseFileWalker {
 						e.getDependencies().add(dep);
 					}
 
-					System.out.println(String.format("DEP: " + eventName
-							+ " : " + dependencyClass));
-
-				}
-				continue;
+//					System.out.println(String.format("DEP: " + eventName
+//							+ " : " + dependencyClass));
 			}
-			// }
 		}
 	}
 

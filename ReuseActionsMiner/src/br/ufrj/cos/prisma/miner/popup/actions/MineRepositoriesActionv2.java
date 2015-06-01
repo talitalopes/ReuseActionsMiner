@@ -61,7 +61,7 @@ public class MineRepositoriesActionv2 extends BaseExtractionAction {
 				LogHelper.log("Current commit Id: " + currentCommitId);
 				Commit currentCommit = Minerv1Factory.eINSTANCE.createCommit(currentCommitId);
 
-				ApplicationFileWalker walker = new ApplicationFileWalker(this.process);
+				ApplicationFileWalker walker = new ApplicationFileWalker(this.process, currentCommit);
 				walker.walk(gitHelper.getRepoFile().getAbsolutePath());
 //				walker.printDependencies(this.process);
 				

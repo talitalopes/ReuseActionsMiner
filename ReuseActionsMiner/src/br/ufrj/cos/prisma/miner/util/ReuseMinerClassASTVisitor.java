@@ -10,6 +10,7 @@ import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.Type;
@@ -24,6 +25,7 @@ class ReuseMinerClassASTVisitor extends ASTVisitor {
 		boolean isAbstract;
 		Set<String> classDependencies;
 		Set<String> interfacesDependencies;
+		Set<String> methodsDependencies;
 
 		public ApplicationClass(String packageName, String appClassName,
 				String superClassName, boolean isAbstract) {
@@ -32,6 +34,7 @@ class ReuseMinerClassASTVisitor extends ASTVisitor {
 			this.superClassName = superClassName;
 			this.classDependencies = new HashSet<String>();
 			this.interfacesDependencies = new HashSet<String>();
+			this.methodsDependencies = new HashSet<String>();
 			this.isAbstract = isAbstract;
 		}
 
@@ -54,6 +57,10 @@ class ReuseMinerClassASTVisitor extends ASTVisitor {
 			this.interfacesDependencies.add(dependency);
 		}
 
+		public void addMethodDependency(String dependency) {
+			this.methodsDependencies.add(dependency);
+		}
+		
 		public String getCompleteAppName() {
 			String completeName = String.format("%s.%s", this.packageName,
 					appClassName);
@@ -135,6 +142,24 @@ class ReuseMinerClassASTVisitor extends ASTVisitor {
 		if (parent != null) {
 			parent.addClassDependency(node.getType().toString());
 		}
+		return true;
+	}
+	
+	public boolean visit(MethodDeclaration node) {
+		int type = node.getParent().getNodeType();
+		ASTNode parentClass = node.getParent();
+		while (type != ASTNode.TYPE_DECLARATION) {
+			parentClass = parentClass.getParent();
+			type = parentClass.getNodeType();
+		}
+
+		TypeDeclaration t = (TypeDeclaration) parentClass;
+		ApplicationClass parent = this.walker.applicationClasses.get(t.getName().toString());
+		if (parent != null) {
+			String methodId = String.format("%s.%s", parent.superClassName, node.getName().toString());
+			parent.addMethodDependency(methodId);
+		}
+		
 		return true;
 	}
 
