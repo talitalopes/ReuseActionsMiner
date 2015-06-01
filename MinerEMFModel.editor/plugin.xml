@@ -22,6 +22,22 @@
       </wizard>
    </extension>
 
+   <extension point="org.eclipse.ui.newWizards">
+      <!-- @generated minerv1 -->
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="minerv1.presentation.Minerv1ModelWizardID"
+            name="%_UI_Minerv1ModelWizard_label"
+            class="minerv1.presentation.Minerv1ModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/Minerv1ModelFile.gif">
+         <description>%_UI_Minerv1ModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
    <extension point="org.eclipse.ui.editors">
       <!-- @generated minerv1 -->
       <editor

@@ -31,6 +31,7 @@ Package minerv1 <http://prisma.cos.ufrj.br/processreuseminerv1>
     Attribute name : EString
     Attribute type : ActivityType
     Attribute packageName : EString
+    Reference parent : Activity
 
   Class Event
     Reference Activity : Activity

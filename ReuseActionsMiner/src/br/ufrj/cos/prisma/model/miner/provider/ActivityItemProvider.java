@@ -64,6 +64,7 @@ public class ActivityItemProvider
 			addNamePropertyDescriptor(object);
 			addTypePropertyDescriptor(object);
 			addPackageNamePropertyDescriptor(object);
+			addParentPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -152,6 +153,28 @@ public class ActivityItemProvider
 				 false,
 				 false,
 				 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Parent feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addParentPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_Activity_parent_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_Activity_parent_feature", "_UI_Activity_type"),
+				 Minerv1Package.Literals.ACTIVITY__PARENT,
+				 true,
+				 false,
+				 true,
+				 null,
 				 null,
 				 null));
 	}

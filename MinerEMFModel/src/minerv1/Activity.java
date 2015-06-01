@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link minerv1.Activity#getName <em>Name</em>}</li>
  *   <li>{@link minerv1.Activity#getType <em>Type</em>}</li>
  *   <li>{@link minerv1.Activity#getPackageName <em>Package Name</em>}</li>
+ *   <li>{@link minerv1.Activity#getParent <em>Parent</em>}</li>
  * </ul>
  * </p>
  *
@@ -130,5 +131,31 @@ public interface Activity extends EObject {
 	 * @generated
 	 */
 	void setPackageName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Parent</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Parent</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Parent</em>' reference.
+	 * @see #setParent(Activity)
+	 * @see minerv1.Minerv1Package#getActivity_Parent()
+	 * @model
+	 * @generated
+	 */
+	Activity getParent();
+
+	/**
+	 * Sets the value of the '{@link minerv1.Activity#getParent <em>Parent</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Parent</em>' reference.
+	 * @see #getParent()
+	 * @generated
+	 */
+	void setParent(Activity value);
 
 } // Activity

@@ -4,6 +4,7 @@
  */
 package minerv1.validation;
 
+import minerv1.Activity;
 import minerv1.ActivityType;
 
 /**
@@ -20,4 +21,6 @@ public interface ActivityValidator {
 	boolean validateType(ActivityType value);
 
 	boolean validatePackageName(String value);
+
+	boolean validateParent(Activity value);
 }

@@ -8,6 +8,7 @@ import minerv1.Minerv1Package;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -22,6 +23,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  *   <li>{@link minerv1.impl.ActivityImpl#getName <em>Name</em>}</li>
  *   <li>{@link minerv1.impl.ActivityImpl#getType <em>Type</em>}</li>
  *   <li>{@link minerv1.impl.ActivityImpl#getPackageName <em>Package Name</em>}</li>
+ *   <li>{@link minerv1.impl.ActivityImpl#getParent <em>Parent</em>}</li>
  * </ul>
  * </p>
  *
@@ -107,6 +109,16 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 	 * @ordered
 	 */
 	protected String packageName = PACKAGE_NAME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getParent() <em>Parent</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getParent()
+	 * @generated
+	 * @ordered
+	 */
+	protected Activity parent;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -216,6 +228,44 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Activity getParent() {
+		if (parent != null && parent.eIsProxy()) {
+			InternalEObject oldParent = (InternalEObject)parent;
+			parent = (Activity)eResolveProxy(oldParent);
+			if (parent != oldParent) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, Minerv1Package.ACTIVITY__PARENT, oldParent, parent));
+			}
+		}
+		return parent;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Activity basicGetParent() {
+		return parent;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setParent(Activity newParent) {
+		Activity oldParent = parent;
+		parent = newParent;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, Minerv1Package.ACTIVITY__PARENT, oldParent, parent));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -227,6 +277,9 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 				return getType();
 			case Minerv1Package.ACTIVITY__PACKAGE_NAME:
 				return getPackageName();
+			case Minerv1Package.ACTIVITY__PARENT:
+				if (resolve) return getParent();
+				return basicGetParent();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -250,6 +303,9 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 				return;
 			case Minerv1Package.ACTIVITY__PACKAGE_NAME:
 				setPackageName((String)newValue);
+				return;
+			case Minerv1Package.ACTIVITY__PARENT:
+				setParent((Activity)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -275,6 +331,9 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 			case Minerv1Package.ACTIVITY__PACKAGE_NAME:
 				setPackageName(PACKAGE_NAME_EDEFAULT);
 				return;
+			case Minerv1Package.ACTIVITY__PARENT:
+				setParent((Activity)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -295,6 +354,8 @@ public class ActivityImpl extends MinimalEObjectImpl.Container implements Activi
 				return type != TYPE_EDEFAULT;
 			case Minerv1Package.ACTIVITY__PACKAGE_NAME:
 				return PACKAGE_NAME_EDEFAULT == null ? packageName != null : !PACKAGE_NAME_EDEFAULT.equals(packageName);
+			case Minerv1Package.ACTIVITY__PARENT:
+				return parent != null;
 		}
 		return super.eIsSet(featureID);
 	}
